@@ -70,7 +70,7 @@ Keep in mind that debugging software issues can take time, so make sure to start
 
 ### Participation and illness
 
-Attendance is important, and you are expected to participate actively in class and group activities and discussions during lecture and lab. However, your health, and the health of your peers, is crucial. If you are ill, please do not come to class or office hours. All class materials will be posted online, and I can meet with you one-on-one when you have recovered. If you need office hours when you are ill, I am happy to communicate via email or Zoom. Extensions on coursework may be granted on an individual basis under extenuating circumstances, at the instructor's discretion.
+Attendance is important, and you are expected to participate actively in class and group activities and discussions during lecture and lab. However, your health, and the health of your peers, is crucial. If you are ill, please do not come to class or office hours. All class materials will be posted online, and I can meet with you one-on-one when you have recovered. If you need office hours when you are ill, I am happy to communicate via email or Zoom. Extensions on coursework may be granted on an individual basis under extenuating circumstances.
 
 ### Accessibility
 
@@ -160,4 +160,17 @@ Project 2: 20%
 
 Project 3: 30%
 
+I will use the standard grading scale (above a 93 is an A, above a 90 is an A-, above an 87 is a B+,
+etc.)
+
+### Late work
+
+An assignment will be marked off 20% for every 24 hours it is late. Be aware I cannot give any points for an assignment that has already been graded and returned to other students.
+
+Example: If an assignment is turned in:
+* 30 minutes -- 24 hours late: lose 20% of points
+* 24 -- 48 hours late: lose 40% of points.
+
+If you know you cannot turn in assignment (for instance, if you are ill or there is a family emergency), let me know before the assignment is due, and we will work something out. There will be no grade changes
+after our last day of class.
 
