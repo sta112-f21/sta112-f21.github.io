@@ -135,3 +135,25 @@ your homework.
 Submission instructions and due dates will be provided on each problem set. Grading will be based on both completeness and accuracy. 
 
 
+### Projects
+
+Statistics and data science in the real world often involves in-depth analysis of complex datasets to answer one or more high-level research questions, and communicating these results to a wider audience. Projects provide an opportunity to develop these skills, and apply the tools you have learned in class and practiced in labs and problem sets.
+
+There will be three projects throughout the course. You will be provided with a dataset and research question, and asked to answer that question with data visualizations and statistical models. You will submit a written report describing your analysis and conclusions. Some projects may also include additional, smaller deliverables (such as a data analysis plan) before the final report is due.
+
+Further instructions and grading rubrics will be provided with each project.
+
+### Exams
+
+There are no exams in this course. **However, we will use the scheduled final exam time to discuss the final project, so make sure you are still in Winston-Salem.** If in doubt, you can check with me before booking your flight home.
+
+
+## Grading
+
+Labs: 15%
+Problem sets: 25%
+Project 1: 10%
+Project 2: 20%
+Project 3: 30%
+
+
