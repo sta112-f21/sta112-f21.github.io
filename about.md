@@ -1,6 +1,6 @@
 ---
 layout: page
-title: About
+title: Syllaubs
 description: >-
     Course policies and information.
 ---
@@ -18,7 +18,19 @@ description: >-
 
 ## About
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam ut porttitor leo a diam. Erat nam at lectus urna duis convallis convallis tellus id. Pellentesque elit eget gravida cum sociis natoque penatibus et magnis. Ultrices vitae auctor eu augue ut lectus arcu. Morbi tristique senectus et netus et malesuada. Turpis tincidunt id aliquet risus feugiat in ante. Consequat interdum varius sit amet mattis vulputate enim nulla. Felis eget nunc lobortis mattis aliquam. Eu non diam phasellus vestibulum lorem sed risus. A condimentum vitae sapien pellentesque habitant morbi tristique. Orci dapibus ultrices in iaculis nunc sed augue lacus viverra. Proin sagittis nisl rhoncus mattis rhoncus urna neque. Dictum varius duis at consectetur lorem donec massa sapien. Blandit cursus risus at ultrices mi tempus imperdiet. Laoreet sit amet cursus sit amet dictum sit amet justo. Felis eget nunc lobortis mattis aliquam faucibus. Nam aliquam sem et tortor consequat.
+Welcome to STA 112! The purpose of this course is to introduce you to statistical modeling and data science. By the end of this course, you will be able to clean, transform, and visualize data, fit and interpret statistical models, and communicate the results of your data analyses. Throughout the semester you will work with real data from a variety of sources, and we will emphasize reproducibility, checking assumptions, and thoughtful data analysis.
+
+**Section D:** MWF 1:00 -- 1:50
+
+**Section E:** MWF 2:00 -- 2:50
+
+**Professor:** Ciaran Evans
+
+**Office:** Manchester 329
+
+**Email:** evansc@wfu.edu *(please allow 24 hours for email responses)*
+
+
 
 ## Lecture
 
