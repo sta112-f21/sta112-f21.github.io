@@ -79,7 +79,21 @@ for academic integrity. Cheating or academic dishonesty of any kind will not be 
 For other information on these matters, please consult the [Code of Conduct](https://static.secure.wfu.edu/files/pdf/students/judicial-handbook.pdf). For Academic issues please
 see the [College Judicial System](https://studentconduct.wfu.edu/the-judicial-council/).
 
-## Lecture and labs
+**Sharing code and resources:**
+* There are many online resources for sharing code, such as StackOverflow. Unless otherwise stated, you are free (and encouraged!) to use these resources for help on labs and assignments. However, you must **explicitly cite** where you have obtained the code (both code you used directly and code used as an inspiration). Any reused code that is not explicitly cited will be treated as plagiarism.
+
+* Unless otherwise stated, you are encouraged to collaborate with other students on labs and homeworks (not projects). If you do so, please acknowledge your collaborator(s) at the top of your assignment. Failure to acknowledge collaborators may result in a grade of 0. You may not copy code and/or answers directly from another student. If you copy someone else's work, both parties may receive a grade of 0.
+
+* Rather than copying someone else's work, ask for help. You are not alone in this course!
+
+### Professionalism
+
+Laptops will be used regularly in class, and you must bring one each day. You may also use laptops or tablets to take notes. Please refrain from using your laptop or tablet for anything other than coursework during class. 
+
+Cell phones may not be used during class for any reason. Keep phones stowed during class time.
+If you have a specific need to have a phone during a class period, please contact me.
+
+## Course components
 
 Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Vulputate dignissim suspendisse in est ante in. Massa vitae tortor condimentum lacinia quis vel. Gravida neque convallis a cras semper auctor. Pellentesque eu tincidunt tortor aliquam nulla. Quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Sit amet purus gravida quis blandit turpis cursus in. Porttitor leo a diam sollicitudin tempor. Vel facilisis volutpat est velit egestas dui id ornare. Cum sociis natoque penatibus et magnis. Tristique magna sit amet purus gravida. Nibh sit amet commodo nulla facilisi nullam vehicula. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque. Id semper risus in hendrerit gravida. Sit amet justo donec enim diam vulputate ut pharetra sit. Vitae justo eget magna fermentum. Tellus in metus vulputate eu. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Etiam erat velit scelerisque in dictum non consectetur a erat. Pellentesque eu tincidunt tortor aliquam nulla.
 
