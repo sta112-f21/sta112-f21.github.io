@@ -151,9 +151,13 @@ There are no exams in this course. **However, we will use the scheduled final ex
 ## Grading
 
 Labs: 15%
+
 Problem sets: 25%
+
 Project 1: 10%
+
 Project 2: 20%
+
 Project 3: 30%
 
 
