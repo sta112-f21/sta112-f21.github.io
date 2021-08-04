@@ -38,6 +38,24 @@ Welcome to STA 112! The purpose of this course is to introduce you to statistica
 
 **Software:** We will be using the statistical software [R](https://cran.r-project.org/), through the interface [RStudio](https://www.rstudio.com/products/rstudio/download/) for working with data and statistical modeling. You will need to download R and RStudio onto your laptop; instruction will be provided on the course website.
 
+**Other resources:**
+
+Other helpful resources for statistics and data science:
+
+* [OpenIntro](https://www.openintro.org/book/os/)
+
+* [Modern Data Science with R](https://mdsr-book.github.io/)
+
+* [Visual and Statistical Thinking](https://www.edwardtufte.com/tufte/books_textb)
+
+Resources for R:
+
+* [swirl package](https://swirlstats.com/)
+
+* [RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
+
+* [StackOverflow](https://stackoverflow.com/) (for code help; see Academic Integrity info below)
+
 
 ## Getting help
 
@@ -50,7 +68,11 @@ Keep in mind that debugging software issues can take time, so make sure to start
 
 ## Course policies
 
-### Accessibility policy
+### Participation and illness
+
+Attendance is important, and you are expected to participate actively in class and group activities and discussions during lecture and lab. However, your health, and the health of your peers, is crucial. If you are ill, please do not come to class or office hours. All class materials will be posted online, and I can meet with you one-on-one when you have recovered. If you need office hours when you are ill, I am happy to communicate via email or Zoom. Extensions on coursework may be granted on an individual basis under extenuating circumstances, at the instructor's discretion.
+
+### Accessibility
 
 If you require accommodations due to a disability or other learning differences, contact Learning Assistance Center & Disability Services at 336-758-5929 or lacds@wfu.edu as soon as possible to better ensure that such accommodations are implemented in a timely fashion. Please feel free
 to contact me, and I will be happy to discuss any necessary accommodations. I always like
@@ -95,12 +117,21 @@ If you have a specific need to have a phone during a class period, please contac
 
 ## Course components
 
-Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Vulputate dignissim suspendisse in est ante in. Massa vitae tortor condimentum lacinia quis vel. Gravida neque convallis a cras semper auctor. Pellentesque eu tincidunt tortor aliquam nulla. Quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Sit amet purus gravida quis blandit turpis cursus in. Porttitor leo a diam sollicitudin tempor. Vel facilisis volutpat est velit egestas dui id ornare. Cum sociis natoque penatibus et magnis. Tristique magna sit amet purus gravida. Nibh sit amet commodo nulla facilisi nullam vehicula. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque. Id semper risus in hendrerit gravida. Sit amet justo donec enim diam vulputate ut pharetra sit. Vitae justo eget magna fermentum. Tellus in metus vulputate eu. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Etiam erat velit scelerisque in dictum non consectetur a erat. Pellentesque eu tincidunt tortor aliquam nulla.
+### Labs
 
-## Resources
+Labs will give you the opportunity to work with data and practice the material learned in lecture, and will take place most Fridays in class. During lab, you will use the statistical software RStudio (a user-friendly front end for R) to manipulate and visualize data, fit statistical models, and report your results. Labs are designed to be completed during class, but can be finished later (up to the posted due date) if you run out of time.
 
-Lacus viverra vitae congue eu. Suspendisse in est ante in nibh mauris cursus mattis. Nisl vel pretium lectus quam id leo in. Euismod lacinia at quis risus sed vulputate odio. Non enim praesent elementum facilisis. Aliquet sagittis id consectetur purus ut faucibus pulvinar elementum integer. Id interdum velit laoreet id donec ultrices tincidunt arcu. Urna molestie at elementum eu facilisis sed odio. Auctor urna nunc id cursus metus aliquam eleifend. Volutpat commodo sed egestas egestas fringilla phasellus. Libero nunc consequat interdum varius sit amet mattis. Imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque. Tortor vitae purus faucibus ornare suspendisse. Auctor elit sed vulputate mi.
+Submission instructions and due dates will be provided on each lab. Grading will be based mainly on completeness.
 
-## Assignments
+### Problem sets
 
-Vehicula ipsum a arcu cursus vitae congue. Etiam dignissim diam quis enim lobortis scelerisque fermentum dui. Risus sed vulputate odio ut enim blandit. Aliquam id diam maecenas ultricies mi eget. Id consectetur purus ut faucibus pulvinar elementum integer enim neque. Eget mi proin sed libero enim sed faucibus. Sem integer vitae justo eget magna fermentum iaculis. In mollis nunc sed id semper risus in. Sit amet risus nullam eget felis eget. Mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. Porta non pulvinar neque laoreet suspendisse interdum consectetur libero id. At varius vel pharetra vel turpis nunc eget. Scelerisque purus semper eget duis at tellus.
+Problem sets provide the opportunity for more extended and in-depth practice with the material we learn in class, and they will help prepare you for the projects. The documents you submit will be .html files created with [R Markdown](https://rmarkdown.rstudio.com/), which improves reproducibility. We will cover R Markdown in class and lab.
+
+You are welcomed, and encouraged, to work with each other on the problems, but you must turn in
+your own work. If you copy someone else’s work, both parties may receive a 0 for the homework grade.
+If you work with someone else on the homework, you must write the name of your collaborator(s) on
+your homework.
+
+Submission instructions and due dates will be provided on each problem set. Grading will be based on both completeness and accuracy. 
+
+
