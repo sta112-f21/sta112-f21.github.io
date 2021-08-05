@@ -1,5 +1,5 @@
 ---
-title: Basic Data Structures
+title: Introduction to data analysis
 ---
 
 August 30
@@ -12,9 +12,7 @@ September 1
 
 September 3
 : **Lab**{: .label .label-purple } Lab 2 -- practice with data wrangling and visualization
-  : [Slides](#)
-:
-  : [Lab 2](#)
+  : [Slides](#), [Lab 2](#)
 
 : **HW 1 due**{: .label .label-red }
 
