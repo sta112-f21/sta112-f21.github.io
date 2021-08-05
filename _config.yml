@@ -14,8 +14,8 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: STA 112, Fall 2021
-tagline: Course websitte for STA 112
-description: Course materials, assignments, and syllaubs
+tagline: Course website for STA 112 (Introduction to Regression and Data Science)
+description: Course materials, assignments, and syllabus
 author: Ciaran Evans
 baseurl: # the subpath of your site, e.g. /blog
 url: 'https://sta112-f21.github.io' # the base hostname & protocol for your site, e.g. http://example.com
