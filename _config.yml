@@ -14,7 +14,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: STA 112, Fall 2021
-tagline: Course website for STA 112 (Introduction to Regression and Data Science)
+tagline: STA 112 (Introduction to Regression and Data Science)
 description: Course materials, assignments, and syllabus
 author: Ciaran Evans
 baseurl: # the subpath of your site, e.g. /blog
