@@ -1,23 +1,20 @@
 ---
-title: Introduction to Java
+title: Introduction to R
 ---
 
-Sep 28
-: [Java & Git](#)
-  : [1.1](#)
+August 23
+: Welcome to STA 112
+  : [Slides](#)
+  : [R and RStudio setup](#)
 
-Sep 29
-: **Section**{: .label .label-purple }[Intro to Java](#)
-  : [Solution](#)
+August 25
+: [Intro to R](#)
+  : [Slides](#)
 
-Sep 30
-: [Variables & Objects](#)
-  : [1.2](#), [2.1](#)
+August 27
+: **Lab**{: .label .label-purple } Lab 1 -- beginning R
+  : [Slides](#)
+  : [Lab 1](#)
 
-Oct 1
-: **Lab**{: .label .label-purple } [Intro to Java](#)
-
-Oct 2
-: [Tracing, IntLists, & Recursion](#)
-  : [2.1](#)
-: **HW 1 due**{: .label .label-red }
+: **HW 1 released**{: .label .label-red }
+  : [HW 1](#)
