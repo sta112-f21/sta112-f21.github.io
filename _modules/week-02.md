@@ -2,22 +2,21 @@
 title: Basic Data Structures
 ---
 
-Oct 5
-: [Linked Lists & Encapsulation](#)
-  : [3.1](#), [2.2](#), [2.3](#)
+August 30
+: Data wrangling
+  : [Slides](#)
 
-Oct 6
-: **Section**{: .label .label-purple }[Linked Lists](#)
-  : [Solution](#)
+September 1
+: Data visualization
+  : [Slides](#)
 
-Oct 7
-: [Resizing Arrays](#)
-  : [2.4](#), [2.5](#)
+September 3
+: **Lab**{: .label .label-purple } Lab 2 -- practice with data wrangling and visualization
+  : [Slides](#)
 
-Oct 8
-: **Lab**{: .label .label-purple } [Resizing Arrays](#)
+  : [Lab 2](#)
 
-Oct 9
-: [Runtime Analysis](#)
-  : [8.1](#), [8.2](#), [8.3](#), [8.4](#)
-: **HW 2 due**{: .label .label-red }
+: **HW 1 due**{: .label .label-red }
+
+: **HW 2 released**{: .label .label-yellow }
+  : [HW 2](#)

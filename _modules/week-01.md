@@ -18,5 +18,5 @@ August 27
 
   : [Lab 1](#)
 
-: **HW 1 released**{: .label .label-red }
+: **HW 1 released**{: .label .label-yellow }
   : [HW 1](#)
