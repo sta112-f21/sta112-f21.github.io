@@ -4,7 +4,7 @@ title: Introduction to R
 
 August 23
 : Welcome to STA 112
-  : [Slides](#), [Class activity](ca_lecture1.md)
+  : [Slides](#), [Class activity](#)
 
 : Install R and RStudio 
   : [R and RStudio setup](#)
