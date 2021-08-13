@@ -4,6 +4,8 @@ title: Class Activity, August 23
 nav_exclude: true
 ---
 
+# Class Activity, August 23
+
 In this activity, we'll get to know each other, and you'll answer some questions about data analysis on NBA games. Conducting a data analysis, and communicating your results, are core learning goals for this course. This activity allows you to think about what qualities a good data analysis should have.
 
 **Instructions:** Work in groups to answer the questions below. The icebreaker questions are for us to get to know each other. For the data analysis questions, you'll need to read the linked article on NBA fan attendance. 
