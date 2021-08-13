@@ -6,4 +6,6 @@ description: Listing of course modules and topics.
 
 # Calendar
 
-{ week-01.md }
+{% for module in site.modules %}
+{{ module }}
+{% endfor %}
