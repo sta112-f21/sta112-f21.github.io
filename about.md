@@ -16,6 +16,8 @@ description: >-
 
 ---
 
+*Note: this syllabus may change in response to changing public health circumstances or university protocols.*
+
 ## Overview
 
 Welcome to STA 112! The purpose of this course is to introduce you to statistical modeling and data science. By the end of this course, you will be able to clean, transform, and visualize data, fit and interpret statistical models, and communicate the results of your data analyses. Throughout the semester you will work with real data from a variety of sources, and we will emphasize reproducibility, checking assumptions, and thoughtful data analysis.
@@ -59,11 +61,16 @@ Resources for R:
 
 ## Getting help
 
-If you have any questions about the course (or statistics in general!), please don't hesitate to ask! I am available during office hours, by appointment, or via email. If you're emailing about an issue with R, please include a minimum working example (everything I need to reproduce the issue you encountered). There are also tutors available at the [Math and Stats Center](http://mathandstatscenter.wfu.edu/).
+If you have any questions about the course (or statistics in general!), please don't hesitate to ask! I am available during office hours, by appointment, or via email. If you're emailing about an issue with R, please include a minimum working example (everything I need to reproduce the issue you encountered). Starting August 31, there will also be tutoring at the [Math and Stats Center](http://mathandstatscenter.wfu.edu/student-information/).
 
 Keep in mind that debugging software issues can take time, so make sure to start the assignments early in case you run into problems.
 
-**Office hours:** TBA
+**Office hours:** There will be a mix of virtual and in-person office hours. For all office hours, sign up for 15-minute slots (one person per slot) [here](https://calendar.google.com/calendar/u/0/selfsched?sstoken=UU5FbWRMeTJRWGxafGRlZmF1bHR8YzljNjUzMDk5MzRhMTA0ZGJmY2NhZDcxNmViOGVlNGY). Please sign up for only one slot at a time. 
+
+Times:
+    - Tuesday 4:00pm -- 5:00pm (virtual; [Zoom link](https://wakeforest-university.zoom.us/j/97797186623?pwd=alhjSnNwTm55UmhmdW5SU0pTWjlKZz09))
+    - Wednesday 3:00pm -- 4:00pm (in-person; Manchester 329)
+    - Thursday 1:00pm -- 2:00pm (virtual; [Zoom link](https://wakeforest-university.zoom.us/j/98192385058?pwd=dzBGcWo0b0txemVjUmwwejFmY2ZRZz09))
 
 
 ## Course policies
@@ -77,6 +84,8 @@ Attendance is important, and you are expected to participate actively in class a
 If you require accommodations due to a disability or other learning differences, contact Learning Assistance Center & Disability Services at 336-758-5929 or lacds@wfu.edu as soon as possible to better ensure that such accommodations are implemented in a timely fashion. Please feel free
 to contact me, and I will be happy to discuss any necessary accommodations. I always like
 to know how to help my students feel comfortable and successful in our course.
+
+**Scent-free zone:** The Department of Mathematics and Statistics is a scent-free zone. Please refrain from wearing perfume, cologne, scented lotion, body spray, and all other scented products when in the department.
 
 ### Mental health
 
@@ -143,25 +152,27 @@ There will be three projects throughout the course. You will be provided with a 
 
 Further instructions and grading rubrics will be provided with each project.
 
-### Exams
+### Quizzes
 
-There are no exams in this course. **However, we will use the scheduled final exam time to discuss the final project, so make sure you are still in Winston-Salem.** If in doubt, you can check with me before booking your flight home.
+We will have short (15--20 minute) quizzes in class throughout the semester. These quizzes are designed to help you check your progress in the course. The questions will be based on material we have recently covered in class, lab, and/or homework.
+
+There is no final exam in this course. **However, we will use the scheduled final exam time to discuss the final project, so make sure you are still in Winston-Salem.** If in doubt, you can check with me before booking your flight home.
 
 
 ## Grading
 
-Labs: 15%
+| Component | Weight |
+| --------- | ------ |
+| Labs      |  15%   |
+| Homework  |  20%   |
+| Quizzes   |  15%   |
+| Project 1 |  10%   |
+| Project 2 |  15%   |
+| Project 3 |  25%   |
 
-Problem sets: 25%
+One homework, lab, or quiz will be dropped. Occasionally, optional extra credit assignments will be posted. These will involve learning material beyond what we cover in the course, and are expected to take a significant amount of time.
 
-Project 1: 10%
-
-Project 2: 20%
-
-Project 3: 30%
-
-I will use the standard grading scale (above a 93 is an A, above a 90 is an A-, above an 87 is a B+,
-etc.)
+I will use the standard grading scale (above a 93 is an A, above a 90 is an A-, above an 87 is a B+, etc.)
 
 ### Late work
 

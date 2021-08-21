@@ -31,9 +31,10 @@ schedule:
         location: Manchester 125
   - name: Tuesday
     events:
-      - name: Office Hours (virtual, sign-up)
+      - name: Office Hours (virtual, [sign-up](https://calendar.google.com/calendar/u/0/selfsched?sstoken=UU5FbWRMeTJRWGxafGRlZmF1bHR8YzljNjUzMDk5MzRhMTA0ZGJmY2NhZDcxNmViOGVlNGY))
         start: 4:00 PM
         end: 5:00 PM
+        location: [Zoom link](https://wakeforest-university.zoom.us/j/97797186623?pwd=alhjSnNwTm55UmhmdW5SU0pTWjlKZz09)
   - name: Wednesday
     events:
       - name: Section D
@@ -44,15 +45,16 @@ schedule:
         start: 2:00 PM
         end: 2:50 PM
         location: Manchester 125
-      - name: Office Hours (in-person, sign-up)
+      - name: Office Hours (in-person, [sign-up](https://calendar.google.com/calendar/u/0/selfsched?sstoken=UU5FbWRMeTJRWGxafGRlZmF1bHR8YzljNjUzMDk5MzRhMTA0ZGJmY2NhZDcxNmViOGVlNGY))
         start: 3:00 PM
         end: 4:00 PM
         location: Manchester 329
   - name: Thursday
     events:
-      - name: Office Hours (virtual, sign-up)
+      - name: Office Hours (virtual, [sign-up](https://calendar.google.com/calendar/u/0/selfsched?sstoken=UU5FbWRMeTJRWGxafGRlZmF1bHR8YzljNjUzMDk5MzRhMTA0ZGJmY2NhZDcxNmViOGVlNGY))
         start: 1:00 PM
         end: 2:00 PM
+        location: [Zoom link](https://wakeforest-university.zoom.us/j/98192385058?pwd=dzBGcWo0b0txemVjUmwwejFmY2ZRZz09)
   - name: Friday
     events:
       - name: Section D
