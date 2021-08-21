@@ -4,14 +4,14 @@ title: Introduction to R
 
 August 23
 : Welcome to STA 112
-  : [Slides](#), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture1/)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_1.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture1/)
 
 : Install R and RStudio 
   : [R and RStudio setup](https://sta112-f21.github.io/software_installation/)
 
 August 25
 : Intro to R
-  : [Slides](https://sta112-f21.github.io/slides/lecture_1/)
+  : [Slides](#)
 
 August 27
 : **Lab**{: .label .label-purple } Lab 1 -- beginning R
