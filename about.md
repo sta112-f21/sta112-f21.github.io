@@ -138,7 +138,7 @@ Submission instructions and due dates will be provided on each lab. Grading will
 
 ### Problem sets
 
-Problem sets provide the opportunity for more extended and in-depth practice with the material we learn in class, and they will help prepare you for the projects. The documents you submit will be .html files created with [R Markdown](https://rmarkdown.rstudio.com/), which improves reproducibility. We will cover R Markdown in class and lab.
+Problem sets provide the opportunity for more extended and in-depth practice with the material we learn in class, and they will help prepare you for the projects. The documents you submit will be files created with [R Markdown](https://rmarkdown.rstudio.com/), which improves reproducibility. We will cover R Markdown in class and lab.
 
 You are welcomed, and encouraged, to work with each other on the problems, but you must turn in
 your own work. If you copy someone else’s work, both parties may receive a 0 for the homework grade.
