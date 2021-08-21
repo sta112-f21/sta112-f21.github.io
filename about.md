@@ -68,9 +68,11 @@ Keep in mind that debugging software issues can take time, so make sure to start
 **Office hours:** There will be a mix of virtual and in-person office hours. For all office hours, sign up for 15-minute slots (one person per slot) [here](https://calendar.google.com/calendar/u/0/selfsched?sstoken=UU5FbWRMeTJRWGxafGRlZmF1bHR8YzljNjUzMDk5MzRhMTA0ZGJmY2NhZDcxNmViOGVlNGY). Please sign up for only one slot at a time. 
 
 Times:
-    - Tuesday 4:00pm -- 5:00pm (virtual; [Zoom link](https://wakeforest-university.zoom.us/j/97797186623?pwd=alhjSnNwTm55UmhmdW5SU0pTWjlKZz09))
-    - Wednesday 3:00pm -- 4:00pm (in-person; Manchester 329)
-    - Thursday 1:00pm -- 2:00pm (virtual; [Zoom link](https://wakeforest-university.zoom.us/j/98192385058?pwd=dzBGcWo0b0txemVjUmwwejFmY2ZRZz09))
+* Tuesday 4:00pm -- 5:00pm (virtual; [Zoom link](https://wakeforest-university.zoom.us/j/97797186623?pwd=alhjSnNwTm55UmhmdW5SU0pTWjlKZz09))
+    
+* Wednesday 3:00pm -- 4:00pm (in-person; Manchester 329)
+    
+* Thursday 1:00pm -- 2:00pm (virtual; [Zoom link](https://wakeforest-university.zoom.us/j/98192385058?pwd=dzBGcWo0b0txemVjUmwwejFmY2ZRZz09))
 
 
 ## Course policies
