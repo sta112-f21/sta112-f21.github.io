@@ -135,6 +135,8 @@ Source: Albert Y. Kim & Johanna Hardin (2021) “Playing the Whole Game”: A Da
 # Syllabus highlights
 
 (please see the course website [https://sta112-f21.github.io/about/](https://sta112-f21.github.io/about/) for full details)
+
+*Syllabus may change if the public health situation and/or university policies change.*
 ]
 
 ---

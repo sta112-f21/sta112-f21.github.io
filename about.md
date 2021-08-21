@@ -75,6 +75,10 @@ Times:
 
 ## Course policies
 
+### Food and drink
+
+Eating and drinking during class is not permitted, except in extenuating circumstances with permission of the instructor.
+
 ### Participation and illness
 
 Attendance is important, and you are expected to participate actively in class and group activities and discussions during lecture and lab. However, your health, and the health of your peers, is crucial. If you are ill, please do not come to class or office hours. All class materials will be posted online, and I can meet with you one-on-one when you have recovered. If you need office hours when you are ill, I am happy to communicate via email or Zoom. Extensions on coursework may be granted on an individual basis under extenuating circumstances.
