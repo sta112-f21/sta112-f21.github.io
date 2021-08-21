@@ -24,31 +24,43 @@ schedule:
       - name: Section D
         start: 1:00 PM
         end: 1:50 PM
-        location: TBA
+        location: Manchester 125
       - name: Section E
         start: 2:00 PM
         end: 2:50 PM
-        location: TBA
+        location: Manchester 125
   - name: Tuesday
+    events:
+      - name: Office Hours (virtual, sign-up)
+        start: 4:00 PM
+        end: 5:00 PM
   - name: Wednesday
     events:
       - name: Section D
         start: 1:00 PM
         end: 1:50 PM
-        location: TBA
+        location: Manchester 125
       - name: Section E
         start: 2:00 PM
         end: 2:50 PM
-        location: TBA
+        location: Manchester 125
+      - name: Office Hours (in-person, sign-up)
+        start: 3:00 PM
+        end: 4:00 PM
+        location: Manchester 329
   - name: Thursday
+    events:
+      - name: Office Hours (virtual, sign-up)
+        start: 1:00 PM
+        end: 2:00 PM
   - name: Friday
     events:
       - name: Section D
         start: 1:00 PM
         end: 1:50 PM
-        location: TBA
+        location: Manchester 125
       - name: Section E
         start: 2:00 PM
         end: 2:50 PM
-        location: TBA
+        location: Manchester 125
 ---
