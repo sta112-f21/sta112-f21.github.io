@@ -7,7 +7,7 @@ August 23
   : [Slides](#), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture1/)
 
 : Install R and RStudio 
-  : [R and RStudio setup](#)
+  : [R and RStudio setup](https://sta112-f21.github.io/software_installation/)
 
 August 25
 : Intro to R

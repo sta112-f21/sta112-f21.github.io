@@ -10,7 +10,6 @@ In this activity, we'll get to know each other, and you'll answer some questions
 
 **Instructions:** Work in groups to answer the questions below. The icebreaker questions are for us to get to know each other. For the data analysis questions, you'll need to read the linked article on NBA fan attendance. 
 
-Type your answers in a Word file or .txt file. Make sure to include the names of all group members. When you are done, submit your file to Canvas.
 
 ## Icebreaker questions
 
