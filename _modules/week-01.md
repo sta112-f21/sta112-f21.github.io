@@ -11,7 +11,7 @@ August 23
 
 August 25
 : Intro to R
-  : [Slides](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_1/)
 
 August 27
 : **Lab**{: .label .label-purple } Lab 1 -- beginning R
