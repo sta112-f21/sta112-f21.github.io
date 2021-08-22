@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Extra Credit 1: Web scraping
+title: Extra Credit 1 (Web scraping)
 nav_exclude: true
 ---
 
