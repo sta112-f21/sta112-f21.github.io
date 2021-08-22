@@ -45,12 +45,20 @@ Illustration: Updated from Grolemund & Wickham's classis R4DS schematic, envisio
 * Work in small groups to answer the activity questions
 * We'll reconvene to discuss in 15--20 minutes
 
+.footnote[
+Image: NBA.com
+]
+
 ---
 
 ## Icebreaker: which reality show?
 
 .center[
 <img src="bakeoff.webp" width="500">
+]
+
+.footnote[
+Image: Mark Bourdillon/C4
 ]
 
 ---
@@ -110,12 +118,14 @@ Possibly, but it would be hard.
 * Data doesn't seem to be available (we would have to collect it ourselves)
 * Code for analysis not available
 
+Extra credit 1: write code to scrape the data from Basketball-Reference.com
+
 ---
 
 ## Components of (good) data analysis
 
 .center[
-<img src="playing_whole_game.jpeg" width="350">
+<img src="playing_whole_game.jpeg" width="500">
 ]
 
 * Defining a clear research question

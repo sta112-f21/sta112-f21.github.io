@@ -16,7 +16,7 @@ nav_exclude: true
 
 On the first day of class, we looked at [this](https://fivethirtyeight.com/features/after-this-weird-nba-season-we-have-a-better-idea-of-how-much-fans-matter/) article about the impact of fans on NBA games. One thing we noticed is that the data used in the article is not readily available. For this extra credit assignment, you will scrape this data from [Basketball-Reference.com](https://www.basketball-reference.com/).
 
-*Web scraping* means automatically extracting data from web pages. This is done by writing code to visit a website and download the data (rather than manually entering copying the data, or clicking download buttons by hand). Web scraping is particularly useful when you want to download data that is spread across many web pages, and visiting each of them by hand is difficult. 
+*Web scraping* means automatically extracting data from web pages. This is done by writing code to visit a website and download the data (rather than manually copying the data, or clicking download buttons by hand). Web scraping is particularly useful when you want to download data that is spread across many web pages, and visiting each of them by hand is difficult. 
 
 For this extra credit assignment, you will learn some basic web scraping. The assignment is deliberately open ended, to give you practice with independently learning new computing skills. It will be graded as credit/no credit; to receive credit, you must turn in two files:
 1. A CSV file where each row represents one game from the 2020-21 NBA regular season, and the following columns:

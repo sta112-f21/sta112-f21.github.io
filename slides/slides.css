@@ -1,33 +1,35 @@
-@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700);
 @import url(https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700);
-@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
-@import url(https://fonts.googleapis.com/css?family=Lato);
 
-body { font-family: 'Lato', sans-serif; 
+body { 
+  font-family: 'Source Sans Pro'; sans-serif;
+  font-weight: 400;
   color: #333333;
 }
-h1, h2, h3 {
-  font-family: 'Lato';
+h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: bold;
+  color: #6CA0DC;
+  font-size: 12px;
+  margin: 0.25em 0 0.5em 0;
+}
+h1, h3 {
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: bold;
   color: #6CA0DC;
 }
 a, a > code {
+  font-family: 'Source Sans Pro', sans-serif;
   color: #6CA0DC;
   text-decoration: none;
 }
 
 .footnote {
   position: absolute;
-  bottom: 2em;
+  bottom: 3em;
   padding-right: 4em;
-  font-size: 60%;
-}
-.remark-code, .remark-inline-code { 
-  font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace; 
   font-size: 90%;
 }
-.remark-code-line-highlighted     { background-color: #ffff88; }
 
 .inverse {
   background-color: #6CA0DC;
@@ -37,6 +39,17 @@ a, a > code {
 .inverse h1, .inverse h2, .inverse h3 {
   color: #f3f3f3;
 }
+
+/* Code formatting */
+.remark-code-line-highlighted {
+  background-color: #A7D5E8;
+}
+.remark-code, .remark-inline-code { 
+  font-family: 'Inconsolata', 'Lucida Console', Monaco, monospace; 
+  font-size: 90%;
+}
+
+
 /* Two-column layout */
 .left-column {
   color: #777;
@@ -52,6 +65,9 @@ a, a > code {
   float: right;
   padding-top: 1em;
 }
+.center {
+  text-align:center;
+}
 .pull-left {
   float: left;
   width: 47%;
@@ -63,8 +79,14 @@ a, a > code {
 .pull-right ~ * {
   clear: both;
 }
-
 /* Custom boxes */
+.definition {
+  border-left: solid 5px #6CA0DC;
+  background-color: #6CA0DC50;
+  padding: 1px 16px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
 .question {
   border-left: solid 5px #1E5C65;
   background-color: #1E5C6530;
@@ -149,6 +171,10 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
   }
 }
 
+.remark-slide-content{
+  font-size: 24px;
+}
+
 .remark-slide-content:after {
     content: "";
     position: absolute;
@@ -159,6 +185,14 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
     background-repeat: no-repeat;
     background-size: contain;
     background-image: url("img/icon.png");
+}
+
+.element.style {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 685px;
+    width: 700px;
 }
 
 /* Footer */
