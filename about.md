@@ -77,6 +77,10 @@ Times:
 
 ## Course policies
 
+### Communication
+
+While course materials will be posted on the course website, I will send messages and announcements through Canvas. Please make sure your Canvas account is set up so that you receive emails when I send these messages.
+
 ### Food and drink
 
 Eating and drinking during class is not permitted, except in extenuating circumstances with permission of the instructor.
