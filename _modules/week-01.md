@@ -11,7 +11,7 @@ August 23
 
 August 25
 : Intro to R
-  : [Slides](#), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture2.html)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_1.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture2.html)
 
 August 27
 : **Lab**{: .label .label-purple } Lab 1 -- beginning R
@@ -19,3 +19,6 @@ August 27
 
 : **HW 1 released**{: .label .label-yellow }
   : [HW 1](#)
+
+: **Extra Credit 1 released**
+  : [EC 1](https://sta112-f21.github.io/extra_credit/ec1/)

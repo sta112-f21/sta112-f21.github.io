@@ -126,3 +126,12 @@ This is an example of a *prediction* question, one important use for statistical
 ```
 
 8. **Challenge:** Come up with a rule to predict penguin species, given bill length and bill depth. This will be a function $f(length, depth)$, which outputs Adelie, Chinstrap, or Gentoo, depending on the values of length and depth.
+
+**If you're finished early:** try to customize the plots! Search online to see if you can figure out how to change:
+* the axis labels
+* the theme
+* the colors of the points
+
+Hint 1: googling "ggplot plot labels" is a good place to start. Similar searches would be useful for the theme and colors.
+
+Hint 2: There's a great ggplot cheat sheet: [https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization.pdf](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization.pdf)
