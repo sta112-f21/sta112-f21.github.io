@@ -90,6 +90,14 @@ code {
 	line-height: 1.6;
 }
 
+.question {
+  border-left: solid 5px #1E5C65;
+  background-color: #1E5C6530;
+  padding: 1px 16px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
 pre code {
 	font-size: 15px;
 }

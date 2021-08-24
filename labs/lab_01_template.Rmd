@@ -11,7 +11,7 @@ library(palmerpenguins)
 library(tidyverse)
 ```
 
-## Question 1
+## Exercise 1
 
 ```{r}
 
