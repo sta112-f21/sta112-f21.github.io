@@ -30,6 +30,7 @@ If you receive credit, this extra credit assignment can replace a lab of your ch
 ## Tips
 * Tables of regular season data for each month can be found [here](https://www.basketball-reference.com/leagues/NBA_2021_games.html?sr&utm_source=direct&utm_medium=Share&utm_campaign=ShareTool#schedule) on Basketball-Reference.com. This is a good starting point.
 * The R package `rvest` may be helpful. See [this](https://rvest.tidyverse.org/) link for examples and more information.
+* You have until November 5 to complete this assignment, so you don't have to finish it immediately. As you get more practice with R, it will become easier.
 
 ## Collaboration
 You may:

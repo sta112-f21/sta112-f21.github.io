@@ -10,8 +10,8 @@ August 23
   : [R and RStudio setup](https://sta112-f21.github.io/software_installation/)
 
 August 25
-: Intro to R
-  : [Slides](https://sta112-f21.github.io/slides/lecture_1.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture2.html)
+: Intro to R -- exploratory data analysis
+  : [Slides](https://sta112-f21.github.io/slides/lecture_2.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture2.html)
 
 August 27
 : **Lab**{: .label .label-purple } Lab 1 -- beginning R

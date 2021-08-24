@@ -1,0 +1,30 @@
+---
+title: "Lab 1, August 27"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Friday, September 3, 12:00pm on Canvas (see the end of the lab for submission instructions)
+
+**Learning goals:** By the end of this lab, you will be able to
+
+* Open, edit, and knit an R Markdown document
+* Manipulate data frames in R
+* Summarize and plot data
+
+
+# Download the lab template
+
+[Lab template](https://sta112-f21.github.io/labs/lab_01_template.Rmd)
+
+# Continuing penguin EDA
+
+In the lab, you will continue to work with the `penguins` data from day 2. We will use R to conduct further exploratory data analysis on the penguins. In the process, you will learn more about working with data in R.
+
+1. On Wednesday, we saw that there are 344 penguins in the dataset. But how many penguins of each species are there? The `count()` function counts the number of observations in each group. In your R Markdown document, 
+
+## Submission Instructions
