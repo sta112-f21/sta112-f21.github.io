@@ -1,0 +1,162 @@
+---
+title: "Homework 1"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(nycflights13)
+library(tidyverse)
+```
+
+**Due:** Friday, September 3, 12:00pm on Canvas
+
+**Instructions:** 
+
+* There are three parts to this assignment. In parts I and II, you will write your responses, and include any code, in an R Markdown file. 
+* As in Lab 1, a template R Markdown file will be provided, with set-up instructions below.
+* When you are done with parts I and II, knit the R Markdown file containing all your code and responses. Submit the knitted HTML file on Canvas.
+* For part III, there is nothing to include in R Markdown or submit on Canvas. You will be asked to complete a tutorial from the ZSR library and send me the results. Full instructions are in part III.
+* Rules for challenge questions: on most homework assignments, there will be a **challenge** question that is a bit more difficult and open-ended. These questions ask you to synthesize several different skills, and may require you to learn something new. As with other questions, you may use the internet, collaborate with peers, or ask me for help. However, for challenge questions you may not ask a tutor or TA (e.g., at the Math and Stats Center) for help.
+
+## Setup
+
+1. Open RStudio, and install the `nycflights13` package, which provides data on flights from New York airports, which you will explore in this assignment. (See the class activity from August 25 for examples installing R packages)
+2. Download the R Markdown template file for this assignment: [hw_01_template.Rmd](https://sta112-f21.github.io/homework/hw_01_template.Rmd). Save it to your computer, and change the file name to `hw_01_your_name.Rmd`
+3. Open `hw_01_your_name.Rmd` in RStudio. Change the `author` in YAML to your name.
+4. Fill in answers to questions 1 -- 6. I recommend you save and knit as you answer each question, to avoid losing any work and to catch any knitting issues early.
+5. When you are done, knit and submit your HTML file on Canvas (Assignments -> Homework 1).
+
+# Part I: Practice with exploratory data analysis
+
+In this section, we'll practice exploratory data analysis in R, using data on flights departing from New York City's three major airports. These questions can be answered by adapting code from Lab 1 and the class activity on August 25. 
+
+### Some helpful resources
+
+If you're not sure how to make a particular plot, a good resource is the `ggplot2` webpage ([https://ggplot2.tidyverse.org/index.html](https://ggplot2.tidyverse.org/index.html)). At the search bar in the top, you can search for the type of plot you would like to make. The `ggplot2` cheat sheet ([click here](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization.pdf)) is also useful. (What's the difference between `ggplot` and `ggplot2`? `ggplot` is the name of the function we use to make plots, `ggplot2` is the package which provides that function. `ggplot2` is one of several packages included in the tidyverse).
+
+### Questions
+
+The questions in this section follow the general EDA steps discussed in [lecture 2](https://sta112-f21.github.io/slides/lecture_2.html#1). We'll begin exploratory data analysis by summarizing the data. 
+
+:::{.question}
+#### Question 1
+
+Summarize the `flights` data. Describe:
+
+* Who (or which organization) originally collected the data?
+* What does a row in the data represent?
+* How many rows and columns are in the data?
+* What information do the variables record?
+* Are there any missing data?
+:::
+
+Now let's look at the distribution of some of the variables. For quantitative variables, we can visualize the distribution with a histogram. 
+
+:::{.question}
+#### Question 2
+
+Create a histogram for the distribution of departure delay, and describe the distribution.
+:::
+
+For categorical variables, we can visualize the distribution through a bar chart.
+
+:::{.question}
+#### Question 3
+
+Create a bar chart showing the number of flights departing from each of the three New York airports (EWR, LGA, and JFK). Which airport had the most flights? *Hint: the code for making a bar chart with `ggplot` is very similar to the code for making a histogram in Question 2. Just change the variable being plotted, and replace `geom_histogram` with something else.*
+:::
+
+Now let's look at the relationship between airport and departure delay.
+
+:::{.question}
+#### Question 4
+
+Create a plot showing the distribution of departure delay for each airport. For each airport, also report the mean departure delay and the standard deviation of departure delays. How does the distribution of departure delay differ across the three New York airports (EWR, LGA, and JFK)? *Hint: you can answer this question by adapting code from Lab 1.*
+:::
+
+Finally, let's visualize the relationship between departure delay from New York, and arrival delay at the flight's destination. 
+
+:::{.question}
+#### Question 5: Challenge Question
+
+*(See the rules for challenge questions at the top of the assignment)*
+
+Below is a scatterplot showing arrival delay vs. departure delay. I have:
+
+* colored each flight by the New York airport it departed from
+* changed the axis labels
+* added a title
+* changed the legend label (to "Origin airport")
+* changed the plot theme (e.g., notice the background is white, not gray)
+* changed the opacity of the points
+* changed the colors used to represent each airport
+
+Recreate this plot as closely as possible. (Note that because the data is large, the `ggplot` function may take longer than usual to run.) You will need to look up how to make some of these changes. *Hint: google searches for things like "ggplot change opacity" often produce good results. We will also cover some of this material on Monday, August 30.*
+:::
+
+```{r, fig.width = 12, fig.height = 9}
+flights %>%
+  drop_na() %>%
+  ggplot(aes(x = dep_delay, y = arr_delay, color = origin)) +
+  geom_point(alpha = 0.7) +
+  labs(x = "Departure delay (minutes)", 
+       y = "Arrival delay (minutes)",
+       color = "Origin airport",
+       title = "Arrival delay vs. departure delay in NYC airports") +
+  theme_bw() +
+  scale_color_manual(values = c("#999999", "#E69F00", "#56B4E9"))
+```
+
+# Part II: Principles of data analysis
+
+On the first day of class, we talked about some components of a data analysis, such as defining a clear research question, collecting data, and communicating your results. These are the core steps involved when you analyze data. But how each of these steps is done depends on the analyst and the purpose of the analysis, plus any outside constraints.
+
+The paper [Elements and Principles for Characterizing Variation between Data Analyses](https://arxiv.org/pdf/1903.07639.pdf), by Stephanie Hicks and Roger Peng, describes several key principles of data analysis. These principles can be used to characterize an analysis, without necessarily judging the quality of the analysis. Briefly, the principles are
+
+* *Data matching:* How closely does the data match the research question?
+* *Exhaustive:* Does the analyst use multiple elements to investigate the research question?
+* *Skeptical:* Does the analyst consider alternative explanations for the observed phenomenon?
+* *Second-order:* Does the analyst give context to the analysis?
+* *Transparency:* Does the analyst summarize key elements of their analysis?
+* *Reproducibility:* Would you be able to reproduce the results?
+
+:::{.question}
+#### Question 6
+
+Read the data analysis paper, then rate the [NBA article](https://fivethirtyeight.com/features/after-this-weird-nba-season-we-have-a-better-idea-of-how-much-fans-matter/) from lecture 1 on each of these principles, like the vignettes in Section 4 of the data analysis paper. The first one is provided as an example. 
+
+**Data matching:** the NBA article has high data matching. The authors are interested in the relationship between the number of fans in basketball arenas, and the outcome of the game. Both variables are measured directly in the data scraped from Basketball-Reference.com.
+
+*(Note: scoring low on some principles doesn't necessarily make the analysis bad. It just means that the authors gave different weight to the principles than, say, a study on the relationship between smoking and lung cancer).*
+:::
+
+# Part III: ZSR plagiarism tutorial
+
+An important part of data analysis is communicating your results, which may require citations for data sources, software packages, existing literature, and statistical methods. However, it can be tricky to know when citations are needed!
+
+The ZSR library has a great tutorial on citations. While the tutorial isn't focused on data analysis, it still provides useful guidance about what constitutes plagiarism. 
+
+**Instructions:** For this part of the assignment, do the following.
+
+1. Go to [https://zsr.wfu.edu/tutorials/plagiarism/](https://zsr.wfu.edu/tutorials/plagiarism/)
+2. Complete the tutorial
+3. At the end of the tutorial, enter both your WFU email and my email (evansc@wfu.edu), so that a record of your completion is sent to me
+
+That's it for this part! You don't have to submit anything on Canvas for part III.
+
+# Grading
+
+Grading will be based on accuracy and completion, with points assigned according to the table below. For questions 1--5, both your response to the question *and* your full code must be visible in the knitted HTML file.
+
+| **Total** | **100pts** |
+| --------- | ---------- |
+| Filename hw_01_your_name.html | 5 pts |
+| Changed `author` in YAML | 5 pts |
+| Questions 1--4 | 10 pts each |
+| Questions 5 and 6 | 20 pts each |
+| ZSR plagiarism tutorial | 10 pts |
