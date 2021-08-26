@@ -99,7 +99,7 @@ Below is a scatterplot showing arrival delay vs. departure delay. I have:
 Recreate this plot as closely as possible. (Note that because the data is large, the `ggplot` function may take longer than usual to run.) You will need to look up how to make some of these changes. *Hint: google searches for things like "ggplot change opacity" often produce good results. We will also cover some of this material on Monday, August 30.*
 :::
 
-```{r, fig.width = 12, fig.height = 9}
+```{r, fig.width = 6, fig.height = 4}
 flights %>%
   drop_na() %>%
   ggplot(aes(x = dep_delay, y = arr_delay, color = origin)) +
