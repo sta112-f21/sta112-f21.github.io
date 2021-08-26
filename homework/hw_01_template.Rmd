@@ -1,8 +1,4 @@
 ---
-title: "Lab 1"
-author: "Your Name"
-date: "8/27/2021"
-output: html_document
 ---
 ---
 title: "Lab 1"
