@@ -15,10 +15,10 @@ August 25
 
 August 27
 : **Lab**{: .label .label-purple } Lab 1 -- beginning R
-  : [Slides](#), [Lab 1](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_2.html), [Lab 1](https://sta112-f21.github.io/labs/lab1.html)
 
 : **HW 1 released**{: .label .label-yellow }
-  : [HW 1](#)
+  : [HW 1](https://sta112-f21.github.io/homework/homework_1.html)
 
 : **Extra Credit 1 released**
   : [EC 1](https://sta112-f21.github.io/extra_credit/ec1/)
