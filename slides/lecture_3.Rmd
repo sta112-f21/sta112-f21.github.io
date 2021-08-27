@@ -26,6 +26,7 @@ output:
 
 * Welcome to work in groups, but everyone turns in their own lab on Canvas
 * Due by September 3 at noon if you don't finish today
+* You may leave if done early, or start HW 1 in class
 
 .center[
 <img src="penguin_art.png" width="600">
