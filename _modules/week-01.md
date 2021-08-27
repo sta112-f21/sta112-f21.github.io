@@ -15,7 +15,7 @@ August 25
 
 August 27
 : **Lab**{: .label .label-purple } Lab 1 -- beginning R
-  : [Slides](https://sta112-f21.github.io/slides/lecture_2.html), [Lab 1](https://sta112-f21.github.io/labs/lab1.html)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_3.html), [Lab 1](https://sta112-f21.github.io/labs/lab1.html)
 
 : **HW 1 released**{: .label .label-yellow }
   : [HW 1](https://sta112-f21.github.io/homework/homework_1.html)
