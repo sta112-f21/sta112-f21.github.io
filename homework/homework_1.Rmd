@@ -13,7 +13,7 @@ library(nycflights13)
 library(tidyverse)
 ```
 
-**Due:** Friday, September 3, 12:00pm on Canvas
+**Due:** Friday, September 3, 12:00pm (noon) on Canvas
 
 **Instructions:** 
 

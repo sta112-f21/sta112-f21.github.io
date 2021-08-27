@@ -16,6 +16,7 @@ output:
 * Introduction to R Markdown
 * Lab 1
 * HW 1 released on course website, due September 3 at noon on Canvas
+* Extra Credit 1 release on course website, due November 5 at 1pm on Canvas
 
 ---
 

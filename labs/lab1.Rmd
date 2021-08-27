@@ -8,7 +8,9 @@ output:
 link-citations: yes
 ---
 
-**Due:** Friday, September 3, 12:00pm on Canvas (see the end of the lab for submission instructions)
+**Due:** Friday, September 3, 12:00pm (noon) on Canvas (see the end of the lab for submission instructions)
+
+You are welcome to work in groups, but everyone should submit their own lab.
 
 **Learning goals:** By the end of this lab, you will be able to
 
