@@ -8,11 +8,11 @@ output:
 link-citations: yes
 ---
 
-In this activity, you will practice using `ggplot` to create and customize visualizations. You will use both the `mpg` data from class today, and the `penguins` data from last week. Work in groups to answer the questions below.
+In this activity, you will practice using `ggplot` to create and customize visualizations. You will use both the `mpg` data from class today, and the `penguins` data from last week. Work in groups to answer the questions below. Solutions are provided for the first two questions, in case you get stuck.
 
 ## Setup
 
-As with all class activities, there is nothing you will need to submit. However, in case it helps you work on the questions, an R Markdown template is provided for you:
+As with all class activities, there is nothing you will need to submit. However, in case it helps you work on the questions, an R Markdown template is provided for you: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_4_template.Rmd)
 
 The `mpg` data comes from the `tidyverse` package, and the `penguins` data comes from the `palmerpenguins` package. You will need to load each of these packages (with `library`) to run the code today. If you use the R Markdown template, those packages are included in the setup chunk, so you just need to run the setup chunk first.
 
@@ -30,6 +30,32 @@ mpg %>%
        color = "...") +
   theme_...()
 ```
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+```r
+mpg %>%
+  ggplot(aes(x = cty, y = hwy, color = class)) +
+  geom_point() +
+  facet_wrap(~year) +
+  labs(x = "City fuel efficiency (miles per gallon)",
+       y = "Highway fuel efficiency (miles per gallon)",
+       color = "Car class") +
+  theme_bw()
+```
+</DIV>
 
 ```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=8, fig.height=4}
 library(tidyverse)
@@ -55,6 +81,20 @@ penguins %>%
        title = "...") +
   theme_...()
 ```
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+```r
+penguins %>%
+  ggplot(aes(x = flipper_length_mm, y = island)) +
+  geom_boxplot() +
+  labs(x = "Flipper length (mm)", 
+       y = "Island", 
+       title = "Distribution of flipper length by island") +
+  theme_classic()
+```
+</DIV>
 
 ```{r, echo=F, warning=F, message=F, fig.align='center', fig.width=8, fig.height=4}
 penguins %>%
