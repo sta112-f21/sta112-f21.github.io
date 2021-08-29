@@ -1,0 +1,89 @@
+---
+title: "Class Activity, August 30"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice using `ggplot` to create and customize visualizations. You will use both the `mpg` data from class today, and the `penguins` data from last week. Work in groups to answer the questions below.
+
+## Setup
+
+As with all class activities, there is nothing you will need to submit. However, in case it helps you work on the questions, an R Markdown template is provided for you:
+
+The `mpg` data comes from the `tidyverse` package, and the `penguins` data comes from the `palmerpenguins` package. You will need to load each of these packages (with `library`) to run the code today. If you use the R Markdown template, those packages are included in the setup chunk, so you just need to run the setup chunk first.
+
+## Questions
+
+1. Fill in the following code to create the scatterplot below (each `...` needs to be filled in):
+
+```r
+mpg %>%
+  ggplot(aes(x = cty, y = hwy, color = class)) +
+  geom_point() +
+  facet_wrap(~year) +
+  labs(x = "...",
+       y = "...",
+       color = "...") +
+  theme_...()
+```
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=8, fig.height=4}
+library(tidyverse)
+library(palmerpenguins)
+mpg %>%
+  ggplot(aes(x = cty, y = hwy, color = class)) +
+  geom_point() +
+  facet_wrap(~year) +
+  labs(x = "City fuel efficiency (miles per gallon)",
+       y = "Highway fuel efficiency (miles per gallon)",
+       color = "Car class") +
+  theme_bw()
+```
+
+2. Fill in the following code to create the boxplots below (each `...` needs to be filled in):
+
+```r
+penguins %>%
+  ggplot(aes(x = ..., y = ...)) +
+  geom_...() +
+  labs(x = "...", 
+       y = "...", 
+       title = "...") +
+  theme_...()
+```
+
+```{r, echo=F, warning=F, message=F, fig.align='center', fig.width=8, fig.height=4}
+penguins %>%
+  ggplot(aes(x = flipper_length_mm, y = island)) +
+  geom_boxplot() +
+  labs(x = "Flipper length (mm)", 
+       y = "Island", 
+       title = "Distribution of flipper length by island") +
+  theme_classic()
+```
+
+3. Recreate this scatterplot using the `penguins` data. You may find the `ggplot2` cheatsheet [(click here)](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization.pdf) helpful.
+
+```{r, echo=F, warning=F, message=F, fig.align='center', fig.width=8, fig.height=3}
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = flipper_length_mm, 
+             y = body_mass_g,
+             color = species,
+             shape = sex,
+             size = bill_length_mm)) +
+  geom_point() +
+  facet_wrap(~island) +
+  labs(x = "Flipper length (mm)", 
+       y = "Body mass (g)",
+       color = "Species", 
+       shape = "Sex",
+       size = "Bill length (mm)") +
+  theme_light()
+```
+
+4. A researcher looks at the boxplots from Exercise 2, and hypothesizes that living on different islands causes penguins to have different flipper lengths. Explain why their reasoning is flawed.

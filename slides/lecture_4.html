@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data visualization</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data visualization
+### Dr. Ciaran Evans
+
+---
+
+
+## Data for today
+
+
+```r
+library(tidyverse)
+glimpse(mpg)
+```
+
+```
+## Rows: 234
+## Columns: 11
+## $ manufacturer &lt;chr&gt; "audi", "audi", "audi", "audi", "audi", "audi", "audi", "…
+## $ model        &lt;chr&gt; "a4", "a4", "a4", "a4", "a4", "a4", "a4", "a4 quattro", "…
+## $ displ        &lt;dbl&gt; 1.8, 1.8, 2.0, 2.0, 2.8, 2.8, 3.1, 1.8, 1.8, 2.0, 2.0, 2.…
+## $ year         &lt;int&gt; 1999, 1999, 2008, 2008, 1999, 1999, 2008, 1999, 1999, 200…
+## $ cyl          &lt;int&gt; 4, 4, 4, 4, 6, 6, 6, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 8, 8, …
+## $ trans        &lt;chr&gt; "auto(l5)", "manual(m5)", "manual(m6)", "auto(av)", "auto…
+## $ drv          &lt;chr&gt; "f", "f", "f", "f", "f", "f", "f", "4", "4", "4", "4", "4…
+## $ cty          &lt;int&gt; 18, 21, 20, 21, 16, 18, 18, 18, 16, 20, 19, 15, 17, 17, 1…
+## $ hwy          &lt;int&gt; 29, 29, 31, 30, 26, 26, 27, 26, 25, 28, 27, 25, 25, 25, 2…
+## $ fl           &lt;chr&gt; "p", "p", "p", "p", "p", "p", "p", "p", "p", "p", "p", "p…
+## $ class        &lt;chr&gt; "compact", "compact", "compact", "compact", "compact", "c…
+```
+
+---
+
+## Which code created this plot?
+
+&lt;img src="lecture_4_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Which code created this plot?
+
+.pull-left[
+&lt;img src="lecture_4_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+.abox[ 
+```
+mpg %&gt;%
+  ggplot(aes(x = class, y = hwy))
+```
+]
+
+.bbox[
+```
+mpg %&gt;%
+  ggplot(aes(x = hwy, y = class)) +
+  geom_boxplot()
+```
+]
+
+.cbox[
+```
+mpg %&gt;%
+  ggplot(aes(x = hwy)) +
+  geom_histogram() +
+  facet_wrap(~class)
+```
+]
+
+.dbox[
+
+```
+mpg %&gt;%
+  ggplot(aes(x = class, y = hwy)) +
+  geom_boxplot()
+```
+
+]
+
+]
+
+---
+
+## Which code created this plot?
+
+.pull-left[
+&lt;img src="lecture_4_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+.abox[ 
+```
+mpg %&gt;%
+  ggplot(aes(x = year))
+```
+]
+
+.bbox[
+```
+mpg %&gt;%
+  ggplot(aes(x = year, fill = class)) +
+  geom_bar()
+```
+]
+
+.cbox[
+```
+mpg %&gt;%
+  ggplot(aes(x = year, color = class)) +
+  geom_point()
+```
+]
+
+.dbox[
+
+```
+mpg %&gt;%
+  ggplot(aes(x = class)) +
+  geom_bar()
+```
+
+]
+
+]
+
+---
+
+## Data visualization with ggplot2
+
+* `ggplot2`: the R package
+* `ggplot`: the function (from `ggplot2`) used to make plots
+* `gg` stands for "Grammar of Graphics"
+
+.center[
+&lt;img src="ggplot2_masterpiece.png" width = "500px"&gt;
+]
+
+.footnote[
+Artwork by @allison_horst
+]
+
+---
+
+## Grammar of Graphics
+
+Build visualizations in layers:
+
+.center[
+&lt;img src="grammar-of-graphics.png" width = "700px"&gt;
+]
+
+---
+
+## Example
+
+
+```r
+mpg %&gt;%
+  ggplot(aes(x = cty, y = hwy, color = class)) +
+  geom_point() +
+  facet_wrap(~year)
+```
+
+&lt;img src="lecture_4_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Data
+
+**Data:** which dataset do we want to visualize?
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_1.png" width = "800px"&gt;
+]
+
+---
+
+## Data
+
+**Data:** which dataset do we want to visualize?
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_data.png" width = "800px"&gt;
+]
+
+---
+
+## Aesthetics
+
+**Aes**thetics: mapping features of the plot to variables in the data
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_1.png" width = "800px"&gt;
+]
+
+---
+
+## Aesthetics
+
+**Aes**thetics: mapping features of the plot to variables in the data
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_aes.png" width = "800px"&gt;
+]
+
+
+.pull-left[
+Examples of aesthetics: 
+* `x`
+* `y`
+* `color`
+]
+
+.pull-right[
+* `fill`
+* `size`
+* `shape`
+* `opacity` (alpha)
+]
+
+---
+
+## Geometric objects
+
+**Geom**etric objects: objects we use to visualize the data
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_1.png" width = "800px"&gt;
+]
+
+---
+
+## Geometric objects
+
+**Geom**etric objects: objects we use to visualize the data
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_geom.png" width = "800px"&gt;
+]
+
+.pull-left[
+Examples of geoms: 
+* `geom_point` (scatterplots)
+* `geom_line` (line plots)
+* `geom_histogram` (histograms)
+]
+
+.pull-right[
+* `geom_bar` (bar charts)
+* `geom_boxplot` (boxplots)
+* `geom_smooth` (display regression fits)
+* `geom_density` (density plots)
+]
+
+---
+
+## Facets
+
+**Facets:** split visualization by the value of another variable
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_1.png" width = "800px"&gt;
+]
+
+---
+
+## Facets
+
+**Facets:** split visualization by the value of another variable
+
+.center[
+&lt;img src="ggplot_grammar_annotated_example_facet.png" width = "800px"&gt;
+]
+
+* `facet_wrap(~year)`: facet the plot by year
+* Can also use `facet_grid` to facet by two variables
+
+---
+
+## Theme and appearance
+
+How could this plot be improved? Discuss with a neighbor for 1--2 minutes.
+
+&lt;img src="lecture_4_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Theme and appearance
+
+
+```r
+mpg %&gt;%
+  ggplot(aes(x = class, y = hwy)) +
+  geom_boxplot() +
+  labs(x = "Class of car", 
+       y = "Highway fuel consumption (miles per gallon)",
+       title = "Distribution of highway fuel consumption by class") +
+  theme_bw()
+```
+
+&lt;img src="lecture_4_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Theme and appearance
+
+
+```r
+mpg %&gt;%
+  ggplot(aes(x = class, y = hwy)) +
+  geom_boxplot() +
+  labs(x = "Class of car", 
+       y = "Highway fuel consumption (miles per gallon)",
+       title = "Distribution of highway fuel consumption by class") +
+  theme_bw()
+```
+
+* `labs`: specify labels for aesthetics
+* themes: customize border, gridlines, background
+  - examples: `theme_bw`, `theme_classic`, `theme_minimal`
+  
+---
+
+## Just because you CAN...
+
+doesn't mean you SHOULD.
+
+.pull-left[
+.tiny[
+```r
+library(palmerpenguins)
+penguins %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = flipper_length_mm, 
+             y = body_mass_g,
+             color = species,
+             shape = sex,
+             size = bill_length_mm)) +
+  geom_point() +
+  facet_wrap(~island) +
+  labs(x = "Flipper length (mm)", 
+       y = "Body mass (g)",
+       color = "Species", 
+       shape = "Sex",
+       size = "Bill length (mm)") +
+  theme_light()
+```
+]
+]
+
+.pull-right[
+
+![](lecture_4_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

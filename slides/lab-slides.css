@@ -64,6 +64,10 @@ a, a > code {
   clear: both;
 }
 
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+
 /* Custom boxes */
 .question {
   border-left: solid 5px #1E5C65;
@@ -72,6 +76,31 @@ a, a > code {
   margin-top: 12px;
   margin-bottom: 12px;
 }
+
+.abox {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #e1e895;
+}
+
+.bbox {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #95e8bc;
+}
+
+.cbox {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #95aee8;
+}
+
+.dbox {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #e895da;
+}
+
 .alert {
   border-right: solid 5px #A7D5E8;
   background-color: #A7D5E830;
