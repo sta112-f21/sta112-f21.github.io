@@ -322,6 +322,20 @@ mpg %>%
   
 ---
 
+## Class activity: practice with ggplot
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_4.html](https://sta112-f21.github.io/class_activities/ca_lecture_4.html)
+
+.center[
+<img src="ggplot2_visual_data_img.png" width = "500px">
+]
+
+.footnote[
+Artwork by @allison_horst
+]
+
+---
+
 ## Just because you CAN...
 
 doesn't mean you SHOULD.
