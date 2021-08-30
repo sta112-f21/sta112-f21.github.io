@@ -11,6 +11,17 @@ output:
       countIncrementalSlides: false
 ---
 
+## Announcements
+
+* HW 1 and Lab 1 due on Friday
+* Quiz 1 next week (Wednesday September 8)
+    - data visualization with ggplot
+    - 15--20 minutes in class
+    - open-note
+    - similar to lab and class activity questions
+    
+---
+
 ## Data for today
 
 ```{r, message=F}
