@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Functions and data wrangling</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Functions and data wrangling
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* Functions and piping
+* Functions for data wrangling
+* Class activity
+
+---
+
+## Functions in R
+
+
+
+
+```r
+count(penguins)
+```
+
+```
+## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1   344
+```
+
+---
+
+## Functions in R
+
+.center[
+&lt;img src="r_function_1.png" width = "700px"&gt;
+]
+
+* Functions are typically **verbs** (e.g., `count`, `drop_na`, `ggplot`)
+* Functions are applied to the arguments in parentheses
+
+---
+
+## Functions in R
+
+.center[
+&lt;img src="r_function_2.png" width = "700px"&gt;
+]
+
+* Functions are typically **verbs** (e.g., `count`, `drop_na`, `ggplot`)
+* Functions are applied to the arguments in parentheses
+* Additional directions are given as additional arguments
+
+---
+
+## Function arguments
+
+The Help tells you what arguments a function takes:
+
+```r
+?count
+```
+
+.center[
+&lt;img src="r_count_function_help.png" width = "600px"&gt;
+]
+
+---
+
+## Function arguments
+
+```r
+?count
+```
+
+.center[
+&lt;img src="r_count_function_help_2.png" width = "500px"&gt;
+]
+
+---
+
+## Function arguments
+
+
+```r
+count(penguins, species, sex, sort = TRUE)
+```
+
+```
+## # A tibble: 8 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Gentoo    male      61
+## 4 Gentoo    female    58
+## 5 Chinstrap female    34
+## 6 Chinstrap male      34
+## 7 Adelie    &lt;NA&gt;       6
+## 8 Gentoo    &lt;NA&gt;       5
+```
+
+---
+
+## Chaining functions together
+
+We can nest functions within other functions:
+
+
+```r
+count(drop_na(penguins), species, sex, sort = TRUE)
+```
+
+```
+## # A tibble: 6 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Gentoo    male      61
+## 4 Gentoo    female    58
+## 5 Chinstrap female    34
+## 6 Chinstrap male      34
+```
+
+---
+
+## Chaining functions with the pipe
+
+* Nested functions are hard to read (you have to read from the inside out)
+* The pipe `%&gt;%` makes it nicer: you can read from top to bottom
+
+.pull-left[
+
+```r
+count(drop_na(penguins), 
+      species, sex, sort=TRUE)
+```
+
+```
+## # A tibble: 6 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Gentoo    male      61
+## 4 Gentoo    female    58
+## 5 Chinstrap female    34
+## 6 Chinstrap male      34
+```
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  drop_na() %&gt;%
+  count(species, sex, sort=TRUE)
+```
+
+```
+## # A tibble: 6 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Gentoo    male      61
+## 4 Gentoo    female    58
+## 5 Chinstrap female    34
+## 6 Chinstrap male      34
+```
+]
+
+These two chunks are equivalent!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

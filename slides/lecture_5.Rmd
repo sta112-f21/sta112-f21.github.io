@@ -1,0 +1,122 @@
+---
+author: "Dr. Ciaran Evans"
+title: Functions and data wrangling
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+## Agenda
+
+* Functions and piping
+* Functions for data wrangling
+* Class activity
+
+---
+
+## Functions in R
+
+```{r, include=F}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+```{r}
+count(penguins)
+```
+
+---
+
+## Functions in R
+
+.center[
+<img src="r_function_1.png" width = "700px">
+]
+
+* Functions are typically **verbs** (e.g., `count`, `drop_na`, `ggplot`)
+* Functions are applied to the arguments in parentheses
+
+---
+
+## Functions in R
+
+.center[
+<img src="r_function_2.png" width = "700px">
+]
+
+* Functions are typically **verbs** (e.g., `count`, `drop_na`, `ggplot`)
+* Functions are applied to the arguments in parentheses
+* Additional directions are given as additional arguments
+
+---
+
+## Function arguments
+
+The Help tells you what arguments a function takes:
+
+```r
+?count
+```
+
+.center[
+<img src="r_count_function_help.png" width = "600px">
+]
+
+---
+
+## Function arguments
+
+```r
+?count
+```
+
+.center[
+<img src="r_count_function_help_2.png" width = "500px">
+]
+
+---
+
+## Function arguments
+
+```{r}
+count(penguins, species, sex, sort = TRUE)
+```
+
+---
+
+## Chaining functions together
+
+We can nest functions within other functions:
+
+```{r}
+count(drop_na(penguins), species, sex, sort = TRUE)
+```
+
+---
+
+## Chaining functions with the pipe
+
+* Nested functions are hard to read (you have to read from the inside out)
+* The pipe `%>%` makes it nicer: you can read from top to bottom
+
+.pull-left[
+```{r}
+count(drop_na(penguins), 
+      species, sex, sort=TRUE)
+```
+]
+
+.pull-right[
+```{r}
+penguins %>%
+  drop_na() %>%
+  count(species, sex, sort=TRUE)
+```
+]
+
+These two chunks are equivalent!
