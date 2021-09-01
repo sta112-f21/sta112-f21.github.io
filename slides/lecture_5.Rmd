@@ -503,3 +503,17 @@ penguins %>%
 .footnote[
 Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
 ]
+
+---
+
+## Class activity: practice with dplyr
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_5.html](https://sta112-f21.github.io/class_activities/ca_lecture_5.html)
+
+.center[
+<img src="dplyr_mutate.png" width = "500px">
+]
+
+.footnote[
+Artwork by @allison_horst
+]
