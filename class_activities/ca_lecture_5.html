@@ -214,10 +214,43 @@ Solution
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(origin)</span></code></pre></div>
 </div>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Occasionally, flights actually depart early. How many American Airlines flights departed early? (You’ll need to combine a couple <code>dplyr</code> functions to answer this question.)</p></li>
-<li><p>Now let’s explore early departures across all the airlines. Which airline had the <em>most</em> early departures? (You’ll need to combine a couple <code>dplyr</code> functions to answer this question.)</p></li>
-<li><p>An additional variable influencing the number of early departures for an airline is the total number of flights for that airline. Which airline had the highest <em>proportion</em> of flights departing early? Is it the same airline as in Exercise 5? (You’ll need to combine a couple <code>dplyr</code> functions to answer this question.)</p></li>
+<li>Occasionally, flights actually depart early. How many American Airlines flights departed early? (You’ll need to combine a couple <code>dplyr</code> functions to answer this question.)</li>
 </ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q4_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q4_solution" style="display:none">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(carrier <span class="sc">==</span> <span class="st">&quot;AA&quot;</span>, dep_delay <span class="sc">&lt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code></pre></div>
+</div>
+<ol start="5" style="list-style-type: decimal">
+<li>Now let’s explore early departures across all the airlines. Which airline had the <em>most</em> early departures? (You’ll need to combine a couple <code>dplyr</code> functions to answer this question.)</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q5_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q5_solution" style="display:none">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dep_delay <span class="sc">&lt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(carrier, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<ol start="6" style="list-style-type: decimal">
+<li>An additional variable influencing the number of early departures for an airline is the total number of flights for that airline. Which airline had the highest <em>proportion</em> of flights departing early? Is it the same airline as in Exercise 5? (You’ll need to combine a couple <code>dplyr</code> functions to answer this question.)</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q6_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q6_solution" style="display:none">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">is_early =</span> (dep_delay <span class="sc">&lt;</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(carrier) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">prop_early =</span> <span class="fu">mean</span>(is_early)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(prop_early))</span></code></pre></div>
+</div>
 </div>
 
 

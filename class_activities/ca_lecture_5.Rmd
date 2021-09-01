@@ -97,6 +97,41 @@ flights %>%
 
 4. Occasionally, flights actually depart early. How many American Airlines flights departed early? (You'll need to combine a couple `dplyr` functions to answer this question.)
 
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+```r
+flights %>%
+  drop_na() %>%
+  filter(carrier == "AA", dep_delay < 0) %>%
+  count()
+```
+</DIV>
+
 5. Now let's explore early departures across all the airlines. Which airline had the *most* early departures? (You'll need to combine a couple `dplyr` functions to answer this question.)
 
+<BUTTON ONCLICK="ShowAndHide('q5_solution')">Solution</BUTTON>
+
+<DIV ID="q5_solution" STYLE="display:none">
+```r
+flights %>%
+  drop_na() %>%
+  filter(dep_delay < 0) %>%
+  count(carrier, sort = TRUE)
+```
+</DIV>
+
 6. An additional variable influencing the number of early departures for an airline is the total number of flights for that airline. Which airline had the highest *proportion* of flights departing early? Is it the same airline as in Exercise 5? (You'll need to combine a couple `dplyr` functions to answer this question.)
+
+<BUTTON ONCLICK="ShowAndHide('q6_solution')">Solution</BUTTON>
+
+<DIV ID="q6_solution" STYLE="display:none">
+```r
+flights %>%
+  drop_na() %>%
+  mutate(is_early = (dep_delay < 0)) %>%
+  group_by(carrier) %>%
+  summarize(prop_early = mean(is_early)) %>%
+  arrange(desc(prop_early))
+```
+</DIV>
