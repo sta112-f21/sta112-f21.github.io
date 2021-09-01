@@ -9,8 +9,10 @@ August 30
 : [ggplot2 cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization.pdf)
 
 September 1
-: Data wrangling
-  : [Slides](#)
+: Functions and data wrangling
+  : [Slides](https://sta112-f21.github.io/slides/lecture_5.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_5.html)
+  
+: [dplyr cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf)
 
 September 3
 : **Lab**{: .label .label-purple } Lab 2 -- practice with data wrangling and visualization
