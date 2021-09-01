@@ -514,6 +514,8 @@ Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino 
 <img src="dplyr_mutate.png" width = "500px">
 ]
 
+
+
 .footnote[
 Artwork by @allison_horst
 ]
