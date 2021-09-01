@@ -185,6 +185,584 @@ penguins %&gt;%
 ]
 
 These two chunks are equivalent!
+
+---
+
+## The pipe
+
+Recall that the pipe `%&gt;%` means "and then"
+
+.pull-left[
+```r
+penguins %&gt;%
+  drop_na() %&gt;%
+  count(species, sex)
+```
+]
+
+.pull-right[
+take penguins, *and then* &lt;br&gt; drop NAs, *and then* &lt;br&gt;
+count by species and sex
+]
+
+The output of each line is used as the input for the next line.
+
+---
+
+## Concept check
+
+3 of these 4 code chunks produce the same result. Which one will produce a different result?
+
+.abox[
+```
+penguins %&gt;%
+  drop_na() %&gt;%
+  count(species, sex)
+```
+]
+
+.bbox[
+```
+penguins_no_nas &lt;- drop_na(penguins)
+count(penguins_no_nas, species, sex)
+```
+]
+
+.cbox[
+```
+penguins_no_nas &lt;- penguins %&gt;%
+  drop_na()
+penguins_no_nas %&gt;%
+  count(species, sex)
+```
+]
+
+.dbox[
+```
+drop_na(penguins)
+penguins %&gt;%
+  count(species, sex)
+```
+]
+
+---
+
+## Functions in R (usually) don't modify in place
+
+```r
+drop_na(penguins)
+```
+
+* returns a *new* data frame with the NAs removed
+* the original `penguins` data is unchanged
+
+---
+
+## Data wrangling
+
+.center[
+&lt;img src="dplyr_wrangling.png" width = "700px"&gt;
+]
+
+.footnote[
+Artwork by @allison_horst
+]
+
+---
+
+## dplyr for data wrangling
+
+.pull-left[
+.center[
+&lt;img src="dplyr_logo.png" width = "200px"&gt;
+]
+]
+
+.pull-right[
+* part of the tidyverse
+* provides a "grammar of data manipulation": useful verbs (functions) for manipulating data
+* dplyr functions:
+    * are applied to data frames
+    * usually return data frames
+    * don't modify in place
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## A few useful dplyr functions
+
+(A non-exhaustive list)
+
+* `count` (count the number of rows, possibly grouped by variables)
+* `arrange` (reorder the rows by the values of one or more variables)
+* `filter` (retain a subset of rows that satisfy conditions)
+* `select` (select certain columns)
+* `distinct` (remove duplicate rows)
+* `mutate` (create new columns)
+* `summarize` (summary functions of columns)
+* `group_by` (group rows by one or more variables)
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## arrange
+
+Reorder the rows by the values of one or more variables
+
+.pull-left[
+
+```r
+penguins %&gt;%
+  count(species, sex)
+```
+
+```
+## # A tibble: 8 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Adelie    &lt;NA&gt;       6
+## 4 Chinstrap female    34
+## 5 Chinstrap male      34
+## 6 Gentoo    female    58
+## 7 Gentoo    male      61
+## 8 Gentoo    &lt;NA&gt;       5
+```
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  count(species, sex) %&gt;%
+  arrange(n)
+```
+
+```
+## # A tibble: 8 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Gentoo    &lt;NA&gt;       5
+## 2 Adelie    &lt;NA&gt;       6
+## 3 Chinstrap female    34
+## 4 Chinstrap male      34
+## 5 Gentoo    female    58
+## 6 Gentoo    male      61
+## 7 Adelie    female    73
+## 8 Adelie    male      73
+```
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## arrange
+
+Use `desc()` to arrange in descending order:
+
+.pull-left[
+
+```r
+penguins %&gt;%
+  count(species, sex)
+```
+
+```
+## # A tibble: 8 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Adelie    &lt;NA&gt;       6
+## 4 Chinstrap female    34
+## 5 Chinstrap male      34
+## 6 Gentoo    female    58
+## 7 Gentoo    male      61
+## 8 Gentoo    &lt;NA&gt;       5
+```
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  count(species, sex) %&gt;%
+  arrange(desc(n))
+```
+
+```
+## # A tibble: 8 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Gentoo    male      61
+## 4 Gentoo    female    58
+## 5 Chinstrap female    34
+## 6 Chinstrap male      34
+## 7 Adelie    &lt;NA&gt;       6
+## 8 Gentoo    &lt;NA&gt;       5
+```
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## filter
+
+Retain a subset of rows that satisfy conditions
+
+.pull-left[
+
+```r
+penguins %&gt;%
+  count(species, sex)
+```
+
+```
+## # A tibble: 8 × 3
+##   species   sex        n
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie    female    73
+## 2 Adelie    male      73
+## 3 Adelie    &lt;NA&gt;       6
+## 4 Chinstrap female    34
+## 5 Chinstrap male      34
+## 6 Gentoo    female    58
+## 7 Gentoo    male      61
+## 8 Gentoo    &lt;NA&gt;       5
+```
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  filter(species == "Adelie") %&gt;%
+  count(species, sex)
+```
+
+```
+## # A tibble: 3 × 3
+##   species sex        n
+##   &lt;fct&gt;   &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie  female    73
+## 2 Adelie  male      73
+## 3 Adelie  &lt;NA&gt;       6
+```
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## filter
+
+You can filter by multiple conditions
+
+
+```r
+penguins %&gt;%
+  filter(species == "Adelie", island != "Dream") %&gt;%
+  count(species, island)
+```
+
+```
+## # A tibble: 2 × 3
+##   species island        n
+##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;
+## 1 Adelie  Biscoe       44
+## 2 Adelie  Torgersen    52
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## Logical operators in R
+
+operator    | definition                   || operator     | definition
+------------|------------------------------||--------------|----------------
+`&lt;`         | less than                    ||`x`&amp;nbsp;&amp;#124;&amp;nbsp;`y`     | `x` OR `y` 
+`&lt;=`        |	less than or equal to        ||`is.na(x)`    | test if `x` is `NA`
+`&gt;`         | greater than                 ||`!is.na(x)`   | test if `x` is not `NA`
+`&gt;=`        |	greater than or equal to     ||`x %in% y`    | test if `x` is in `y`
+`==`        |	exactly equal to             ||`!(x %in% y)` | test if `x` is not in `y`
+`!=`        |	not equal to                 ||`!x`          | not `x`
+`x &amp; y`     | `x` AND `y`                  ||              |
+
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## select
+
+Select specific columns
+
+
+```r
+penguins %&gt;%
+  select(bill_length_mm, body_mass_g) %&gt;%
+  glimpse()
+```
+
+```
+## Rows: 344
+## Columns: 2
+## $ bill_length_mm &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, 42.…
+## $ body_mass_g    &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, 425…
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## select
+
+Can also exclude specific columns
+
+
+```r
+penguins %&gt;%
+  select(-bill_length_mm, -body_mass_g) %&gt;%
+  glimpse()
+```
+
+```
+## Rows: 344
+## Columns: 6
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## distinct
+
+Remove duplicate rows
+
+.pull-left[
+
+```r
+penguins %&gt;%
+  select(species, sex)
+```
+
+```
+## # A tibble: 344 × 2
+##    species sex   
+##    &lt;fct&gt;   &lt;fct&gt; 
+##  1 Adelie  male  
+##  2 Adelie  female
+##  3 Adelie  female
+##  4 Adelie  &lt;NA&gt;  
+##  5 Adelie  female
+##  6 Adelie  male  
+##  7 Adelie  female
+##  8 Adelie  male  
+##  9 Adelie  &lt;NA&gt;  
+## 10 Adelie  &lt;NA&gt;  
+## # … with 334 more rows
+```
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  select(species, sex) %&gt;%
+  distinct()
+```
+
+```
+## # A tibble: 8 × 2
+##   species   sex   
+##   &lt;fct&gt;     &lt;fct&gt; 
+## 1 Adelie    male  
+## 2 Adelie    female
+## 3 Adelie    &lt;NA&gt;  
+## 4 Gentoo    female
+## 5 Gentoo    male  
+## 6 Gentoo    &lt;NA&gt;  
+## 7 Chinstrap female
+## 8 Chinstrap male
+```
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## mutate
+
+Create new columns
+
+
+```r
+penguins %&gt;%
+  mutate(bill_ratio = bill_depth_mm/bill_length_mm) %&gt;%
+  glimpse()
+```
+
+```
+## Rows: 344
+## Columns: 9
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+## $ bill_ratio        &lt;dbl&gt; 0.4782609, 0.4405063, 0.4466501, NA, 0.5258856, 0.52…
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## mutate
+
+.center[
+&lt;img src="mutate_annotated.png" width = "500px"&gt;
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## summarize
+
+Summary functions of columns
+
+
+```r
+penguins %&gt;%
+  drop_na() %&gt;%
+  summarize(mean_length = mean(bill_length_mm))
+```
+
+```
+## # A tibble: 1 × 1
+##   mean_length
+##         &lt;dbl&gt;
+## 1        44.0
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## summarize
+
+.center[
+&lt;img src="summarize_annotated.png" width = "500px"&gt;
+]
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## summarize
+
+Can calculate multiple functions at once
+
+
+```r
+penguins %&gt;%
+  drop_na() %&gt;%
+  summarize(mean_length = mean(bill_length_mm),
+            sd_length = sd(bill_length_mm))
+```
+
+```
+## # A tibble: 1 × 2
+##   mean_length sd_length
+##         &lt;dbl&gt;     &lt;dbl&gt;
+## 1        44.0      5.47
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
+
+---
+
+## group_by
+
+Group rows by one or more variables. Often used before `mutate` or `summarize`.
+
+
+```r
+penguins %&gt;%
+  drop_na() %&gt;%
+  group_by(island, sex) %&gt;%
+  summarize(mean_length = mean(bill_length_mm),
+            sd_length = sd(bill_length_mm))
+```
+
+```
+## `summarise()` has grouped output by 'island'. You can override using the `.groups` argument.
+```
+
+```
+## # A tibble: 6 × 4
+## # Groups:   island [3]
+##   island    sex    mean_length sd_length
+##   &lt;fct&gt;     &lt;fct&gt;        &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Biscoe    female        43.3      4.18
+## 2 Biscoe    male          47.1      4.69
+## 3 Dream     female        42.3      5.53
+## 4 Dream     male          46.1      5.77
+## 5 Torgersen female        37.6      2.21
+## 6 Torgersen male          40.6      3.03
+```
+
+.footnote[
+Slides adapted from datasciencebox.org and from material by Dr. Lucy D'Agostino McGowan 
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
