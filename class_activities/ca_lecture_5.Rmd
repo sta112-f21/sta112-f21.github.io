@@ -1,0 +1,100 @@
+---
+title: "Class Activity, September 1"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice using `dplyr` functions with the `flights` data from Homework 1. Work in groups to answer the questions below.
+
+## Setup
+
+As with all class activities, there is nothing you will need to submit. However, in case it helps you work on the questions, an R Markdown template is provided for you: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_5_template.Rmd)
+
+You will need to load the `nycflights13` and `tidyverse` packages. If you use the R Markdown template, those packages are included in the setup chunk, so you just need to run the setup chunk first.
+
+## Questions
+
+For the purposes of these questions, we will remove all rows from `flights` which contain NAs.
+
+1. Flights departing late will probably arrive late. But sometimes pilots can make up for lost time during the flight. Let's create a new variable measuring the amount of time made up during each flight, and visualize its distribution with a histogram. Fill in the following code:
+
+```r
+flights %>%
+  drop_na() %>%
+  mutate(time_gained = ...) %>%
+  ggplot(aes(x = ...)) +
+  geom_histogram()
+```
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+```r
+flights %>%
+  drop_na() %>%
+  mutate(time_gained = dep_delay - arr_delay) %>%
+  ggplot(aes(x = time_gained)) +
+  geom_histogram()
+```
+</DIV>
+
+2. How does the amount of time gained vary across airlines? Fill in the following code to calculate the average time gained for each airline.
+
+```r
+flights %>%
+  drop_na() %>%
+  mutate(time_gained = ...) %>%
+  group_by(...) %>%
+  summarize(avg_time_gained = ...)
+```
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+```r
+flights %>%
+  drop_na() %>%
+  mutate(time_gained = dep_delay - arr_delay) %>%
+  group_by(carrier) %>%
+  summarize(avg_time_gained = mean(time_gained))
+```
+</DIV>
+
+3. Now let's look more at the different airlines. Which airport is the most common departure airport for American Airlines (AA) flights? Fill in the following code.
+
+```r
+flights %>%
+  filter(... == "AA") %>%
+  count(...)
+```
+
+<BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
+
+<DIV ID="q3_solution" STYLE="display:none">
+```r
+flights %>%
+  filter(carrier == "AA") %>%
+  count(origin)
+```
+</DIV>
+
+4. Occasionally, flights actually depart early. How many American Airlines flights departed early? (You'll need to combine a couple `dplyr` functions to answer this question.)
+
+5. Now let's explore early departures across all the airlines. Which airline had the *most* early departures? (You'll need to combine a couple `dplyr` functions to answer this question.)
+
+6. An additional variable influencing the number of early departures for an airline is the total number of flights for that airline. Which airline had the highest *proportion* of flights departing early? Is it the same airline as in Exercise 5? (You'll need to combine a couple `dplyr` functions to answer this question.)

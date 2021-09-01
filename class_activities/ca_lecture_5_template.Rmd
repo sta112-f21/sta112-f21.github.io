@@ -1,0 +1,56 @@
+---
+---
+---
+title: "Class activity, September 1"
+author: "Your Name"
+date: "8/30/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nycflights13)
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+
+```
+
+## Exercise 2
+
+```{r}
+
+```
+
+## Exercise 3
+
+```{r}
+
+```
+
+## Exercise 4
+
+```{r}
+
+```
+
+Answer to exercise 4...
+
+## Exercise 5
+
+```{r}
+
+```
+
+Answer to exercise 5...
+
+## Exercise 6
+
+```{r}
+
+```
+
+Answer to exercise 6...
