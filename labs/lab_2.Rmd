@@ -1,0 +1,134 @@
+---
+title: "Lab 2, September 3"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Friday, September 10, 12:00pm (noon) on Canvas (see the end of the lab for submission instructions)
+
+You are welcome to work in groups, but everyone should submit their own lab.
+
+**Learning goals:** By the end of this lab, you will be able to
+
+* Manipulate data with `dplyr` to remove rows, create new columns, and calculate summary statistics
+* Visualize data with `ggplot2`
+* Use summary statistics and figures to address a research question
+
+# Setup
+
+
+# Part I: dplyr practice with gapminder data
+
+In this part, you will practice using the `dplyr` functions we learned on Wednesday. 
+
+1. Fill in the following code to create a new data frame, containing only countries in 2007 with life expectancy at least 70 years and GDP per capita at most $20000.
+
+```r
+new_gapminder <- gapminder %>%
+  filter(year ..., 
+         lifeExp ..., 
+         gdpPercap ...)
+```
+
+2. Fill in the following code to create a new data frame with only the country and continent columns, and duplicate rows removed.
+
+```r
+new_gapminder <- gapminder %>%
+  select(..., ...) %>%
+  ...()
+```
+
+3. Fill in the following code to count the number of countries in each continent in the data for 2007.
+
+```r
+gapminder %>%
+  filter(...) %>%
+  count(...)
+```
+
+4. Fill in the following code to create a data frame with a new column that is the natural log of GDP per capita. (Hint: in R, the natural log function is `log`).
+
+```r
+new_gapminder <- gapminder %>%
+  mutate(log_gdp_percap = ...)
+```
+
+5. Fill in the following code to calculate the median natural log of GDP per capita in countries with a life expectancy of at least 70 years in 2007. (Hint: in R, the median function is `median`).
+
+```r
+gapminder %>%
+  mutate(log_gdp_percap = ...) %>%
+  filter(...) %>%
+  summarize(...)
+```
+
+6. Fill in the following code to calculate the median natural log of GDP per capita in countries with a life expectancy of at least 70 years in 2007, broken down by continent.
+
+```r
+gapminder %>%
+  mutate(...) %>%
+  filter(...) %>%
+  group_by(...) %>%
+  summarize(...)
+```
+
+# Part II: investigating a research question
+
+In this part of the lab, you will use the `gapminder` data to address a research question with summary statistics and visualizations.
+
+**Research question:** Has global inequality in health and economic development decreased over time?
+
+This is our overall research question. We will try to answer this question with the `gapminder` data, which measures health by life expectancy at birth, and economic development by GDP per capita.
+
+7. Let's start by examining variation in life expectancy and GDP per capita around the world in 2007 (the most recent year in the data). Create a plot visualizing the relationship between GDP per capita (on the x-axis) and life expectancy (on the y-axis), in 2007. Color the points by continent, since we care about any differences around the world.
+
+8. Calculate the median life expectancy for each continent in 2007.
+
+9. Using your plot from exercise 7 and your summary statistics from exercise 8, describe the relationship between GDP per capita and life expectancy, and summarize the differences between continents.
+
+10. We're interested in how global inequality has changed over time, not just what inequality looks like now. Remake the plot from exercise 7, but this time facet by year, instead of displaying only 2007 data.
+
+11. The faceted plot in exercise 10 is useful, but it is still hard to visualize trends over time. Complete the following code to create the plot below:
+
+```r
+gapminder %>%
+  group_by(..., ...) %>%
+  summarize(median_life_exp = ...) %>%
+  ggplot(aes(x = ..., 
+             y = ..., 
+             color = ...)) +
+  geom_point() +
+  geom_line() +
+  labs(x = ..., 
+       y = ...,
+       color = ...,
+       title = ...) +
+  theme_...()
+```
+
+```{r, echo=F, message=F, warning=F}
+library(gapminder)
+library(tidyverse)
+
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(median_life_exp = median(lifeExp)) %>%
+  ggplot(aes(x = year, 
+             y = median_life_exp, 
+             color = continent)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", 
+       y = "Median life expectancy at birth (years)",
+       color = "Continent",
+       title = "Median life expectancy over time") +
+  theme_bw()
+```
+
+12. Based on the plots in exercises 10 and 11, answer the overall research question: has global inequality in health and economic development decreased over time?
+
+13. Are there other analyses you would want to do to answer this research question?
