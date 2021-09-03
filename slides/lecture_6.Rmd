@@ -1,0 +1,36 @@
+---
+author: "Dr. Ciaran Evans"
+title: Lab 2 
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+## Agenda
+
+* Please stay home if you are feeling ill. I am happy to answer any questions you have over email, Zoom office hours, or in person once you are feeling better.
+* Lab 2
+* HW 2 released on course website, due September 10 at noon on Canvas
+
+---
+
+## Lab 2: Gapminder data
+
+[https://sta112-f21.github.io/labs/lab_2.html](https://sta112-f21.github.io/labs/lab_2.html)
+
+* Welcome to work in groups, but everyone turns in their own lab on Canvas
+* Due by September 10 at noon if you don't finish today
+* You may leave if done early, or start HW 2 in class
+
+.center[
+<img src="gapminder_website_plot.png" width="400">
+]
+
+.footnote[
+Image from [Gapminder](https://www.gapminder.org/fw/world-health-chart/whc2019/)
+]

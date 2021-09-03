@@ -16,7 +16,7 @@ September 1
 
 September 3
 : **Lab**{: .label .label-purple } Lab 2 -- practice with data wrangling and visualization
-  : [Slides](#), [Lab 2](https://sta112-f21.github.io/labs/lab_2.html)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_6.html), [Lab 2](https://sta112-f21.github.io/labs/lab_2.html)
 
 : **HW 1 due**{: .label .label-red }
 
