@@ -1,0 +1,255 @@
+---
+title: "HW 1 Solutions"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nycflights13)
+library(tidyverse)
+```
+
+Start by grading problem 1 for all students, then problem 2 for all students, etc.
+
+Don't put in their final score yet. I need to grade their plagiarism tutorials.
+
+If they get an answer wrong, or their answer could be improved, leave them a short comment explaining what they did wrong.
+
+**Grading filename:**
+
+* 5/5: changed filename to hw_01_your_name.html (e.g., hw_01_ciaran_evans.html)
+* 0/5: wrong filename
+
+**Grading author:**
+
+* 5/5: author is Your Name (e.g., Ciaran Evans) at the top
+* 0/5: wrong author
+
+# Part I
+
+## Question 1
+
+**Question:** Summarize the `flights` data. Describe:
+
+* Who (or which organization) originally collected the data?
+* What does a row in the data represent?
+* How many rows and columns are in the data?
+* What information do the variables record?
+* Are there any missing data?
+
+**Solution:**
+
+```{r, eval=F}
+# getting dimensions of the data
+glimpse(flights)
+
+# You can view documentation with ?flights in the console
+
+# getting the dimension after removing NAs
+flights %>%
+  drop_na() %>%
+  glimpse()
+
+# 336776 - 327346
+```
+
+The `flights` dataset contains information on 336776 different flights from three New York airports (JFK, LGA, and EWR) in 2013. Each row represents a flight, and there are 19 columns capturing information about departure and landing times, delays, the origin and destination, and the airline. The data was collected by the Bureau of Transportation Statistics, part of the Research and Innovative Technology Administration (RITA), and is provided in the `nycflights13` data. 9430 rows in the data contain missing information.
+
+**Grading**:
+
+When grading this question, please comment on any parts which are missing or incorrect.
+
+* 10/10: each component is present and most are correct, and code for answering the question is included. (The answer can be written in bullet points or a list, it does not have to be in a paragraph for this assignment).
+* 7/10: each component is present and most are correct, but code is not included. 
+* 7/10: code is included, but one or two components are missing
+* 4/10: 3 or more components are missing, OR code is missing and one or more components is missing
+* 0/10: no answer
+
+## Question 2
+
+**Question:** Create a histogram for the distribution of departure delay, and describe the distribution.
+
+**Solution:**
+
+```{r}
+flights %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_histogram() +
+  labs(x = "Departure delay (minutes)",
+       title = "Histogram for departure delay") +
+  theme_bw()
+
+# how many flights with delay > 500
+flights %>%
+  filter(dep_delay > 500) %>%
+  count()
+```
+
+The distribution of departure delay is unimodal and highly right skewed, with a peak around 0 minutes. Almost all flights in the data have a departure delay below 200 minutes, but there are 60 flights with a departure delay above 500 minutes. These may be outliers.
+
+**Grading:** 
+
+To get full credit, they only need to make a histogram and describe some aspect of the distribution. In future, they will be asked to describe shape, center, spread, and comment on any potential outliers. They do not need to change the theme, axis labels, or title of the histogram. They do not need to count the number of outliers.
+
+They may use `drop_na` before creating the histogram. Whether or not they use `drop_na` does not affect their score.
+
+* 10/10: the correct histogram is made with departure delay, and the description correctly describes shape, center, and/or spread. The code is included.
+* 7/10: the correct histogram is made and described, but the description is incorrect. Code is included.
+* 5/10: Code is not included, or the description is not included
+* 3/10: The wrong plot is made
+* 0/10: no answer
+
+## Question 3
+
+**Question:** Create a bar chart showing the number of flights departing from each of the three New York airports (EWR, LGA, and JFK). Which airport had the most flights?
+
+**Solution:**
+
+```{r}
+flights %>%
+  ggplot(aes(x = origin)) +
+  geom_bar() +
+  labs(x = "Origin airport",
+       title = "Distribution of flights by NYC airport") +
+  theme_bw()
+```
+
+EWR had the most departing flights.
+
+**Grading:** 
+
+To get full credit, they only need to make a bar chart and report the airport with the most departing flights. They do not need to change the theme, axis labels, or title of the bar chart.
+
+They may use `drop_na` before creating the bar chart. Whether or not they use `drop_na` does not affect their score.
+
+* 10/10: the correct bar chart is made for origin, and EWR is identified as having the most flights. The code is included.
+* 7/10: the correct bar chart is made, but the answer is incorrect. Code is included.
+* 5/10: Code is not included, or the answer is not included
+* 3/10: The wrong plot is made
+* 0/10: no answer
+
+## Question 4
+
+**Question:** Create a plot showing the distribution of departure delay for each airport. For each airport, also report the mean departure delay and the standard deviation of departure delays. How does the distribution of departure delay differ across the three New York airports (EWR, LGA, and JFK)?
+
+**Solution:** Acceptable answers for the plot are either faceted histograms or grouped box plots (see below). However, if they use boxplots, note that boxplots aren't very useful when the data is so skewed.
+
+```{r}
+# Option 1: faceted histograms
+flights %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_histogram() +
+  facet_wrap(~origin) +
+  labs(x = "Departure delay (minutes)",
+       title = "Departure delay by origin airport") +
+  theme_bw()
+
+# Option 2: boxplots
+flights %>%
+  ggplot(aes(x = origin, y = dep_delay)) +
+  geom_boxplot() +
+  labs(x = "Origin airport",
+       y = "Departure delay (minutes)",
+       title = "Departure delay by origin airport")
+
+# calculating mean and sd
+flights %>%
+  drop_na() %>%
+  group_by(origin) %>%
+  summarize(mean_delay = mean(dep_delay),
+            sd_delay = sd(dep_delay))
+```
+
+The distributions of departure delay look similar across airports, with all three distributions unimodal and strongly right skewed. The three distributions have similar means and standard deviations.
+
+**Grading:** 
+
+They may use `drop_na` before creating the plot. Whether or not they use `drop_na` does not affect their score. However, they do need to remove NAs before calculating the means and standard deviations.
+
+* 10/10: One of the two plots is made, and the summary statistics are calculated. Distributions are compared across the airports. The code is included.
+* 7/10: Code is included, but one piece is incorrect (either the plot, summary statistics, or description).
+* 5/10: More than one piece is incorrect, OR one piece is missing completely (either the plot, summary statistics, code, or description)
+* 3/10: More than one piece is missing
+* 0/10: no answer
+
+## Question 5
+
+**Question:** Below is a scatterplot showing arrival delay vs. departure delay. I have:
+
+* colored each flight by the New York airport it departed from
+* changed the axis labels
+* added a title
+* changed the legend label (to "Origin airport")
+* changed the plot theme (e.g., notice the background is white, not gray)
+* changed the opacity of the points
+* changed the colors used to represent each airport
+
+Recreate this plot as closely as possible.
+
+**Solution:**
+
+```{r}
+flights %>%
+  drop_na() %>%
+  ggplot(aes(x = dep_delay, y = arr_delay, color = origin)) +
+  geom_point(alpha = 0.7) +
+  labs(x = "Departure delay (minutes)", 
+       y = "Arrival delay (minutes)",
+       color = "Origin airport",
+       title = "Arrival delay vs. departure delay in NYC airports") +
+  theme_bw() +
+  scale_color_manual(values = c("#999999", "#E69F00", "#56B4E9"))
+```
+
+**Grading:**
+
+There are 8 pieces in this plot: the basic scatterplot of arrival delay vs. departure delay, and then the 7 components that I changed. We'll grade based on the number of complete pieces. Here's what they need for each piece to be complete:
+
+* basic scatterplot: correctly displays arrival delay on y axis and departure delay on x axis
+* color the points: correctly colors by origin
+* changing axis labels: both x and y axis labels are close to mine
+* adding a title: title is close to mine
+* changing legend label: changed to "Origin airport" (capitalization not important)
+* changed the plot theme: any theme other than the basic ggplot theme is ok
+* changed the opacity: any opacity other than 1 is ok
+* changed the colors: any colors that are somewhat similar to mine are ok
+
+Scoring:
+
+* 20/20: all 8 components
+* 17/20: 6-7 components
+* 14/20: 4-5 components
+* 10/20: 2-3 components
+* 5/20: 1 component
+* 0/20: no answer
+
+# Part II
+
+## Question 6
+
+**Question:** Read the data analysis paper, then rate the [NBA article](https://fivethirtyeight.com/features/after-this-weird-nba-season-we-have-a-better-idea-of-how-much-fans-matter/) from lecture 1 on each of these principles, like the vignettes in Section 4 of the data analysis paper. The first one is provided as an example. 
+
+*Data matching:* the NBA article has high data matching. The authors are interested in the relationship between the number of fans in basketball arenas, and the outcome of the game. Both variables are measured directly in the data scraped from Basketball-Reference.com.
+
+
+**Solution:** Answers are somewhat subjective. Here is my ranking:
+
+* *Data matching:*  the NBA article has high data matching. The authors are interested in the relationship between the number of fans in basketball arenas, and the outcome of the game. Both variables are measured directly in the data scraped from Basketball-Reference.com.
+* *Exhaustive:* the analysis is not very exhaustive. Their findings depend mainly on the results of one model, and other elements are not used.
+* *Skeptical:* The analysis is not skeptical. Only one model is fit, and alternative models with other variables are not considered.
+* *Second-order:* Good second-order details are provided, such as motivation on the impact of fans in the NBA season, information about how protocols varied around the league, and details on issues and discrepancies in the data.
+* *Transparency:* The analysis is moderately transparent. The linear regression model is simple enough that reporting the coefficient for fans is fairly understandable, and the confidence interval figure is easy to read. However, the analysis could be made more transparent by adding a visualization showing the relationship between fans and home team advantage, rather than just reporting the model.
+* *Reproducibility:* the analysis is somewhat, but not very, reproducible. Most data can be found on Basketball-Reference.com, and the authors describe how they cleaned, prepared, and modeled the data. However, their code is not provided, nor is the final dataset, and there are few details about how the additional data from local news sources was collected.
+
+**Grading:** 
+
+Since I provided the data matching section, there are 5 principles they need to analyze, and they get 4 points per principle. Don't grade them on correctness, but do leave a comment if they say something with which you strongly disagree.
+
+* 20/20: all 5 remaining principles
+* 16/20: 4 principles
+* 12/20: 3 principles
+* 8/20: 2 principles
+* 4/20: 1 principles
+* 0/20: no answer
