@@ -1,0 +1,14 @@
+---
+title: "Homework 2"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(nycflights13)
+library(tidyverse)
+```
