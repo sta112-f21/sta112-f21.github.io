@@ -20,6 +20,9 @@ You are welcome to work in groups, but everyone should submit their own lab.
 
 # Setup
 
+**Template file:** [lab_02_template.Rmd](https://sta112-f21.github.io/labs/lab_02_template.Rmd)
+
+**Data:** In this lab, we will work with data on global health and economic development. The data is called `gapminder`, and is part of the `gapminder` package in R. You will need to install the `gapminder` package before beginning the lab.
 
 # Part I: dplyr practice with gapminder data
 
@@ -132,3 +135,14 @@ gapminder %>%
 12. Based on the plots in exercises 10 and 11, answer the overall research question: has global inequality in health and economic development decreased over time?
 
 13. Are there other analyses you would want to do to answer this research question?
+
+# Grading
+
+Grading will be based on completion, with points assigned according to the table below. An exercise is complete if you have made an honest effort to fill in the code chunk and answer the question for that exercise.
+
+| **Total** | **100pts** |
+| --------- | ---------- |
+| Filename lab_02_your_name.html | 1 pt |
+| Changed `author` in YAML | 1 pts |
+| Exercises 1--6 | 7 pts each |
+| Exercises 7--13 | 8 pts each |

@@ -7,8 +7,164 @@ output:
 link-citations: yes
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F)
-library(nycflights13)
-library(tidyverse)
+**Due:** Friday, September 10, 12:00pm (noon) on Canvas
+
+**Instructions:** In this homework assignment, you will use data visualization to investigate the impact of diet on fruit fly development.
+
+* A template R Markdown file is provided in the setup below
+* When you are done with the assignment, knit and submit the HTML on Canvas
+* When making plots, make sure to nicely label all axes, provide units where applicable, and add a title
+* When making histograms, choose a good number of bins
+* Remember to acknowledge any collaborators, and to cite outside sources
+
+## Setup
+
+### Template
+
+A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_02_template.Rmd](https://sta112-f21.github.io/homework/hw_02_template.Rmd)
+
+### Data
+
+Researchers are interested in examining how diet affects physical characteristics for fruit flies - not only how an individual's diet affects its own characteristics, but also how its diet impacts its descendants. The paper 'Ancestral and offspring nutrition interact to affect life-history traits in Drosophila melanogaster' (Deas *et al.* 2018, *Proc. R. Soc. B.*) contributes to a body of research on how an organism's environmental conditions, not just its genes, can affect its descendants.
+
+In this paper, the authors recorded information on three generations (F0, F1, and F2) of *Drosophila melanogaster* (fruit flies). Each individual was given either a Poor, Standard, or Rich diet, and the diets of its ancestors were also recorded. The researchers then measured several characteristics for each individual, such as the mass and wing length. The goal of the paper is to examine how diet affects these characteristics for an individual and its descendants.
+
+The data for this homework is a subset of the data gathered for the paper, consisting of measurements on 1372 different flies. The different columns are:
+
+* *Generation:* Which generation the individual belongs to (F0, F1, F2). F0 is the oldest, offspring of F0 are F1, and offspring of F1 are F2.
+* *Vial:* Which vial in the experiment the fly was bred in
+* *Diet:* The diet of the individual (poor, rich, or standard)
+* *DietHistory:* Diets of individual and its ancestors. Read from ancestors on left to indvidual on right, e.g. PRS means grandparent was poor, parent rich, individual standard
+* *Mass:* Mass of the individual (in mg)
+* *WingLength:* Individual's wing length (in mm)
+* *LarvalTime:* Length of time spent in larval development stage (in days). Flies develop in larval then pupal stage, after which they are adults
+* *PupalTime:* Length of time spent in pupal development stage (in days)
+
+### Downloading the data
+
+Previously, all of the data we have used in this class has come from the R packages (e.g., the `penguins` data comes from the `palmerpenguins` package). However, the data for this assignment comes from the paper by Deas *et al.*, and is stored in a CSV file. CSV files can be read into R with the `read_csv` function, which is part of the `readr` package in the tidyverse. The following code imports the data and saves it as a data frame called `drosophila`:
+
+```r
+drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
 ```
+
+This code is included in the setup chunk of the R Markdown template for this assignment. The argument to the `read_csv` function here is the path to the CSV file we want to import. This can be either a local path (on your computer) or a url.
+
+### Research questions
+
+We will use the `drosophila` data to investigate two questions:
+
+1. Does diet affect fruit fly development (that is, how big they get and how quickly they grow)?
+2. Does diet affect descendant development? That is, suppose fruit fly A and fruit fly B have the same diet, but fruit fly A had parents with a rich diet, and fruit fly B had parents with a poor diet. Should we expect A to develop better than B?
+
+We might suspect that the answer to the first question is "yes". But it is still important to check, because it would be strange if diet affected the development of your descendants, but not your own development. The second question is particularly interesting -- if diet affects descendant development, it means that environmental conditions, not just genetic information, can be passed on to descendants.
+
+*Note: I have phrased these two research questions as statements about causality. This is ok here because the researchers performed an experiment in which flies were randomly assigned a diet.*
+
+## Questions
+
+We will measure fruit fly development by body mass and larval time (in a more extensive analysis, we could also look at wing length and pupal time).
+
+Before addressing the research questions directly, we will perform some exploratory data analysis. This gets us familiar with the data.
+
+### Exploratory data analysis
+
+:::{.question}
+#### Question 1: data summary
+
+Write a short paragraph summarizing the `drosophila` data. Describe:
+
+* Who (or which organization) originally collected the data?
+* What does a row in the data represent?
+* How many rows and columns are in the data?
+* What information do the variables record?
+* Are there any missing data?
+:::
+
+:::{.question}
+#### Question 2: distributions of mass and larval time
+
+Create two histograms, one for the distribution of mass and one for the distribution of larval time. For each histogram, calculate the mean and standard deviation, and describe the distribution, reporting the following information:
+
+* Shape (symmetric vs. skewed, number of modes, location of modes)
+* Center (mean)
+* Spread (standard deviation)
+* Any unusual features?
+* Any potential outliers?
+:::
+
+:::{.question}
+#### Question 3: generation and diet
+
+To make meaningful comparisons across generations, we need each diet to be represented in each generation. Since the data come from a carefully designed experiment, we would expect this to be the case, but it is good to check. Create a bar chart showing the distribution of diet, faceted by generation. Are any diets missing from a generation?
+:::
+
+:::{.question}
+#### Question 4: diet history
+
+There are 3 possible diet histories in generation F0 (P, S, and R); there are 9 possible diet histories in generation F1; and there are 27 possile diet histories in generation F2. However, the researchers might not have considered all possible diet combinations. Are all possible diet histories present in the data? If not, summarize which histories are absent.
+:::
+
+### Impact of diet on development
+
+First, let's see if there are differences in mass and larval time across diets.
+
+:::{.question}
+#### Question 5
+
+Report the mean body mass and mean larval time for each diet, in each generation. How are average body mass and average larval time related for the different diets?
+:::
+
+:::{.question}
+#### Question 6
+
+Now make two plots: one showing the distribution of body mass for each of the three diets, and one showing the distribution of larval time for each of the three diets. Facet both plots by generation.
+:::
+
+:::{.question}
+#### Question 7
+
+Based on questions 5 and 6, do you think diet is associated with differences in development?
+:::
+
+
+### Impact of diet history on development
+
+Now let's investigate whether diet history affects development. For the purposes of this assignment, we will focus on flies in the F1 generation.
+
+:::{.question}
+#### Question 8
+
+Make a plot showing the distribution of body mass for F1 flies in each diet history group, faceted by diet. Repeat for larval time.
+:::
+
+:::{.question}
+#### Question 9
+
+Based on your plots in question 8, do you think diet history is associated with differences in development? In your answer, make sure to explain which parts of the plot you are comparing to arrive at your conclusion.
+:::
+
+### Reflection
+
+:::{.question}
+#### Question 10: principles of data analysis
+
+Rank each of the following principles from the Elements and Principles of Data Analysis article for this data analysis from 1 to 10 along with a 1--2 sentence summary. I have done Transparency as an example.
+
+* *Data matching:* 
+* *Exhaustive:* 
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 10 The analysis depends entirely on a few visualizations and summary statistics, and so is very transparent.
+* *Reproducibility:* 
+:::
+
+# Grading
+
+Grading will be based on accuracy and completion, with points assigned according to the table below. Make sure your full code *and* your responses are visible in the knitted HTML file. Note that questions 6 and 8 only require code, while questions 7, 9, and 10 only require written responses.
+
+| **Total** | **100pts** |
+| --------- | ---------- |
+| Filename hw_02_your_name.html | 0 pts |
+| Changed `author` in YAML | 0 pts |
+| Questions 1--10 | 10 pts each |
