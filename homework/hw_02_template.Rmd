@@ -12,8 +12,6 @@ library(tidyverse)
 drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
 ```
 
-# Part I
-
 ## Question 1
 
 ```{r}
@@ -52,10 +50,38 @@ Type your answer to question 4 here...
 
 ```
 
-
-# Part II
+Type your answer to question 5 here...
 
 ## Question 6
 
-Type your answer to question 6 here...
+```{r}
+
+```
+
+## Question 7
+
+Type your answer to question 7 here...
+
+## Question 8
+
+```{r}
+
+```
+
+## Question 9
+
+Type your answer to question 9 here...
+
+## Question 10
+
+* *Data matching:* 
+* *Exhaustive:* 
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 10 The analysis depends entirely on a few visualizations and summary statistics, and so is very transparent.
+* *Reproducibility:* 
+
+## Citations and acknowledgments
+
+Cite any outside resources used, and acknowledge any collaborators
 

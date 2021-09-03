@@ -8,7 +8,7 @@ output:
 link-citations: yes
 ---
 
-**Due:** Friday, September 10, 12:00pm (noon) on Canvas (see the end of the lab for submission instructions)
+**Due:** Friday, September 10, 12:00pm (noon) on Canvas. Knit your R Markdown file and submit the resulting HTML file to Canvas.
 
 You are welcome to work in groups, but everyone should submit their own lab.
 
@@ -134,7 +134,14 @@ gapminder %>%
 
 12. Based on the plots in exercises 10 and 11, answer the overall research question: has global inequality in health and economic development decreased over time?
 
-13. Are there other analyses you would want to do to answer this research question?
+13. **Reflection:** Rank each of the following principles from the Elements and Principles of Data Analysis article for this data analysis from 1 to 10 along with a 1--2 sentence summary. I have done Exhaustiveness as an example.
+
+* *Data matching:* 
+* *Exhaustive:* 5 This is a moderately exhaustive analysis, as several different plots are used to address the research question. However, the analysis could be more exhaustive by trying different statistics to directly measure global inequality in each year, and tracking this over time.
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 
+* *Reproducibility:*  
 
 # Grading
 

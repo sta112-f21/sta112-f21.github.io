@@ -1,0 +1,98 @@
+---
+---
+---
+title: "Lab 2"
+author: "Your Name"
+date: "9/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gapminder)
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+
+```
+
+## Exercise 2
+
+```{r}
+
+```
+
+## Exercise 3
+
+```{r}
+
+```
+
+## Exercise 4
+
+```{r}
+
+```
+
+## Exercise 5
+
+```{r}
+
+```
+
+
+## Exercise 6
+
+```{r}
+
+```
+
+## Exercise 7
+
+```{r}
+
+```
+
+## Exercise 8
+
+```{r}
+
+```
+
+## Exercise 9
+
+Type your answer to question 9 here...
+
+## Exercise 10
+
+```{r}
+
+```
+
+
+## Exercise 11
+
+```{r}
+
+```
+
+
+## Exercise 12
+
+Type your answer to question 9 here...
+
+## Exercise 13
+
+* *Data matching:* 
+* *Exhaustive:* 5 This is a moderately exhaustive analysis, as several different plots are used to address the research question. However, the analysis could be more exhaustive by trying different statistics to directly measure global inequality in each year, and tracking this over time.
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 
+* *Reproducibility:*  
+
+## Citations and acknowledgments
+
+Cite any outside resources used, and acknowledge any collaborators
