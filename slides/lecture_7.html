@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Principles of Data Analysis + Intro to Regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Principles of Data Analysis + Intro to Regression
+### Dr. Ciaran Evans
+
+---
+
+
+## Filling in the data analysis workflow
+
+.center[
+&lt;img src="playing_whole_game.jpeg" width="600"&gt;
+]
+
+---
+
+## Filling in the data analysis workflow
+
+.center[
+&lt;img src="playing_whole_game_packages.png" width="600"&gt;
+]
+
+Today:
+* **Communicate:** elements and principles of data analysis
+* **Model:** introduction to regression
+
+---
+
+## Elements of data analysis
+
+*Elements* of data analysis are the different tools for communicating, summarizing, and using your results, including
+
+* narrative text
+* code and code comments
+* data visualization
+* summary statistics
+* tables
+* statistical models
+
+---
+
+## Principles of data analysis
+
+Characteristics of a data analysis, which reflect choices and priorities of the analyst.
+
+* Data matching
+* Exhaustive
+* Skeptical
+* Second-order
+* Transparency
+* Reproducible
+
+We can assess how much weight an analysis gives each principle. This is an evaluation of characteristics of a data analysis, not a judgment of quality.
+
+---
+
+## Data matching
+
+How closely does the data match the research question?
+
+.center[
+&lt;img src="data-matching.png" width="600"&gt;
+]
+
+---
+
+## Exhaustive
+
+Does the analyst use multiple elements to investigate the research question?
+
+.center[
+&lt;img src="exhaustive.png" width="600"&gt;
+]
+
+---
+
+## Skeptical
+
+Does the analyst consider alternative explanations for the observed phenomenon?
+
+.center[
+&lt;img src="skeptical.png" width="600"&gt;
+]
+
+---
+
+## Second-order
+
+Does the analyst give context to the analysis?
+
+.center[
+&lt;img src="second-order.png" width="600"&gt;
+]
+
+---
+
+## Transparency
+
+Does the analyst summarize key elements of their analysis?
+
+.center[
+&lt;img src="transparency.png" width="600"&gt;
+]
+
+---
+
+## Reproducible
+
+Would you be able to reproduce the results?
+
+.center[
+&lt;img src="reproducible.png" width="600"&gt;
+]
+
+---
+
+## Example: fivethirtyeight NBA article
+
+* *Data matching:* 10/10  The authors are interested in the relationship between the number of fans in basketball arenas, and the outcome of the game. Both variables are measured directly in the data scraped from Basketball-Reference.com.
+* *Exhaustive:* 2/10 Their findings depend mainly on the results of one model, and other elements are not used.
+* *Skeptical:* 3/10 Only one model is fit, and alternative models with other variables are not considered.
+* *Second-order:* 8/10 Good second-order details are provided, such as motivation on the impact of fans in the NBA season, information about how protocols varied around the league, and details on issues and discrepancies in the data.
+* *Transparency:* 7/10 The linear regression model is simple enough that reporting the coefficient for fans is fairly understandable, and the confidence interval figure is easy to read. However, the analysis could be made more transparent by adding a visualization showing the relationship between fans and home team advantage, rather than just reporting the model.
+* *Reproducible:* 5/10  Most data can be found on Basketball-Reference.com, and the authors describe how they cleaned, prepared, and modeled the data. However, their code is not provided, nor is the final dataset, and there are few details about how the additional data from local news sources was collected.
+
+---
+
+## Modeling
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+* Given a value of GDP per capita, what would I predict for life expectancy?
+* What is the relationship between GDP per capita and life expectancy?
+
+---
+
+## General model
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\text{life expectancy} = f(\text{GDP per capita}) + \varepsilon\)`
+]
+
+--
+
+* `\(f\)` = systematic information that GDP per capita provides about life expectancy (the general trend)
+    * `\(f(\text{GDP per capita})\)` = &lt;ins&gt;average&lt;/ins&gt; life expectancy given GDP per capita
+    * E.g., `\(f(20000)\)` = average life expectancy when GDP per capita = $20000
+* `\(\varepsilon\)` = random error term
+
+---
+
+## Regression
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\text{life expectancy} = f(\text{GDP per capita}) + \varepsilon\)`
+]
+
+* But, we don't know what `\(f\)` is!
+* Regression: estimate `\(f\)`
+
+---
+
+## Goals of regression
+
+In general, write
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+* `\(x\)` = predictor, aka independent variable
+* `\(y\)` = response, aka dependent variable
+
+---
+
+## Goals of regression
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+Three different goals:
+
+* **Prediction:** given a value of `\(x\)`, what is our "best guess" for the value of `\(y\)`?
+    * don't care about the form of `\(f\)`, just want to get good predictions
+--
+* **Inference:** What is the relationship between `\(x\)` and `\(y\)`?
+    * want to get form of `\(f\)` right
+--
+* **Causal inference:** If I change `\(x\)`, how does `\(y\)` change?
+    * want to get form of `\(f\)` right
+    * need study design that allows for causal conclusions (e.g., randomized experiment)
+    
+---
+
+## Goals of regression
+
+.center[
+&lt;img src="regression_goals_assumptions.png" width="700"&gt;
+]
+
+---
+
+## Prediction, inference, or causal inference?
+
+**Scenario:** A beer company is conducting a social media marketing campaign, and wants to identify individuals who are likely to buy their beer based on Facebook and Instagram activity. The company doesn't care about understanding the relationship, they just want to accurately target likely customers.
+
+.abox[
+Prediction
+]
+
+.bbox[
+Inference
+]
+
+.cbox[
+Causal inference
+]
+
+---
+
+## Prediction, inference, or causal inference?
+
+**Scenario:** The beer company advertises on several different platforms: Facebook, Instagram, Twitter, YouTube, and on several popular podcasts. They want to know whether the amount they spend on each platform is associated with an increase in sales.
+
+.abox[
+Prediction
+]
+
+.bbox[
+Inference
+]
+
+.cbox[
+Causal inference
+]
+
+---
+
+## Prediction, inference, or causal inference?
+
+**Scenario:** The beer company wants to target social media influencers who can help sell their beer. Unfortunately, no one in the company knows any influencers. So they decide to identify influencers by finding Instagram posts with pictures of beer. To do so, the company trains a neural network which takes an Instagram image as input, and outputs either "contains beer" or "does not contain beer". They don't care how the neural network works, they just want to identify images of beer.
+
+.abox[
+Prediction
+]
+
+.bbox[
+Inference
+]
+
+.cbox[
+Causal inference
+]
+
+---
+
+## Prediction, inference, or causal inference?
+
+**Scenario:** The beer company made their Facebook ads with Comic Sans, but it turns out that Comic Sans isn't cool anymore. The company considers switching their advertising font to Papyrus, but they want to know whether changing the font will lead to more sales.
+
+.abox[
+Prediction
+]
+
+.bbox[
+Inference
+]
+
+.cbox[
+Causal inference
+]
+
+---
+
+## Some regression methods
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+* Nonparametric regression (minimal assumptions about `\(f\)`)
+    * tree-based regression
+    * local regression
+    * smoothing splines
+    * neural networks
+    * `\(+\)` many more
+* Parametric regression (more assumptions about `\(f\)`)
+    * linear regression (assume `\(f\)` is a linear function of `\(x\)`)
+    * generalized linear models
+    * penalized regression (lasso, ridge, elastic net)
+    * `\(+\)` many more
+    
+---
+
+## Example of nonparametric regression
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\text{life expectancy} = f(\text{GDP per capita}) + \varepsilon\)`
+]
+
+* `\(\widehat{f}\)` (blue curve) is our *estimate* of `\(f\)`
+* **Assumptions:** nonparametric regression often just assumes `\(f\)` is "smooth"
+
+---
+
+## Example of linear regression
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\text{life expectancy} = f(\text{GDP per capita}) + \varepsilon\)`
+]
+
+* `\(\widehat{f}\)` (blue curve) is our *estimate* of `\(f\)`
+* **Assumptions:** `\(f\)` is &lt;ins&gt;linear&lt;/ins&gt;
+
+---
+
+## Linear regression
+
+Sometimes, we can transform the data to make the relationship look linear:
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\text{life expectancy} = f(\log(\text{GDP per capita})) + \varepsilon\)`
+]
+
+---
+
+## Linear regression
+
+.pull-left[
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+When the true relationship looks linear, then linear regression is the right choice.
+
+---
+
+## Simple linear regression
+
+One predictor, one response:
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+Linear regression: `\(f(x) = \beta_0 + \beta_1 x\)`
+
+---
+
+## Simple linear regression
+
+One predictor, one response:
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+&lt;img src="annotated_linear_regression_equation.png" width="400"&gt;
+
+--
+
+.question[
+If we observed all countries in the world, we could model the exact relationship between `\(x\)` and `\(y\)`.
+]
+
+---
+
+## Simple linear regression
+
+One predictor, one response:
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+&lt;img src="annotated_linear_regression_equation.png" width="400"&gt;
+
+.question[
+But usually, we only have a sample, so we *estimate* the relationship:
+]
+
+&lt;br&gt;
+
+.center[
+`\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+---
+
+## Simple linear regression
+
+One predictor, one response:
+
+.center[
+`\(y = f(x) + \varepsilon\)`
+]
+
+&lt;img src="annotated_linear_regression_equation.png" width="400"&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+.center[
+&lt;img src="annotated_estimated_linear_regression_equation.png" width="150"&gt;
+]
+
+---
+
+## Notation
+
+.center[
+Assumed truth: `\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+
+Estimate from sample: `\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+&lt;br&gt;
+
+* `\(y\)` = quantitative response variable
+* `\(x\)` = quantitative predictor 
+* `\(\beta_0\)` = intercept of true regression line
+* `\(\beta_1\)` = slope of true regression line
+* `\(\widehat{\beta}_0\)` = intercept of estimated regression line
+* `\(\widehat{\beta}_1\)` = slope of estimated regression line
+* `\(\widehat{y}\)` = estimated response
+
+---
+
+## Notation
+
+.center[
+Assumed truth: `\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+
+Estimate from sample: `\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+&lt;br&gt;
+
+* `\(y\)` = quantitative response variable 
+* `\(x\)` = quantitative predictor
+* `\(\beta_0\)` = intercept of true regression line **(parameter)**
+* `\(\beta_1\)` = slope of true regression line **(parameter)**
+* `\(\widehat{\beta}_0\)` = intercept of estimated regression line **(parameter estimate)**
+* `\(\widehat{\beta}_1\)` = slope of estimated regression line **(parameter estimate)**
+* `\(\widehat{y}\)` = estimated response
+
+---
+
+## Estimated regression line
+
+&lt;img src="lecture_7_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\widehat{\text{life expectancy}} = 4.95 + 7.20 \log(\text{GDP per capita})\)`
+]
+
+* `\(\widehat{\beta}_0 = 4.95\)`
+* `\(\widehat{\beta}_1 = 7.20\)`
+
+---
+
+## Estimated regression line
+
+.center[
+`\(\widehat{\text{life expectancy}} = 4.95 + 7.20 \log(\text{GDP per capita})\)`
+]
+
+Questions:
+* If a country has `\(\log(\text{GDP per capita}) = 8\)`, what is the estimated life expectancy?
+* If a country has GDP per capita = $2981, what is the estimated life expectancy?
+
+---
+
+## Nonparametric regression vs. linear regression
+
+.pull-left[
+**Nonparametric regression**
+* Most relationships aren't lines
+* More flexible, works in more situations
+]
+
+.pull-right[
+**Linear regression**
+* Right choice if relationship is linear
+* Easy interpretation and inference
+* Can sometimes transform nonlinear data to look linear
+* Can still be useful for prediction even if data is nonlinear
+* Computationally cheap
+]
+
+--
+
+**In this class:** focus on linear regression (and later logistic regression)
+
+**STA 214 (categorical data):** intro to generalized linear models
+
+**STA 312 (linear models):** more details and theory for linear regression
+
+**STA 363 (statistical learning):** penalized regression, nonparametric regression
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
