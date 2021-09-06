@@ -24,6 +24,7 @@ editor_options:
     * elements and principles of data analysis
     * introduction to regression
     
+    
 ---
 
 ## Filling in the data analysis workflow
