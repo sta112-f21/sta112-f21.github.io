@@ -13,6 +13,19 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Agenda
+
+* Reminder: quiz in class on Wednesday
+    * 15 minutes
+    * open notes (including laptop + internet)
+    * closed other people
+    * covers through ggplot material (but not dplyr)
+* Today:
+    * elements and principles of data analysis
+    * introduction to regression
+    
+---
+
 ## Filling in the data analysis workflow
 
 .center[

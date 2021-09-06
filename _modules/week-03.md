@@ -3,8 +3,8 @@ title: Beginning linear regression
 ---
 
 September 6
-: Least-squares regression
-  : [Slides](#)
+: Principles of data analysis and introduction to regression
+  : [Slides](https://sta112-f21.github.io/slides/lecture_7.html)
 
 September 8
 : Interpretation
