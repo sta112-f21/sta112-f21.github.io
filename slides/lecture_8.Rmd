@@ -1,0 +1,489 @@
+---
+author: "Dr. Ciaran Evans"
+title: Least-Squares Regression
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Fitting linear regression with least squares
+* Class activity
+* Quiz
+    
+---
+
+## Kent sparrow data
+
+```{r echo=F, message=F, fig.align='center', fig.width = 7, fig.height=5}
+library(Stat2Data)
+library(tidyverse)
+data(Sparrows)
+
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+* Data collected on a sample of 116 Savannah sparrows on Kent island (Maryland)
+* Available in the `Sparrows` dataset from the `Stat2Data` package (the package for our textbook)
+
+---
+
+## Regression
+
+```{r echo=F, message=F, fig.align='center', fig.width = 7, fig.height=5}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+* Is there a relationship between weight and wing length? (inference)
+* If we know wing length, how can we predict weight? (prediction)
+
+---
+
+## Linear regression
+
+```{r echo=F, message=F, fig.align='center', fig.width = 6, fig.height=4}
+Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+Relationship looks linear, so let's fit a line!
+
+---
+
+## Linear regression
+
+```{r echo=F, message=F, fig.align='center', fig.width = 6, fig.height=4}
+Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+**True line** (in population): $\text{weight} = \beta_0 + \beta_1 \text{wing length} + \varepsilon$
+
+**Estimated line** (from sample): $\widehat{\text{weight}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{wing length}$
+
+--
+
+How do we calculate $\widehat{\beta}_0$ and $\widehat{\beta}_1$?
+
+---
+
+## Choosing between different lines
+
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height=4}
+library(patchwork)
+p1 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  geom_abline(slope = 1/3, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p2 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  geom_abline(slope = 1/2, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p3 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  geom_abline(slope = 1.5, intercept = -15, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p1 + p2 + p3
+```
+
+Which one looks like the best choice?
+
+--
+
+Intuitively, want the line to "go through" the points. Can we formalize this?
+
+---
+
+## Residuals
+
+```{r echo=F, message=F, fig.align='center', fig.width = 6, fig.height=4}
+Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_segment(aes(xend = WingLength,
+                   yend = 0.5*WingLength),
+               color = "red") +
+  geom_point() +
+  geom_abline(slope = 1/2, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+**Data:** $(x_1, y_1), (x_2, y_2), ..., (x_n, y_n)$, where $n$ = number of observations
+
+--
+
+E.g., $(\text{wing length}_1, \text{weight}_1), ..., (\text{wing length}_{116}, \text{weight}_{116})$
+
+---
+
+## Residuals
+
+```{r echo=F, message=F, fig.align='center', fig.width = 6, fig.height=4}
+Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_segment(aes(xend = WingLength,
+                   yend = 0.5*WingLength),
+               color = "red") +
+  geom_point() +
+  geom_abline(slope = 1/2, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+**Data:** $(x_1, y_1), (x_2, y_2), ..., (x_n, y_n)$, where $n$ = number of observations
+
+**Predictions:** $\widehat{y}_i = \widehat{\beta}_0 + \widehat{\beta}_1 x_i$ (prediction for $i$th observation)
+
+**Residuals:** $e_i = y_i - \widehat{y}_i$ (difference between observed and predicted values)
+
+---
+
+## Residuals
+
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height=4}
+p1 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  geom_abline(slope = 1/3, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p2 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  geom_abline(slope = 1/2, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p3 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_point() +
+  geom_abline(slope = 1.5, intercept = -15, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p1 + p2 + p3
+```
+
+---
+
+## Residuals
+
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height=4}
+p1 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_segment(aes(xend = WingLength,
+                   yend = 0.333*WingLength),
+               color = "red") +
+  geom_point() +
+  geom_abline(slope = 1/3, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p2 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_segment(aes(xend = WingLength,
+                   yend = 0.5*WingLength),
+               color = "red") +
+  geom_point() +
+  geom_abline(slope = 1/2, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p3 <- Sparrows %>%
+  ggplot(aes(y = Weight, x = WingLength)) +
+  geom_segment(aes(xend = WingLength,
+                   yend = 1.5*WingLength - 15),
+               color = "red") +
+  geom_point() +
+  geom_abline(slope = 1.5, intercept = -15, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p1 + p2 + p3
+```
+
+--
+
+Want residuals to generally be small. How can we formalize this?
+
+---
+
+## Sum of the squared residuals
+               
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height=3}
+p1 <- Sparrows %>%
+  mutate(fitted = 0.333*WingLength) %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_rect(aes(xmin = WingLength, 
+                xmax = WingLength + Weight - fitted,
+                ymin = Weight, ymax = fitted), 
+            fill = "red", color = "red", alpha = 0.2) +
+  geom_point() +
+  geom_abline(slope = 0.333, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)",
+       title = "SSE = 3293.9") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p2 <- Sparrows %>%
+  mutate(fitted = 0.5*WingLength) %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_rect(aes(xmin = WingLength, 
+                xmax = WingLength + Weight - fitted,
+                ymin = Weight, ymax = fitted), 
+            fill = "red", color = "red", alpha = 0.2) +
+  geom_point() +
+  geom_abline(slope = 0.5, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)",
+       title = "SSE = 251.2") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p3 <- Sparrows %>%
+  mutate(fitted = 1.5*WingLength - 15) %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_rect(aes(xmin = WingLength, 
+                xmax = WingLength + Weight - fitted,
+                ymin = Weight, ymax = fitted), 
+            fill = "red", color = "red", alpha = 0.2) +
+  geom_point() +
+  geom_abline(slope = 1.5, intercept = -15, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)",
+       title = "SSE = 18288.6") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p1 + p2 + p3
+```
+
+Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2 $
+
+---
+
+## Least Squares
+
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height=3}
+p1 <- Sparrows %>%
+  mutate(fitted = 0.333*WingLength) %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_rect(aes(xmin = WingLength, 
+                xmax = WingLength + Weight - fitted,
+                ymin = Weight, ymax = fitted), 
+            fill = "red", color = "red", alpha = 0.2) +
+  geom_point() +
+  geom_abline(slope = 0.333, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)",
+       title = "SSE = 3293.9") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p2 <- Sparrows %>%
+  mutate(fitted = 0.5*WingLength) %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_rect(aes(xmin = WingLength, 
+                xmax = WingLength + Weight - fitted,
+                ymin = Weight, ymax = fitted), 
+            fill = "red", color = "red", alpha = 0.2) +
+  geom_point() +
+  geom_abline(slope = 0.5, intercept = 0, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)",
+       title = "SSE = 251.2") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p3 <- Sparrows %>%
+  mutate(fitted = 1.5*WingLength - 15) %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_rect(aes(xmin = WingLength, 
+                xmax = WingLength + Weight - fitted,
+                ymin = Weight, ymax = fitted), 
+            fill = "red", color = "red", alpha = 0.2) +
+  geom_point() +
+  geom_abline(slope = 1.5, intercept = -15, color = "blue",
+              lwd = 1.5) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)",
+       title = "SSE = 18288.6") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+
+p1 + p2 + p3
+```
+
+Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2 = \sum_{i=1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x_i)^2$
+
+Choose $\widehat{\beta}_0$, $\widehat{\beta}_1$ to minimize SSE.
+
+---
+
+## Class activity, Part I
+
+---
+
+## Fitting linear regression in R
+
+```{r echo=F, fig.width=6, fig.height=4, fig.align='center'}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+```r
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+---
+
+## Fitting linear regression in R
+
+```{r echo=F, fig.width=6, fig.height=4, fig.align='center'}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+.center[
+<img src="r_lm_function_annotated.png" width="750">
+]
+
+---
+
+## Fitting linear regression in R
+
+```{r}
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+* $\widehat{\beta}_0 = 1.366$
+* $\widehat{\beta}_1 = 0.467$
+
+---
+
+## Class activity, Part II
+
+---
+
+## Calculating $\widehat{\beta}_0$ and $\widehat{\beta}_1$
+
+.center[
+$SSE = \sum_{i=1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x_i)^2$
+]
+
+Choose $\widehat{\beta}_0$, $\widehat{\beta}_1$ to minimize SSE
+
+* Option 1: search for $\widehat{\beta}_0$, $\widehat{\beta}_1$ like in class activity Part I
+--
+
+    * not efficient
+    * not what R does
+--
+* Option 2: closed-form equation?
+
+---
+
+## Equations for $\widehat{\beta}_0$ and $\widehat{\beta}_1$
+
+.center[
+$\widehat{\beta}_1 = \dfrac{\sum_{i=1}^n (x_i - \overline{x})(y_i - \overline{y})}{\sum_{i=1}^n (x_i - \overline{x})^2}$
+
+$\widehat{\beta}_0 = \overline{y} - \widehat{\beta}_1 \overline{x}$
+]
+
+where 
+
+.center[
+$\overline{x} = \frac{1}{n} \sum_{i=1}^n x_i$
+
+$\overline{y} = \frac{1}{n} \sum_{i=1}^n y_i$
+]
