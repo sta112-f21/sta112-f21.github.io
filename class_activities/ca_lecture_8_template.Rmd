@@ -6,13 +6,63 @@ author: "Your Name"
 output: html_document
 ---
 
+## Setup
+
+First, install the Stat2Data package. This is the R package which contains the datasets from our textbook. Then run the setup chunk.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(Stat2Data)
 library(tidyverse)
+data(Sparrows)
 ```
 
 # Part I
 
+The code in the chunk below lets you specify an intercept and slope for the regression line. It then plots a line with the specified intercept and slope, and reports the sum of squared residuals (SSE). Experiment with changing the intercept and slope, and observe how the plot and SSE change.
+
+```{r}
+# add values here!
+est_intercept = ...
+est_slope = ...
+
+# plot
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_abline(intercept = est_intercept,
+              slope = est_slope,
+              color = "blue",
+              lwd = 1.5)
+
+# calculate sum of squared residuals
+Sparrows %>%
+  mutate(prediction = est_intercept + est_slope*WingLength,
+         residual = Weight - prediction) %>%
+  summarize(sum_sq_resid = sum(residual^2))
+```
+
+## Question 1
+
+Which values give the smallest SSE?
+
 
 # Part II
+
+We can use the lm function to fit a linear regression in R. Run the following code:
+
+```{r}
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+## Question 2
+
+What are the estimated slope and intercept?
+
+## Question 3
+
+What is the SSE when using the estimated slope and intercept from question 2? Confirm this SSE is smaller than for the different slopes and intercepts you tried in part I.
+
+## Question 4
+
+If a sparrow has a wing length of 25cm, what is its predicted weight from the estimated regression line?

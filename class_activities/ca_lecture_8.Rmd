@@ -1,0 +1,61 @@
+---
+title: "Class Activity, September 1"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will experiment with using least squares to fit simple linear regression with the `Sparrows` dataset. 
+
+## Setup
+
+First, install the `Stat2Data` package. This is the R package which contains the datasets from our textbook. Then download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_8_template.Rmd)
+
+The activity template contains copies of the code and questions below. Run the setup chunk in the template before you begin.
+
+There are two parts to the activity, which you will complete at different times during class today.
+
+## Part I
+
+The code in the chunk below lets you specify an intercept and slope for the regression line. It then plots a line with the specified intercept and slope, and reports the sum of squared residuals (SSE). Experiment with changing the intercept and slope, and observe how the plot and SSE change.
+
+```r
+# add values here!
+est_intercept = ...
+est_slope = ...
+
+# plot
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_abline(intercept = est_intercept,
+              slope = est_slope,
+              color = "blue",
+              lwd = 1.5)
+
+# calculate sum of squared residuals
+Sparrows %>%
+  mutate(prediction = est_intercept + est_slope*WingLength,
+         residual = Weight - prediction) %>%
+  summarize(sum_sq_resid = sum(residual^2))
+```
+
+1. Which values give the smallest SSE?
+
+
+## Part II
+
+We can use the lm function to fit a linear regression in R. Run the following code:
+
+```r
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+2. What are the estimated slope and intercept?
+
+3. What is the SSE when using the estimated slope and intercept from question 2? Confirm this SSE is smaller than for the different slopes and intercepts you tried in part I.
+
+4. If a sparrow has a wing length of 25cm, what is its predicted weight from the estimated regression line?
