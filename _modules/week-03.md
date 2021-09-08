@@ -7,8 +7,8 @@ September 6
   : [Slides](https://sta112-f21.github.io/slides/lecture_7.html)
 
 September 8
-: Interpretation
-  : [Slides](#)
+: Least squares
+  : [Slides](https://sta112-f21.github.io/slides/lecture_8.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_8.html)
   
 : **Quiz 1**{: .label .label-red}
 

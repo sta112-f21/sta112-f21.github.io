@@ -40,6 +40,10 @@ Sparrows %>%
 * Data collected on a sample of 116 Savannah sparrows on Kent island (Maryland)
 * Available in the `Sparrows` dataset from the `Stat2Data` package (the package for our textbook)
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Regression
@@ -57,6 +61,10 @@ Sparrows %>%
 * Is there a relationship between weight and wing length? (inference)
 * If we know wing length, how can we predict weight? (prediction)
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Linear regression
@@ -72,6 +80,10 @@ Sparrows %>%
 ```
 
 Relationship looks linear, so let's fit a line!
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -90,6 +102,10 @@ Sparrows %>%
 **True line** (in population): $\text{weight} = \beta_0 + \beta_1 \text{wing length} + \varepsilon$
 
 **Estimated line** (from sample): $\widehat{\text{weight}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{wing length}$
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 --
 
@@ -136,6 +152,10 @@ p1 + p2 + p3
 
 Which one looks like the best choice?
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 --
 
 Intuitively, want the line to "go through" the points. Can we formalize this?
@@ -160,6 +180,10 @@ Sparrows %>%
 ```
 
 **Data:** $(x_1, y_1), (x_2, y_2), ..., (x_n, y_n)$, where $n$ = number of observations
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 --
 
@@ -189,6 +213,10 @@ Sparrows %>%
 **Predictions:** $\widehat{y}_i = \widehat{\beta}_0 + \widehat{\beta}_1 x_i$ (prediction for $i$th observation)
 
 **Residuals:** $e_i = y_i - \widehat{y}_i$ (difference between observed and predicted values)
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -227,6 +255,10 @@ p3 <- Sparrows %>%
 
 p1 + p2 + p3
 ```
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -274,6 +306,10 @@ p3 <- Sparrows %>%
 
 p1 + p2 + p3
 ```
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 --
 
@@ -335,7 +371,11 @@ p3 <- Sparrows %>%
 p1 + p2 + p3
 ```
 
-Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2 $
+Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2$
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -397,6 +437,10 @@ Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2 = \sum_{i
 
 Choose $\widehat{\beta}_0$, $\widehat{\beta}_1$ to minimize SSE.
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Class activity, Part I
@@ -423,6 +467,10 @@ Sparrows %>%
 lm(Weight ~ WingLength, data = Sparrows)
 ```
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Fitting linear regression in R
@@ -441,6 +489,10 @@ Sparrows %>%
 <img src="r_lm_function_annotated.png" width="750">
 ]
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Fitting linear regression in R
@@ -451,6 +503,10 @@ lm(Weight ~ WingLength, data = Sparrows)
 
 * $\widehat{\beta}_0 = 1.366$
 * $\widehat{\beta}_1 = 0.467$
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 

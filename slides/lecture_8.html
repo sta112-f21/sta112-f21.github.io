@@ -32,6 +32,10 @@ class: center, middle, inverse, title-slide
 * Data collected on a sample of 116 Savannah sparrows on Kent island (Maryland)
 * Available in the `Sparrows` dataset from the `Stat2Data` package (the package for our textbook)
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Regression
@@ -41,6 +45,10 @@ class: center, middle, inverse, title-slide
 * Is there a relationship between weight and wing length? (inference)
 * If we know wing length, how can we predict weight? (prediction)
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Linear regression
@@ -48,6 +56,10 @@ class: center, middle, inverse, title-slide
 &lt;img src="lecture_8_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
 Relationship looks linear, so let's fit a line!
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -58,6 +70,10 @@ Relationship looks linear, so let's fit a line!
 **True line** (in population): `\(\text{weight} = \beta_0 + \beta_1 \text{wing length} + \varepsilon\)`
 
 **Estimated line** (from sample): `\(\widehat{\text{weight}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{wing length}\)`
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 --
 
@@ -71,6 +87,10 @@ How do we calculate `\(\widehat{\beta}_0\)` and `\(\widehat{\beta}_1\)`?
 
 Which one looks like the best choice?
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 --
 
 Intuitively, want the line to "go through" the points. Can we formalize this?
@@ -82,6 +102,10 @@ Intuitively, want the line to "go through" the points. Can we formalize this?
 &lt;img src="lecture_8_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 **Data:** `\((x_1, y_1), (x_2, y_2), ..., (x_n, y_n)\)`, where `\(n\)` = number of observations
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 --
 
@@ -99,17 +123,29 @@ E.g., `\((\text{wing length}_1, \text{weight}_1), ..., (\text{wing length}_{116}
 
 **Residuals:** `\(e_i = y_i - \widehat{y}_i\)` (difference between observed and predicted values)
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Residuals
 
 &lt;img src="lecture_8_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Residuals
 
 &lt;img src="lecture_8_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 --
 
@@ -121,7 +157,11 @@ Want residuals to generally be small. How can we formalize this?
                
 &lt;img src="lecture_8_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
-Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2 $
+Sum of squared residuals (SSE) = `\(\sum_{i=1}^n (y_i - \widehat{y}_i)^2\)`
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -132,6 +172,10 @@ Sum of squared residuals (SSE) = $\sum_{i=1}^n (y_i - \widehat{y}_i)^2 $
 Sum of squared residuals (SSE) = `\(\sum_{i=1}^n (y_i - \widehat{y}_i)^2 = \sum_{i=1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x_i)^2\)`
 
 Choose `\(\widehat{\beta}_0\)`, `\(\widehat{\beta}_1\)` to minimize SSE.
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
@@ -151,6 +195,10 @@ Spend a few minutes trying out different potential values for the estimated slop
 lm(Weight ~ WingLength, data = Sparrows)
 ```
 
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
+
 ---
 
 ## Fitting linear regression in R
@@ -159,6 +207,10 @@ lm(Weight ~ WingLength, data = Sparrows)
 
 .center[
 &lt;img src="r_lm_function_annotated.png" width="750"&gt;
+]
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
 ]
 
 ---
@@ -182,6 +234,10 @@ lm(Weight ~ WingLength, data = Sparrows)
 
 * `\(\widehat{\beta}_0 = 1.366\)`
 * `\(\widehat{\beta}_1 = 0.467\)`
+
+.footnote[
+Slides adapted from material from Dr. Lucy D'Agostino McGowan
+]
 
 ---
 
