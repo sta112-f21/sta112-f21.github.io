@@ -1,0 +1,301 @@
+---
+title: "Homework 3"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Friday, September 24, 12:00pm (noon) on Canvas
+
+(As this assignment is longer than usual, you have two weeks to complete it)
+
+**Instructions:** In this homework assignment, you will use exploratory data analysis and linear regression to investigate the relationship between mass and metabolism for a species of marine byrozoan.
+
+* A template R Markdown file is provided in the setup below
+* When you are done with the assignment, knit and submit the HTML on Canvas
+* When making plots, make sure to nicely label all axes, provide units where applicable, and add a title
+* When making histograms, choose a good number of bins
+* Remember to acknowledge any collaborators, and to cite outside sources
+
+# Setup
+
+### Template
+
+A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_02_template.Rmd](https://sta112-f21.github.io/homework/hw_02_template.Rmd)
+
+### Data
+
+Researchers have observed many species for which larger offspring have a biological fitness advantage over smaller offspring, but there have been competing hypotheses for why this is the case, and there are exceptions. In the paper "Why does offspring size affect performance? Integrating metabolic scaling with life-history theory" (Pattersen et al. 2015, *Proc. R. Soc. B.*), the authors propose that larger offspring are more efficient in energy consumption and thus have greater fitness.
+
+To investigate, the authors collected data on two species of marine byrozoan, *Bugula neritina* and *Watersipora subtorquata*. After initial growth, the developmental process of these two species consists of three phases before they are considered mature - a larval stage (before the individual settles and begins metamorphosis), an early post-settlement stage, and a late post-settlement stage (as the individual nears the end of metamorphosis).
+
+Here we have data from 626 individuals from these two species, measured at the three different developmental stages. For each individual, the researchers recorded the mass (in micrograms) and the rate of oxygen consumption. The rate of oxygen consumption was then converted into the metabolic rate (rate of energy consumption), based on the amount of energy in oxygen.
+
+The different columns are:
+
+* *Species:* 	Species of the organism measured, either bugula (Bugula neritina) or watersipora (Watersipora subtorquata)
+* *Stage:* Developmental stage of the organism (larvae = larval stage, early = early post-settlement stage, late = late post-settlement stage)
+* *Run:* Which run of the study the individual was recorded in. Several runs were done for each species
+* *Mass:* Mass of the individual (in micrograms)
+* *Metabolic:* Recorded metabolic rate (rate of energy consumption) of the individual (in mJ per hour)
+
+### Downloading the data
+
+The data for this assignment comes from the paper by Pattersen *et al.*, and is stored in a CSV file. CSV files can be read into R with the `read_csv` function, which is part of the `readr` package in the tidyverse. The following code imports the data and saves it as a data frame called `byrozoan`:
+
+```r
+byrozoan <- read_csv("https://sta112-f21.github.io/homework/byrozoan.csv")
+```
+
+This code is included in the setup chunk of the R Markdown template for this assignment. The argument to the `read_csv` function here is the path to the CSV file we want to import. This can be either a local path (on your computer) or a url.
+
+# Research questions
+
+The researchers hypothesize that larger individuals will have a higher metabolic rate than smaller individuals, but proportional to body size the larger individuals are more energy efficient.
+
+Our goal is to investigate these hypotheses with exploratory data analysis and statistical modeling.
+
+# Questions
+
+Before addressing the research questions directly, we will perform some exploratory data analysis. This provides context to the data analysis, and gets us familiar with the data.
+
+## Exploratory data analysis
+
+Our first step is to summarize the data, providing background and context. In a data analysis report, this information tells the reader what data you are working with (it is hard to understand a data analysis if you don't know what data the analyst is using). The more context we provide, the more second-order our analysis is.
+
+:::{.question}
+#### Question 1: data summary
+
+Write a short paragraph summarizing the `byrozoan` data. Describe:
+
+* Who (or which organization) originally collected the data?
+* Why was the data collected?
+* What does a row in the data represent?
+* How many rows and columns are in the data?
+* What information do the variables record?
+* Are there any missing data?
+:::
+
+Our next step is to examine the variables we will use for our analysis. While this exploration might not directly address the research question (and is not always included in a final report), it is important to identify any unusual features in the data. Summarizing different variables also provides useful context for a reader unfamiliar with your data. For example, most readers will have no idea what a typical mass or metabolic rate is for *Bugula neritina*.
+
+:::{.question}
+#### Question 2: distributions of mass and metabolic rate
+
+Create two histograms, one for the distribution of mass and one for the distribution of metabolic rate. For each histogram, calculate the mean and standard deviation, and describe the distribution, reporting the following information:
+
+* Shape (symmetric vs. skewed, number of modes, location of modes)
+* Center (mean)
+* Spread (standard deviation)
+* Any unusual features?
+* Any potential outliers?
+:::
+
+Now let's visualize the relationship between mass and metabolism. This step is useful for choosing an appropriate regression model, and for identifying any unusual features in the relationship.
+
+:::{.question}
+#### Question 3: relationship between mass and metabolism
+
+The researchers are interested in the relationship between mass and metabolic rate. Create a plot showing the relationship, with mass on the x-axis and metabolic rate on the y-axis. Summarize the relationship:
+* does there appear to be a relationship?
+* if so, does the relationship appear to be positive or negative?
+* what is the general shape of the relationship? Does it look linear?
+:::
+
+:::{.question}
+#### Question 4: calculating correlation
+
+When a relationship appears linear, we can measure the strength and direction of the relationship with the *correlation coefficient*, usually denoted $r$. Recall that $r$ takes values between -1 and 1, with $r = -1$ a very strong negative relationship, $r = 0$ no relationship, and $r = 1$ a very strong positive relationship.
+
+Run the following code to calculate the sample correlation coefficient between mass and metabolic rate.
+
+```r
+byrozoan %>%
+  summarize(r = cor(Mass, Metabolic))
+```
+:::
+
+We want to model the relationship between mass and metabolic rate. However, if this relationship differs between species and developmental stages, then we should condition on species and developmental stage in the model. Let's check whether the relationship looks different for different species and developmental stages.
+
+:::{.question}
+#### Question 5: species and developmental stage
+
+Create a plot showing the relationship between mass (on the x-axis) and metabolic rate (on the y-axis). This time, break it down by both species and developmental stage. (Options including using aesthetics like shape and color, faceting, etc. Choose the options you think make the plot easiest to read). Does it look like the relationship between mass and metabolic rate is different for different species and/or developmental stages?
+:::
+
+To ensure that our analysis is not impacted by differences across species and developmental stages, for the rest of the assignment we will work only with *Bugula neritina* in the larval stage.
+
+:::{.question}
+#### Question 6: filtering
+
+Create a new dataset that contains only the rows of the `byrozoan` data for which species is *bugula* and stage is *larvae*. Save your new dataset as `bugula_larvae`, and use it for the remaining questions below.
+:::
+
+## Regression
+
+### Choose
+
+We will begin by modeling the relationship between mass and metabolism with linear regression.
+
+:::{.question}
+#### Question 7: the model
+
+Write down the population linear regression model, which assumes a linear relationship between mass (the predictor) and metabolic rate (the response). Remember that the population regression model contains parameters, not estimates, and includes a noise term.
+:::
+
+### Fit
+
+:::{.question}
+#### Question 8: estimated line
+
+Use R (the `lm` function) to fit the simple linear regression model in question 7. Write down the estimated regression line. Also create a scatterplot of metabolic rate (y-axis) vs. mass (x-axis), and add the estimated regression line to the plot.
+:::
+
+### Assess
+
+Now that we have fit the linear regression model, we need to assess whether the model we chose was appropriate. We will do that by checking the linear regression conditions. To use the linear regression model for inference, we make several assumptions:
+
+* *shape:* the shape of the true relationship is the same as the shape of our model (i.e. when using linear regression, the true relationship is linear)
+* *zero mean:* the noise term $\varepsilon$ is centered at 0
+* *constant variance:* the variance of the response does not change as the predictor changes
+* *independence:* one point falling above or below the line has no influence on the location of another point
+* *randomness:* the data are generated by a random process, like a random sample or randomized experiment
+* *normality:* the distribution of the noise $\varepsilon$ is normal
+
+We don't check the zero mean assumption, because linear regression forces the mean of the residuals to be 0 by default. The independence and randomness assumptions can't be checked with diagnostic plots; we just have to think about the data generating process.
+
+Technically, not all of these assumptions are always necessary, depending on how we intend to use the regression. However, for this assignment we will practice checking all of them (except zero mean).
+
+:::{.question}
+#### Question 9: independence and randomness
+
+Do the assumptions of independence and randomness seem appropriate for the linear regression model in question 7? Think about the `byrozoan` data -- is there any dependence between different observations? Does the data represent a sample or experiment that can be generalized to a wider population? 
+:::
+
+:::{.question}
+#### Question 10: shape and constant variance
+
+Make a residual plot for the fitted line from question 8: plot the residuals from your estimated model on the y-axis, and the predicted values on the x-axis. Add a horizontal line at 0 on the y-axis. Use this residual plot to assess the shape and constant variance assumptions:
+
+* *shape:* the shape assumption is reasonable if the residuals appear to be scattered randomly above and below 0, with no clear patterns.
+* *constant variance:* the constant variance assumption is reasonable if the band of residuals has relatively constant width.
+
+Use your residual plot to assess the shape and constant variance assumptions.
+:::
+
+:::{.question}
+#### Question 11: normality
+
+Finally, we will assess normality of the residuals. Make a quantile-quantile plot for the residuals, including the diagonal line. The normality assumption is reasonable if the points in the quantile-quantile plot are generally close to the diagonal line.
+
+Use your quantile-quantile plot to assess the normality assumption.
+:::
+
+### Use
+
+The researchers hypothesized that larger individuals have a higher metabolism than smaller individuals, but proportional to body size are more energy efficient. To try and address that research question, we fit a linear regression to model the relationship between mass and metabolic rate. Now that we have assessed the model fit, let's use the fitted model to try and answer the research question.
+
+:::{.question}
+#### Question 12: $\widehat{\beta}_1$
+
+Interpret the fitted regression coefficient $\widehat{\beta}_1$ ("an increase in mass of 1 microgram is associated with..."). Does the estimated regression line support the hypothesis that individuals with larger mass have larger metabolism?
+:::
+
+:::{.question}
+#### Question 13: proportional to body size?
+
+A positive relationship between mass and metabolism is only the first part of the researchers' hypothesis. The second part is that, proportional to body size, larger individuals are more energy efficient. In other words, the increase in metabolic rate associated with an increase in mass is smaller for larger individuals. Explain why the linear regression model from question 7 cannot assess this hypothesis.
+:::
+
+## Transformation
+
+### Choose
+
+The linear regression model from question 7 cannot assess the hypothesis that, proportional to body size, larger individuals are more energy efficient. Therefore, a different model is needed. Instead of the linear model from equation 7, the researchers propose the following:
+
+$\text{metabolic rate} \approx \alpha (\text{mass})^\beta$,
+
+where $\alpha$ and $\beta$ are unknown parameters. (I have written this model with the $\approx$ symbol to denote "approximately", since we haven't written a noise term yet).
+
+:::{.question}
+#### Question 14: interpreting the new model
+
+The researchers hypothesize that larger individuals have higher metabolism, but proportional to body size are more energy efficient. This means that as mass increases, so does metabolism. However, the increase in metabolism associated with a one-unit increase in mass gets smaller and smaller as mass gets larger. Using this new model, the researchers' hypothesis corresponds to $0 < \beta < 1$. Explain.
+:::
+
+At first glance, it looks like we can't fit this model with linear regression, because it isn't a linear model. *However*, we <ins>can</ins> use linear regression if we transform the data! Taking $\log$ of both sides, we write the model
+
+$\log(\text{metabolic rate}) = \log(\alpha) + \beta \log(\text{mass}) + \varepsilon$
+
+Now we have a linear regression model! If we just let $\beta_0 = \log(\alpha)$ and $\beta_1 = \beta$, then 
+
+$\log(\text{metabolic rate}) = \beta_0 + \beta_1 \log(\text{mass}) + \varepsilon$
+
+Now we can fit this model, and estimate $\beta_1$.
+
+### Fit
+
+:::{.question}
+#### Question 15: log transformations
+
+Modify your `bugula_larvae` dataset to have two new columns: `log_mass` (the `log` of mass), and `log_metabolic` (the `log` of metabolic rate). Use the modified dataset for the questions below.
+:::
+
+:::{.question}
+#### Question 16: estimated line
+
+Use R (the `lm` function) to fit the linear regression model with `log_mass` as the predictor and `log_metabolic` as the response. Write down the estimated regression line. Also create a scatterplot of log metabolic rate (y-axis) vs. log mass (x-axis), and add the estimated regression line to the plot.
+:::
+
+### Assess
+
+:::{.question}
+#### Question 17: shape and constant variance
+
+Make a residual plot for the fitted line from question 16: plot the residuals from your estimated model on the y-axis, and the predicted values on the x-axis. Add a horizontal line at 0 on the y-axis. Use this residual plot to assess the shape and constant variance assumptions:
+
+* *shape:* the shape assumption is reasonable if the residuals appear to be scattered randomly above and below 0, with no clear patterns.
+* *constant variance:* the constant variance assumption is reasonable if the band of residuals has relatively constant width.
+
+Use your residual plot to assess the shape and constant variance assumptions.
+:::
+
+:::{.question}
+#### Question 18: normality
+
+Make a quantile-quantile plot for the residuals for the fitted line from question 16, including the diagonal line. The normality assumption is reasonable if the points in the quantile-quantile plot are generally close to the diagonal line.
+
+Use your quantile-quantile plot to assess the normality assumption.
+:::
+
+### Use
+
+:::{.question}
+#### Question 19: evidence for the hypothesis?
+
+Interpret the fitted regression coefficient $\widehat{\beta}_1$ ("an increase in log mass of 1 unit is associated with..."). Does the estimated regression line support the hypothesis that individuals with larger mass have larger metabolism, but proportional to body size are more energy efficient?
+:::
+
+## Reflection
+
+:::{.question}
+#### Question 20: principles of data analysis
+
+Rank each of the following principles from the Elements and Principles of Data Analysis article for the data analysis in this assignment from 1 to 10 along with a 1--2 sentence summary. 
+
+* *Data matching:* 
+* *Exhaustive:* 
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:*
+* *Reproducibility:* 
+:::
+
+# Grading
+
+Grading will be based on accuracy and completion, with points assigned according to the table below. Make sure your full code *and* your responses are visible in the knitted HTML file. Note that questions 6 and 8 only require code, while questions 7, 9, and 10 only require written responses.
+
+| **Total** | **200pts** |
+| --------- | ---------- |
+| Questions 1--20 | 10 pts each |
