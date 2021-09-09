@@ -1,0 +1,100 @@
+---
+---
+---
+title: "Lab 1 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+penguins %>%
+  count(species)
+```
+
+There are 152 Adelie penguins, 68 Chinstrap penguins, and 124 Gentoo penguins.
+
+## Exercise 2
+
+```{r}
+penguins %>%
+  count(island)
+```
+
+There are 168 penguins on Biscoe Island, 124 on Dream Island, and 52 on Torgersen island.
+
+## Exercise 3
+
+```{r}
+penguins %>%
+  ggplot(aes(x = body_mass_g)) +
+  geom_histogram(bins=20)
+```
+
+The distribution of body mass looks unimodal and right-skewed, with a peak around 4000g. Most penguins have a body mass between 3000 and 6000g. There do not appear to be any outliers in the data.
+
+(When we describe distributions in future, we will also calculate measures of center and spread, like the mean/median and standard deviation/IQR).
+
+## Exercise 4
+
+```{r}
+penguins %>%
+  pull(body_mass_g) %>%
+  mean()
+```
+
+We get NA (which means "Not Available"), because the data contain missing observations.
+
+## Exercise 5
+
+```{r}
+penguins_no_nas <- penguins %>%
+  drop_na()
+```
+
+
+## Exercise 6
+
+```{r}
+glimpse(penguins)
+glimpse(penguins_no_nas)
+```
+
+We removed 11 (= 344 - 333) rows.
+
+## Exercise 7
+
+```{r}
+penguins_no_nas %>%
+  pull(body_mass_g) %>%
+  mean()
+```
+
+The mean body mass for penguins in the data, after removing any rows containing NAs, is 4207.06g.
+
+## Exercise 8
+
+```{r}
+penguins_no_nas %>%
+  ggplot(aes(x = body_mass_g)) +
+  geom_histogram() +
+  facet_wrap(~species)
+```
+
+Each species has a unimodal, roughly symmetric distribution, with similar spreads. The distributions of body mass for Adelie and Chinstrap penguins appear to be centered around 3700g, while for Gentoo penguins body mass appears to be centered around 5000g.
+
+## Exercise 9
+
+```{r}
+penguins_no_nas %>%
+  group_by(species) %>%
+  summarize(mean(body_mass_g))
+```
+
+The mean body mass is 3706g for Adelie penguins, 3733g for Chinstrap penguins, and 5092g for Gentoo penguins.

@@ -98,6 +98,7 @@ Now let's visualize the relationship between mass and metabolism. This step is u
 #### Question 3: relationship between mass and metabolism
 
 The researchers are interested in the relationship between mass and metabolic rate. Create a plot showing the relationship, with mass on the x-axis and metabolic rate on the y-axis. Summarize the relationship:
+
 * does there appear to be a relationship?
 * if so, does the relationship appear to be positive or negative?
 * what is the general shape of the relationship? Does it look linear?
@@ -106,7 +107,7 @@ The researchers are interested in the relationship between mass and metabolic ra
 :::{.question}
 #### Question 4: calculating correlation
 
-When a relationship appears linear, we can measure the strength and direction of the relationship with the *correlation coefficient*, usually denoted $r$. Recall that $r$ takes values between -1 and 1, with $r = -1$ a very strong negative relationship, $r = 0$ no relationship, and $r = 1$ a very strong positive relationship.
+When a relationship appears linear, we can measure the strength and direction of the relationship with the *sample correlation coefficient*, usually denoted $r$. Recall that $r$ takes values between -1 and 1, with $r = -1$ a very strong negative relationship, $r = 0$ no relationship, and $r = 1$ a very strong positive relationship.
 
 Run the following code to calculate the sample correlation coefficient between mass and metabolic rate.
 
@@ -116,7 +117,7 @@ byrozoan %>%
 ```
 :::
 
-We want to model the relationship between mass and metabolic rate. However, if this relationship differs between species and developmental stages, then we should condition on species and developmental stage in the model. Let's check whether the relationship looks different for different species and developmental stages.
+We want to model the relationship between mass and metabolic rate. However, if this relationship differs between species and developmental stages, then we would need to include species and developmental stage in the model. Let's check whether the relationship looks different for different species and developmental stages.
 
 :::{.question}
 #### Question 5: species and developmental stage
@@ -156,7 +157,7 @@ Use R (the `lm` function) to fit the simple linear regression model in question 
 
 Now that we have fit the linear regression model, we need to assess whether the model we chose was appropriate. We will do that by checking the linear regression conditions. To use the linear regression model for inference, we make several assumptions:
 
-* *shape:* the shape of the true relationship is the same as the shape of our model (i.e. when using linear regression, the true relationship is linear)
+* *shape:* the shape of the true relationship is the same as the shape of our model (i.e. when using linear regression, we assume the true relationship is linear)
 * *zero mean:* the noise term $\varepsilon$ is centered at 0
 * *constant variance:* the variance of the response does not change as the predictor changes
 * *independence:* one point falling above or below the line has no influence on the location of another point
@@ -202,11 +203,51 @@ The researchers hypothesized that larger individuals have a higher metabolism th
 Interpret the fitted regression coefficient $\widehat{\beta}_1$ ("an increase in mass of 1 microgram is associated with..."). Does the estimated regression line support the hypothesis that individuals with larger mass have larger metabolism?
 :::
 
-:::{.question}
-#### Question 13: proportional to body size?
+**Proportional to body size?** A positive relationship between mass and metabolism is only the first part of the researchers' hypothesis. The second part is that, proportional to body size, larger individuals are more energy efficient. Let's think about what this means mathematically.
 
-A positive relationship between mass and metabolism is only the first part of the researchers' hypothesis. The second part is that, proportional to body size, larger individuals are more energy efficient. In other words, the increase in metabolic rate associated with an increase in mass is smaller for larger individuals. Explain why the linear regression model from question 7 cannot assess this hypothesis.
-:::
+Mathematically, this means that the shape of the relationship between mass and metabolic rate looks like the third plot below, with the curve flattening out as mass increases. If the researchers hypothesize that the true relationship could look like the curve in the third plot, then a linear regression model isn't the right choice. In the next section, we will try a different model for the data.
+
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height = 4}
+library(patchwork)
+library(tidyverse)
+p1 <- data.frame(x = 1:100, y = 1:100) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = "Efficiency is the same") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p2 <- data.frame(x = 1:100, y = (1:100)^2) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = "Larger individuals are less efficient") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p3 <- data.frame(x = 1:100, y = (1:100)^0.25) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = "Larger individuals are more efficient") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p1 + p2 + p3
+```
 
 ## Transformation
 
@@ -216,13 +257,50 @@ The linear regression model from question 7 cannot assess the hypothesis that, p
 
 $\text{metabolic rate} \approx \alpha (\text{mass})^\beta$,
 
-where $\alpha$ and $\beta$ are unknown parameters. (I have written this model with the $\approx$ symbol to denote "approximately", since we haven't written a noise term yet).
+where $\alpha > 0$ and $\beta > 0$ are unknown parameters. (I have written this model with the $\approx$ symbol to denote "approximately", since we haven't written a noise term yet). The plots below show how the value of $\beta$ corresponds to different shapes of the relationship:
 
-:::{.question}
-#### Question 14: interpreting the new model
+```{r echo=F, message=F, fig.align='center', fig.width = 12, fig.height = 4}
+library(latex2exp)
+p1 <- data.frame(x = 1:100, y = 1:100) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = TeX("$\\beta = 1$")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
 
-The researchers hypothesize that larger individuals have higher metabolism, but proportional to body size are more energy efficient. This means that as mass increases, so does metabolism. However, the increase in metabolism associated with a one-unit increase in mass gets smaller and smaller as mass gets larger. Using this new model, the researchers' hypothesis corresponds to $0 < \beta < 1$. Explain.
-:::
+p2 <- data.frame(x = 1:100, y = (1:100)^2) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = TeX("$\\beta > 1$")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p3 <- data.frame(x = 1:100, y = (1:100)^0.25) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = TeX("$0 < \\beta < 1$")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p1 + p2 + p3
+```
+
+**Therefore, the researchers' hypothesis corresponds to $0 < \beta < 1$.**
 
 At first glance, it looks like we can't fit this model with linear regression, because it isn't a linear model. *However*, we <ins>can</ins> use linear regression if we transform the data! Taking $\log$ of both sides, we write the model
 
@@ -237,13 +315,13 @@ Now we can fit this model, and estimate $\beta_1$.
 ### Fit
 
 :::{.question}
-#### Question 15: log transformations
+#### Question 13: log transformations
 
 Modify your `bugula_larvae` dataset to have two new columns: `log_mass` (the `log` of mass), and `log_metabolic` (the `log` of metabolic rate). Use the modified dataset for the questions below.
 :::
 
 :::{.question}
-#### Question 16: estimated line
+#### Question 14: estimated line
 
 Use R (the `lm` function) to fit the linear regression model with `log_mass` as the predictor and `log_metabolic` as the response. Write down the estimated regression line. Also create a scatterplot of log metabolic rate (y-axis) vs. log mass (x-axis), and add the estimated regression line to the plot.
 :::
@@ -251,9 +329,9 @@ Use R (the `lm` function) to fit the linear regression model with `log_mass` as 
 ### Assess
 
 :::{.question}
-#### Question 17: shape and constant variance
+#### Question 15: shape and constant variance
 
-Make a residual plot for the fitted line from question 16: plot the residuals from your estimated model on the y-axis, and the predicted values on the x-axis. Add a horizontal line at 0 on the y-axis. Use this residual plot to assess the shape and constant variance assumptions:
+Make a residual plot for the fitted line from question 14: plot the residuals from your estimated model on the y-axis, and the predicted values on the x-axis. Add a horizontal line at 0 on the y-axis. Use this residual plot to assess the shape and constant variance assumptions:
 
 * *shape:* the shape assumption is reasonable if the residuals appear to be scattered randomly above and below 0, with no clear patterns.
 * *constant variance:* the constant variance assumption is reasonable if the band of residuals has relatively constant width.
@@ -262,9 +340,9 @@ Use your residual plot to assess the shape and constant variance assumptions.
 :::
 
 :::{.question}
-#### Question 18: normality
+#### Question 16: normality
 
-Make a quantile-quantile plot for the residuals for the fitted line from question 16, including the diagonal line. The normality assumption is reasonable if the points in the quantile-quantile plot are generally close to the diagonal line.
+Make a quantile-quantile plot for the residuals for the fitted line from question 14, including the diagonal line. The normality assumption is reasonable if the points in the quantile-quantile plot are generally close to the diagonal line.
 
 Use your quantile-quantile plot to assess the normality assumption.
 :::
@@ -272,7 +350,7 @@ Use your quantile-quantile plot to assess the normality assumption.
 ### Use
 
 :::{.question}
-#### Question 19: evidence for the hypothesis?
+#### Question 17: evidence for the hypothesis?
 
 Interpret the fitted regression coefficient $\widehat{\beta}_1$ ("an increase in log mass of 1 unit is associated with..."). Does the estimated regression line support the hypothesis that individuals with larger mass have larger metabolism, but proportional to body size are more energy efficient?
 :::
@@ -280,9 +358,9 @@ Interpret the fitted regression coefficient $\widehat{\beta}_1$ ("an increase in
 ## Reflection
 
 :::{.question}
-#### Question 20: principles of data analysis
+#### Question 18: principles of data analysis
 
-Rank each of the following principles from the Elements and Principles of Data Analysis article for the data analysis in this assignment from 1 to 10 along with a 1--2 sentence summary. 
+Rank each of the following principles from the Elements and Principles of Data Analysis article for the data analysis you performed in this assignment from 1 to 10 along with a 1--2 sentence summary. 
 
 * *Data matching:* 
 * *Exhaustive:* 
@@ -294,8 +372,9 @@ Rank each of the following principles from the Elements and Principles of Data A
 
 # Grading
 
-Grading will be based on accuracy and completion, with points assigned according to the table below. Make sure your full code *and* your responses are visible in the knitted HTML file. Note that questions 6 and 8 only require code, while questions 7, 9, and 10 only require written responses.
+Grading will be based on accuracy and completion, with points assigned according to the table below. Make sure your full code *and* your responses are visible in the knitted HTML file.
 
 | **Total** | **200pts** |
 | --------- | ---------- |
-| Questions 1--20 | 10 pts each |
+| Questions 1--17 | 11 pts each |
+| Question 18 | 13 pts |
