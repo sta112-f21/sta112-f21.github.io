@@ -1,0 +1,142 @@
+---
+title: "Lab 3, September 10"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Friday, September 17, 12:00pm (noon) on Canvas. Knit your R Markdown file and submit the resulting HTML file to Canvas.
+
+You are welcome to work in groups, but everyone should submit their own lab.
+
+**Learning goals:** By the end of this lab, you will be able to
+
+* Fit a linear model in R
+* Plot the fitted regression line
+* Interpret regression coefficients
+
+# Setup
+
+**Template file:** [lab_03_template.Rmd](https://sta112-f21.github.io/labs/lab_03_template.Rmd)
+
+**Data:** In this lab, we will revisit the `penguins` data from the `palmerpenguins` package. We will look at the relationship between bill depth and body mass.
+
+**Research question:** What is the relationship between bill depth and body mass, and how does it vary across species?
+
+1. Make a plot showing the relationship between bill depth (on the x-axis) and body mass (on the y-axis); remember to provide good axis labels, with units, and a title. Summarize the relationship:
+
+* does there appear to be a relationship?
+* if so, does the relationship appear to be positive or negative?
+* what is the general shape of the relationship? Does it look linear?
+
+We know that there are three species of penguins in the data. If the relationship between bill depth and body mass is different across species, we would need to incorporate species in the model.
+
+2. Make the plot from question 1 again, but this time color the points by species. Does the relationship look different for different species?
+
+Later in the semester, we will learn how to include multiple predictors in a regression model. For now, we will filter the data and focus only on one species of penguin.
+
+3. Create a new dataset, called `gentoos`, which contains only the Gentoo penguins, and which removes any rows containing missing values.
+
+4. Using the plot from question 2, summarize the relationship between bill depth and body mass for the Gentoo penguins:
+* does there appear to be a relationship?
+* if so, does the relationship appear to be positive or negative?
+* what is the general shape of the relationship? Does it look linear?
+
+When a relationship appears linear, we can measure the strength and direction of the relationship with the *sample correlation coefficient*, usually denoted $r$. Recall that $r$ takes values between -1 and 1, with $r = -1$ a very strong negative relationship, $r = 0$ no relationship, and $r = 1$ a very strong positive relationship.
+
+5. Run the following code to calculate the sample correlation coefficient between bill depth and body mass for the Gentoo penguins.
+
+```r
+gentoos %>%
+  summarize(r = cor(bill_depth_mm, body_mass_g))
+```
+
+6. Because the relationship between bill depth and body mass appears linear for the Gentoo penguins, it is reasonable to use a linear regression model. The simple linear regression model is $y = \beta_0 + \beta_1 x + \varepsilon$, for predictor $x$ and response $y$. Write the simple linear regression model for the relationship between bill depth and body mass (replace $x$ and $y$ with the appropriate variable names).
+
+Note: Math notation can be included in R Markdown text. For example, the equation $y = \beta_0 + \beta_1 x + \varepsilon$ would be written 
+
+<pre>$y = \beta_0 + \beta_1 x + \varepsilon$</pre> 
+(the dollar signs are used to enclose math expressions, and the `_` is used for subscripts).
+
+7. Use the `lm` function to fit the simple linear regression model from question 6, by running the following code:
+
+```r
+lm(body_mass_g ~ bill_depth_mm, data = gentoos)
+```
+
+8. Write down the equation of the estimated regression line, using the R output from 7.
+
+Note: the equation $\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x$ can be written 
+
+<pre>$\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x$</pre>
+
+9. Now let's plot the estimated regression line. The first option is to use `ggplot`: the `geom_smooth` geom will plot a regression fit. Run the following code:
+
+```r
+gentoos %>%
+  ggplot(aes(x = bill_depth_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Bill depth (mm)", 
+       y = "Body mass (g)",
+       title = "Regression of body mass on bill depth for gentoo penguins") +
+       theme_bw()
+```
+
+:::{.question}
+*What's going on here?*
+
+`geom_smooth` adds a regression fit to the plot. If `method = "lm"`, then the regression is a linear regression. Other options include `method = "loess"` and `method = "gam"`, both of which will give nonparametric fits. The `se = FALSE` argument means that only the fitted regression function is displayed; if `se = TRUE` (the default), then standard errors for the regression fit are shown too.
+:::
+
+10. The second option for plotting the fitted line is to calculate the predictions from the linear regression model, and add the predictions to the plot. Run the following code:
+
+```r
+y_hat <- lm(body_mass_g ~ bill_depth_mm, data = gentoos) %>%
+  predict()
+
+gentoos %>%
+  mutate(predictions = y_hat) %>%
+  ggplot(aes(x = bill_depth_mm)) +
+  geom_point(aes(y = body_mass_g)) +
+  geom_line(aes(y = predictions), 
+            color = "blue", 
+            lwd = 1.2) +
+  labs(x = "Bill depth (mm)", 
+       y = "Body mass (g)",
+       title = "Regression of body mass on bill depth for gentoo penguins") +
+       theme_bw()
+```
+
+:::{.question}
+*What's going on here?*
+
+The `predict` function calculated predicted values (i.e., $\widehat{y}$) from the fitted regression. We then plot both the original response values for body mass (as points), and the predicted values (as a line). Since we have two different variables plotted on the y-axis here, we specify the y-axis aesthetic separately in each geom.
+:::
+
+11. Interpret the estimated slope and intercept of the fitted regression line from question 8.
+
+12. Now let's look at the other species. Fit a separate linear regression model (body mass on bill depth) for the Chinstrap and Adelie penguins. How do the estimated lines vary across species?
+
+13. **Reflection:** Rank each of the following principles from the Elements and Principles of Data Analysis article for the data analysis you did on this lab from 1 to 10 along with a 1--2 sentence summary.
+
+* *Data matching:* 
+* *Exhaustive:* 
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 
+* *Reproducibility:*  
+
+# Grading
+
+Grading will be based on completion, with points assigned according to the table below. An exercise is complete if you have made an honest effort to fill in the code chunk and answer the question for that exercise.
+
+| **Total** | **100pts** |
+| --------- | ---------- |
+| Filename lab_02_your_name.html | 1 pt |
+| Changed `author` in YAML | 1 pts |
+| Exercises 1--6 | 7 pts each |
+| Exercises 7--13 | 8 pts each |
