@@ -1,0 +1,155 @@
+---
+title: "Homework 2 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
+```
+
+## Question 1
+
+```{r}
+glimpse(drosophila)
+
+drosophila %>%
+  drop_na() %>%
+  glimpse()
+```
+
+The `drosophila` data were collected by researchers interested in studying whether non-genetic traits can be passed down to offspring. The data were made available in the paper ‘Ancestral and offspring nutrition interact to affect life-history traits in Drosophila melanogaster’ (Deas et al. 2018, *Proc. R. Soc. B.*), and contain 1372 rows. Each row represents one fruit fly, and there are 8 variables recorded for each fly. These variables capture information about the experiment (such as which generation the fly was in, and the diet of that fly and its ancestors), as well as measurements on the fly's development, like mass (in mg) and larval time (in days). There are no missing values in the data.
+
+**Grading**:
+
+When grading this question, please comment on any parts which are missing or incorrect.
+
+* 10/10: each component is present and most are correct, and code for answering the question is included. (The answer can be written in bullet points or a list, it does not have to be in a paragraph for this assignment).
+* 7/10: each component is present and most are correct, but code is not included. 
+* 7/10: code is included, but one or two components are missing
+* 4/10: 3 or more components are missing, OR code is missing and one or more components is missing
+* 0/10: no answer
+
+## Question 2
+
+```{r}
+drosophila %>%
+  ggplot(aes(x = Mass)) +
+  geom_histogram(bins=20) +
+  labs(x = "Mass (mg)", 
+       title = "Distribution of mass")
+
+drosophila %>%
+  ggplot(aes(x = LarvalTime)) +
+  geom_histogram(bins=10) +
+  labs(x = "Larval time (days)", 
+       title = "Distribution of larval time")
+
+drosophila %>%
+  summarize(mean_mass = mean(Mass),
+            sd_mass = sd(Mass),
+            mean_larval = mean(LarvalTime),
+            sd_larval = sd(LarvalTime))
+```
+
+The distribution of mass is unimodal and symmetric, with a mean of 1.44 mg and a standard deviation of 0.282 mg. There do not appear to be any outliers. As we experiment with different numbers of bins, we notice that mass only takes on discrete values in the data: 1.0, 1.1, 1.2, etc.
+
+The distribution of larval time is unimodal and somewhat right-skewed, with a mean of 5.48 days and a standard deviation of 1.3 days. There may be a couple outliers with larval times around 11 days. As with mass, we notice that larval time only takes on a few discrete values. This may be the result of how the data is measured -- if the researchers only check the flies once a day, they cannot measure larval time more precisely.
+
+**Grading:** 
+
+To get full credit, they need to include full code, and comment on each aspect of each distribution (center, shape, spread, unusual features, outliers). Acceptable plots for the distribution are histogram, density plot, or violin plot. If they make a boxplot, they can get partial credit (but boxplots don't answer questions about modality, e.g.)
+
+* 10/10: the correct plots and summary statistics are made, code is included, and correct descriptions of each aspect.
+* 7/10: Correct plots (or boxplot) and summary statistics are made, code is included, mostly correct descriptions.
+* 5/10: Code and/or plots are not included, but mostly correct descriptions
+* 3/10: Incorrect plots and/or descriptions
+* 0/10: no answer
+
+## Question 3
+
+```{r}
+drosophila %>%
+  ggplot(aes(x = Diet)) +
+  geom_bar() +
+  facet_wrap(~Generation) +
+  labs(title = "Distribution of diet by generation")
+```
+
+All diets are present in each generation, with roughly equal numbers of flies in each diet in each generation. 
+
+**Grading:** 
+
+* 10/10: the correct plot, code is included, correct answer.
+* 7/10: Correct plot, code is included, mostly correct answer
+* 5/10: Code and/or plot not included or incorrect, mostly correct answer
+* 3/10: Code and/or plot included, answer missing
+* 0/10: everythig missing
+
+## Question 4
+
+```{r}
+
+```
+
+Type your answer to question 4 here...
+
+## Question 5
+
+```{r}
+drosophila %>%
+  group_by(Generation, Diet) %>%
+  summarize(mean_mass = mean(Mass),
+            mean_larval = mean(LarvalTime))
+```
+
+Average mass and larval time appear to be negatively related, with higher average mass associated with lower average larval time (quicker development). The relationship appears to hold across generations.
+
+## Question 6
+
+```{r}
+drosophila %>%
+  ggplot(aes(x = Diet, y = Mass)) +
+  geom_boxplot() +
+  facet_wrap(~Generation) +
+  labs(x = "Diet", 
+       y = "Mass (mg)",
+       title = "Distribution of mass by diet in each generation")
+
+drosophila %>%
+  ggplot(aes(x = Diet, y = LarvalTime)) +
+  geom_boxplot() +
+  facet_wrap(~Generation) +
+  labs(x = "Diet", 
+       y = "Larval time (days)",
+       title = "Distribution of larval time by diet in each generation")
+```
+
+## Question 7
+
+Diet does appear to be associated with differences in development. We can see that flies with poor diets tend to have smaller mass and take longer to develop, compared to flies with righ or standard diets. This relationship holds true across generations.
+
+## Question 8
+
+```{r}
+
+```
+
+## Question 9
+
+Type your answer to question 9 here...
+
+## Question 10
+
+* *Data matching:* 
+* *Exhaustive:* 
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 10 The analysis depends entirely on a few visualizations and summary statistics, and so is very transparent.
+* *Reproducibility:* 
+
+## Citations and acknowledgments
+
+Cite any outside resources used, and acknowledge any collaborators
+
