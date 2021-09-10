@@ -18,6 +18,12 @@ You are welcome to work in groups, but everyone should submit their own lab.
 * Plot the fitted regression line
 * Interpret regression coefficients
 
+# Early feedback survey (optional, anonymous)
+
+If you would like to provide feedback about your experiences in the class so far, you can fill out this survey: [https://forms.gle/AL5iW12js8JcSR6R8](https://forms.gle/AL5iW12js8JcSR6R8) 
+
+Survey participation is completely optional, and is anonymous. You may need to sign into your Wake google account to acess the survey, but your email will not be recorded.
+
 # Setup
 
 **Template file:** [lab_03_template.Rmd](https://sta112-f21.github.io/labs/lab_03_template.Rmd)

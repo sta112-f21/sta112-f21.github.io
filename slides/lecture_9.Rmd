@@ -20,6 +20,13 @@ editor_options:
     * start early
     * we will cover some of the material next week
     * really cool example where linear regression is used in a real research paper
+--
+* Data summary and visualization cheat sheet on the course website
+    * How to summarize, visualize, and describe distributions and relationships between variables
+    * Includes code snippets for examples 
+    * [https://sta112-f21.github.io/homework/data_visualization_summary_cheat_sheet.html](https://sta112-f21.github.io/homework/data_visualization_summary_cheat_sheet.html)
+--
+* Early feedback survey (anonymous, optional): [https://forms.gle/AL5iW12js8JcSR6R8](https://forms.gle/AL5iW12js8JcSR6R8)
 * Interpreting linear regression fit
 * Lab 3
 

@@ -1,0 +1,141 @@
+---
+---
+---
+title: "Homework 3"
+author: "Your Name"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+```
+
+## Question 1
+
+```{r}
+
+```
+
+Type your answer to question 1 here...
+
+## Question 2
+
+```{r}
+
+```
+
+Type your answer to question 2 here...
+
+## Question 3
+
+```{r}
+
+```
+
+Type your answer to question 3 here...
+
+## Question 4
+
+```{r}
+
+```
+
+## Question 5
+
+```{r}
+
+```
+
+Type your answer to question 5 here...
+
+## Question 6
+
+```{r}
+
+```
+
+## Question 7
+
+Type your answer to question 7 here...
+
+## Question 8
+
+```{r}
+
+```
+
+Type your answer to question 8 here...
+
+## Question 9
+
+Type your answer to question 9 here...
+
+## Question 10
+
+```{r}
+
+```
+
+Type your answer to question 10 here...
+
+## Question 11
+
+```{r}
+
+```
+
+Type your answer to question 11 here...
+
+## Question 12
+
+Type your answer to question 12 here...
+
+## Question 13
+
+```{r}
+
+```
+
+## Question 14
+
+```{r}
+
+```
+
+Type your answer to question 14 here...
+
+## Question 15
+
+```{r}
+
+```
+
+Type your answer to question 15 here...
+
+## Question 16
+
+```{r}
+
+```
+
+Type your answer to question 16 here...
+
+## Question 17
+
+Type your answer to question 17 here...
+
+## Question 18
+
+* *Data matching:* 
+* *Exhaustive:* 
+* *Skeptical:* 
+* *Second-order:* 
+* *Transparency:* 
+* *Reproducibility:* 
+
+## Citations and acknowledgments
+
+Cite any outside resources used, and acknowledge any collaborators
+

@@ -220,24 +220,25 @@
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <p><strong>Due:</strong> Friday, September 24, 12:00pm (noon) on Canvas</p>
 <p>(As this assignment is longer than usual, you have two weeks to complete it)</p>
-<p><strong>Instructions:</strong> In this homework assignment, you will use exploratory data analysis and linear regression to investigate the relationship between mass and metabolism for a species of marine byrozoan.</p>
+<p><strong>Instructions:</strong> In this homework assignment, you will use exploratory data analysis and linear regression to investigate the relationship between mass and metabolism for a species of marine bryozoan.</p>
 <ul>
 <li>A template R Markdown file is provided in the setup below</li>
 <li>When you are done with the assignment, knit and submit the HTML on Canvas</li>
 <li>When making plots, make sure to nicely label all axes, provide units where applicable, and add a title</li>
 <li>When making histograms, choose a good number of bins</li>
+<li>Refer to the <a href="https://sta112-f21.github.io/homework/data_visualization_summary_cheat_sheet.html">Data Exploration Cheat Sheet</a> for information on how to summarize, visualize, and describe the distribution of variables and the relationships between variables</li>
 <li>Remember to acknowledge any collaborators, and to cite outside sources</li>
 </ul>
 <div id="setup" class="section level1">
 <h1>Setup</h1>
 <div id="template" class="section level3">
 <h3>Template</h3>
-<p>A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: <a href="https://sta112-f21.github.io/homework/hw_02_template.Rmd">hw_02_template.Rmd</a></p>
+<p>A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: <a href="https://sta112-f21.github.io/homework/hw_03_template.Rmd">hw_03_template.Rmd</a></p>
 </div>
 <div id="data" class="section level3">
 <h3>Data</h3>
 <p>Researchers have observed many species for which larger offspring have a biological fitness advantage over smaller offspring, but there have been competing hypotheses for why this is the case, and there are exceptions. In the paper “Why does offspring size affect performance? Integrating metabolic scaling with life-history theory” (Pattersen et al. 2015, <em>Proc. R. Soc. B.</em>), the authors propose that larger offspring are more efficient in energy consumption and thus have greater fitness.</p>
-<p>To investigate, the authors collected data on two species of marine byrozoan, <em>Bugula neritina</em> and <em>Watersipora subtorquata</em>. After initial growth, the developmental process of these two species consists of three phases before they are considered mature - a larval stage (before the individual settles and begins metamorphosis), an early post-settlement stage, and a late post-settlement stage (as the individual nears the end of metamorphosis).</p>
+<p>To investigate, the authors collected data on two species of marine bryozoan, <em>Bugula neritina</em> and <em>Watersipora subtorquata</em>. After initial growth, the developmental process of these two species consists of three phases before they are considered mature - a larval stage (before the individual settles and begins metamorphosis), an early post-settlement stage, and a late post-settlement stage (as the individual nears the end of metamorphosis).</p>
 <p>Here we have data from 626 individuals from these two species, measured at the three different developmental stages. For each individual, the researchers recorded the mass (in micrograms) and the rate of oxygen consumption. The rate of oxygen consumption was then converted into the metabolic rate (rate of energy consumption), based on the amount of energy in oxygen.</p>
 <p>The different columns are:</p>
 <ul>
@@ -250,9 +251,10 @@
 </div>
 <div id="downloading-the-data" class="section level3">
 <h3>Downloading the data</h3>
-<p>The data for this assignment comes from the paper by Pattersen <em>et al.</em>, and is stored in a CSV file. CSV files can be read into R with the <code>read_csv</code> function, which is part of the <code>readr</code> package in the tidyverse. The following code imports the data and saves it as a data frame called <code>byrozoan</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>byrozoan <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://sta112-f21.github.io/homework/byrozoan.csv&quot;</span>)</span></code></pre></div>
+<p>The data for this assignment comes from the paper by Pattersen <em>et al.</em>, and is stored in a CSV file. CSV files can be read into R with the <code>read_csv</code> function, which is part of the <code>readr</code> package in the tidyverse. The following code imports the data and saves it as a data frame called <code>bryozoan</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bryozoan <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://sta112-f21.github.io/homework/bryozoan_data.csv&quot;</span>)</span></code></pre></div>
 <p>This code is included in the setup chunk of the R Markdown template for this assignment. The argument to the <code>read_csv</code> function here is the path to the CSV file we want to import. This can be either a local path (on your computer) or a url.</p>
+<p><strong>Note: since the data is imported from a csv file, rather than an R package, the <code>?bryozoan</code> command will not provide any information about the data. I have included background on the dataset and variables above.</strong></p>
 </div>
 </div>
 <div id="research-questions" class="section level1">
@@ -268,7 +270,7 @@
 <p>Our first step is to summarize the data, providing background and context. In a data analysis report, this information tells the reader what data you are working with (it is hard to understand a data analysis if you don’t know what data the analyst is using). The more context we provide, the more second-order our analysis is.</p>
 <div id="question-1-data-summary" class="section level4 question">
 <h4>Question 1: data summary</h4>
-<p>Write a short paragraph summarizing the <code>byrozoan</code> data. Describe:</p>
+<p>Write a short paragraph summarizing the <code>bryozoan</code> data. Describe:</p>
 <ul>
 <li>Who (or which organization) originally collected the data?</li>
 <li>Why was the data collected?</li>
@@ -281,11 +283,11 @@
 <p>Our next step is to examine the variables we will use for our analysis. While this exploration might not directly address the research question (and is not always included in a final report), it is important to identify any unusual features in the data. Summarizing different variables also provides useful context for a reader unfamiliar with your data. For example, most readers will have no idea what a typical mass or metabolic rate is for <em>Bugula neritina</em>.</p>
 <div id="question-2-distributions-of-mass-and-metabolic-rate" class="section level4 question">
 <h4>Question 2: distributions of mass and metabolic rate</h4>
-<p>Create two histograms, one for the distribution of mass and one for the distribution of metabolic rate. For each histogram, calculate the mean and standard deviation, and describe the distribution, reporting the following information:</p>
+<p>Create two histograms, one for the distribution of mass and one for the distribution of metabolic rate. For each histogram, calculate a measure of center and a measure of spread (either mean and standard deviation, or median and IQR) and describe the distribution, reporting the following information:</p>
 <ul>
 <li>Shape (symmetric vs. skewed, number of modes, location of modes)</li>
-<li>Center (mean)</li>
-<li>Spread (standard deviation)</li>
+<li>Center (mean or median)</li>
+<li>Spread (standard deviation or IQR)</li>
 <li>Any unusual features?</li>
 <li>Any potential outliers?</li>
 </ul>
@@ -304,7 +306,7 @@
 <h4>Question 4: calculating correlation</h4>
 <p>When a relationship appears linear, we can measure the strength and direction of the relationship with the <em>sample correlation coefficient</em>, usually denoted <span class="math inline">\(r\)</span>. Recall that <span class="math inline">\(r\)</span> takes values between -1 and 1, with <span class="math inline">\(r = -1\)</span> a very strong negative relationship, <span class="math inline">\(r = 0\)</span> no relationship, and <span class="math inline">\(r = 1\)</span> a very strong positive relationship.</p>
 <p>Run the following code to calculate the sample correlation coefficient between mass and metabolic rate.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>byrozoan <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bryozoan <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">r =</span> <span class="fu">cor</span>(Mass, Metabolic))</span></code></pre></div>
 </div>
 <p>We want to model the relationship between mass and metabolic rate. However, if this relationship differs between species and developmental stages, then we would need to include species and developmental stage in the model. Let’s check whether the relationship looks different for different species and developmental stages.</p>
@@ -315,7 +317,7 @@
 <p>To ensure that our analysis is not impacted by differences across species and developmental stages, for the rest of the assignment we will work only with <em>Bugula neritina</em> in the larval stage.</p>
 <div id="question-6-filtering" class="section level4 question">
 <h4>Question 6: filtering</h4>
-<p>Create a new dataset that contains only the rows of the <code>byrozoan</code> data for which species is <em>bugula</em> and stage is <em>larvae</em>. Save your new dataset as <code>bugula_larvae</code>, and use it for the remaining questions below.</p>
+<p>Create a new dataset that contains only the rows of the <code>bryozoan</code> data for which species is <em>bugula</em> and stage is <em>larvae</em>. Save your new dataset as <code>bugula_larvae</code>, and use it for the remaining questions below.</p>
 </div>
 </div>
 <div id="regression" class="section level2">
@@ -350,7 +352,7 @@
 <p>Technically, not all of these assumptions are always necessary, depending on how we intend to use the regression. However, for this assignment we will practice checking all of them (except zero mean).</p>
 <div id="question-9-independence-and-randomness" class="section level4 question">
 <h4>Question 9: independence and randomness</h4>
-<p>Do the assumptions of independence and randomness seem appropriate for the linear regression model in question 7? Think about the <code>byrozoan</code> data – is there any dependence between different observations? Does the data represent a sample or experiment that can be generalized to a wider population?</p>
+<p>Do the assumptions of independence and randomness seem appropriate for the linear regression model in question 7? Think about the <code>bryozoan</code> data – is there any dependence between different observations? Does the data represent a sample or experiment that can be generalized to a wider population?</p>
 </div>
 <div id="question-10-shape-and-constant-variance" class="section level4 question">
 <h4>Question 10: shape and constant variance</h4>

@@ -11,25 +11,26 @@ link-citations: yes
 
 (As this assignment is longer than usual, you have two weeks to complete it)
 
-**Instructions:** In this homework assignment, you will use exploratory data analysis and linear regression to investigate the relationship between mass and metabolism for a species of marine byrozoan.
+**Instructions:** In this homework assignment, you will use exploratory data analysis and linear regression to investigate the relationship between mass and metabolism for a species of marine bryozoan.
 
 * A template R Markdown file is provided in the setup below
 * When you are done with the assignment, knit and submit the HTML on Canvas
 * When making plots, make sure to nicely label all axes, provide units where applicable, and add a title
 * When making histograms, choose a good number of bins
+* Refer to the [Data Exploration Cheat Sheet](https://sta112-f21.github.io/homework/data_visualization_summary_cheat_sheet.html) for information on how to summarize, visualize, and describe the distribution of variables and the relationships between variables
 * Remember to acknowledge any collaborators, and to cite outside sources
 
 # Setup
 
 ### Template
 
-A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_02_template.Rmd](https://sta112-f21.github.io/homework/hw_02_template.Rmd)
+A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_03_template.Rmd](https://sta112-f21.github.io/homework/hw_03_template.Rmd)
 
 ### Data
 
 Researchers have observed many species for which larger offspring have a biological fitness advantage over smaller offspring, but there have been competing hypotheses for why this is the case, and there are exceptions. In the paper "Why does offspring size affect performance? Integrating metabolic scaling with life-history theory" (Pattersen et al. 2015, *Proc. R. Soc. B.*), the authors propose that larger offspring are more efficient in energy consumption and thus have greater fitness.
 
-To investigate, the authors collected data on two species of marine byrozoan, *Bugula neritina* and *Watersipora subtorquata*. After initial growth, the developmental process of these two species consists of three phases before they are considered mature - a larval stage (before the individual settles and begins metamorphosis), an early post-settlement stage, and a late post-settlement stage (as the individual nears the end of metamorphosis).
+To investigate, the authors collected data on two species of marine bryozoan, *Bugula neritina* and *Watersipora subtorquata*. After initial growth, the developmental process of these two species consists of three phases before they are considered mature - a larval stage (before the individual settles and begins metamorphosis), an early post-settlement stage, and a late post-settlement stage (as the individual nears the end of metamorphosis).
 
 Here we have data from 626 individuals from these two species, measured at the three different developmental stages. For each individual, the researchers recorded the mass (in micrograms) and the rate of oxygen consumption. The rate of oxygen consumption was then converted into the metabolic rate (rate of energy consumption), based on the amount of energy in oxygen.
 
@@ -43,13 +44,15 @@ The different columns are:
 
 ### Downloading the data
 
-The data for this assignment comes from the paper by Pattersen *et al.*, and is stored in a CSV file. CSV files can be read into R with the `read_csv` function, which is part of the `readr` package in the tidyverse. The following code imports the data and saves it as a data frame called `byrozoan`:
+The data for this assignment comes from the paper by Pattersen *et al.*, and is stored in a CSV file. CSV files can be read into R with the `read_csv` function, which is part of the `readr` package in the tidyverse. The following code imports the data and saves it as a data frame called `bryozoan`:
 
 ```r
-byrozoan <- read_csv("https://sta112-f21.github.io/homework/byrozoan.csv")
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
 ```
 
 This code is included in the setup chunk of the R Markdown template for this assignment. The argument to the `read_csv` function here is the path to the CSV file we want to import. This can be either a local path (on your computer) or a url.
+
+**Note: since the data is imported from a csv file, rather than an R package, the `?bryozoan` command will not provide any information about the data. I have included background on the dataset and variables above.**
 
 # Research questions
 
@@ -68,7 +71,7 @@ Our first step is to summarize the data, providing background and context. In a 
 :::{.question}
 #### Question 1: data summary
 
-Write a short paragraph summarizing the `byrozoan` data. Describe:
+Write a short paragraph summarizing the `bryozoan` data. Describe:
 
 * Who (or which organization) originally collected the data?
 * Why was the data collected?
@@ -83,11 +86,11 @@ Our next step is to examine the variables we will use for our analysis. While th
 :::{.question}
 #### Question 2: distributions of mass and metabolic rate
 
-Create two histograms, one for the distribution of mass and one for the distribution of metabolic rate. For each histogram, calculate the mean and standard deviation, and describe the distribution, reporting the following information:
+Create two histograms, one for the distribution of mass and one for the distribution of metabolic rate. For each histogram, calculate a measure of center and a measure of spread (either mean and standard deviation, or median and IQR) and describe the distribution, reporting the following information:
 
 * Shape (symmetric vs. skewed, number of modes, location of modes)
-* Center (mean)
-* Spread (standard deviation)
+* Center (mean or median)
+* Spread (standard deviation or IQR)
 * Any unusual features?
 * Any potential outliers?
 :::
@@ -112,7 +115,7 @@ When a relationship appears linear, we can measure the strength and direction of
 Run the following code to calculate the sample correlation coefficient between mass and metabolic rate.
 
 ```r
-byrozoan %>%
+bryozoan %>%
   summarize(r = cor(Mass, Metabolic))
 ```
 :::
@@ -130,7 +133,7 @@ To ensure that our analysis is not impacted by differences across species and de
 :::{.question}
 #### Question 6: filtering
 
-Create a new dataset that contains only the rows of the `byrozoan` data for which species is *bugula* and stage is *larvae*. Save your new dataset as `bugula_larvae`, and use it for the remaining questions below.
+Create a new dataset that contains only the rows of the `bryozoan` data for which species is *bugula* and stage is *larvae*. Save your new dataset as `bugula_larvae`, and use it for the remaining questions below.
 :::
 
 ## Regression
@@ -171,7 +174,7 @@ Technically, not all of these assumptions are always necessary, depending on how
 :::{.question}
 #### Question 9: independence and randomness
 
-Do the assumptions of independence and randomness seem appropriate for the linear regression model in question 7? Think about the `byrozoan` data -- is there any dependence between different observations? Does the data represent a sample or experiment that can be generalized to a wider population? 
+Do the assumptions of independence and randomness seem appropriate for the linear regression model in question 7? Think about the `bryozoan` data -- is there any dependence between different observations? Does the data represent a sample or experiment that can be generalized to a wider population? 
 :::
 
 :::{.question}

@@ -1,5 +1,5 @@
 ---
-title: "Data Visualization Cheat Sheet"
+title: "Data Exploration Cheat Sheet"
 output: 
   rmdformats::robobook:
     css: "homework.css"
