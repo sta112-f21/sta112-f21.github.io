@@ -1,0 +1,166 @@
+---
+author: "Dr. Ciaran Evans"
+title: Interpretation and Lab 3
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* HW 3 released today; due in **two** weeks
+    * longer assignment than normal
+    * start early
+    * we will cover some of the material next week
+    * really cool example where linear regression is used in a real research paper
+* Interpreting linear regression fit
+* Lab 3
+
+---
+
+## Kent sparrows data
+
+```{r echo=F, message=F, fig.align='center', fig.width = 5, fig.height=4}
+library(Stat2Data)
+library(tidyverse)
+data(Sparrows)
+
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+```{r}
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+---
+
+## Kent sparrows data
+
+```{r echo=F, message=F, fig.align='center', fig.width = 5, fig.height=4}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+$\widehat{\text{weight}} = 1.366 + 0.467(\text{wing length})$
+
+---
+
+## $\widehat{\beta}_0$
+
+```{r echo=F, message=F, fig.align='center', fig.width = 5, fig.height=4}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+$\widehat{\text{weight}} = 1.366 + 0.467(\text{wing length})$
+
+$\widehat{\beta}_0 = 1.366$
+
+.question[
+The estimated weight for a sparrow with wing length 0cm is 1.366g
+]
+
+---
+
+## $\widehat{\beta}_0$
+
+```{r echo=F, message=F, fig.align='center', fig.width = 5, fig.height=4}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+$\widehat{\beta}_0 = 1.366$
+
+The estimated weight for a sparrow with wing length 0cm is 1.366g
+
+.question[
+If $x = 0$ is outside the range of the data, then $\widehat{\beta}_0$ might not have a very meaningful interpretation.
+]
+
+---
+
+## $\widehat{\beta}_1$
+
+```{r echo=F, message=F, fig.align='center', fig.width = 5, fig.height=4}
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+$\widehat{\text{weight}} = 1.366 + 0.467(\text{wing length})$
+
+$\widehat{\beta}_1 = 0.467$
+
+.question[
+An increase of one cm in wing length is associated with an increase in 0.467g, on average, in weight.
+]
+
+---
+
+## Be careful with causality!
+
+$\widehat{\text{weight}} = 1.366 + 0.467(\text{wing length})$
+
+**Some appropriate interpretations:**
+
+* An increase of one cm in wing length is associated with an increase in 0.467g, on average, in weight.
+* If sparrow A has a wing length that is one cm longer than sparrow B's wing length, we predict that sparrow A weighs 0.467g more than sparrow B.
+
+--
+
+**Some inappropriate interpretations:** (except in special cases)
+
+* If a sparrow's wings grow by 1cm, then its weight will increase by 0.467g.
+* An increase of 1cm in wing length causes an increase of 0.467g in weight.
+
+--
+
+**When are causal interpretations justified?**
+
+* In randomized experiments
+* In some observational studies, if we appropriately account for confounding variables
+
+---
+
+## Lab 3
+
+Practice with linear regression on the penguins data.
+
+[https://sta112-f21.github.io/labs/lab_3.html](https://sta112-f21.github.io/labs/lab_3.html)

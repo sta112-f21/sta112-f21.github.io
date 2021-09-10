@@ -1,0 +1,87 @@
+---
+title: "Data Visualization Cheat Sheet"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+**Use:** The purpose of this cheat sheet is to serve as a refresher on different types of variables, plots we can use to visualize them, and code for making those plots. We also discuss some summary statistics.
+
+# Types of variables
+
+In STA 112, we deal mainly with *categorical* and *quantitative* variables. 
+
+* **Categorical** variables are variables which take on one of several fixed values. These values generally do not have a numeric interpretation.
+    * Examples: gender, favorite food, brand of laptop
+    * *Binary* categorical variables have exactly 2 possible values
+* **Quantitative** variables are variables which take on a numeric value, and which have a numeric interpretation.
+    * Examples: number of pets, height, weight, age
+    * *Discrete* quantitative variables only take on discrete values (e.g., number of pets)
+    * *Continuous* quantitative variables can take on an entire range of values (e.g., height is continuous if we allow heights like 60.323 inches)
+
+
+# Univariate exploratory data analysis
+
+Here we discuss how to summarize, visualize, and describe the distributions of categorical and quantitative variables.
+
+## Categorical variables
+
+### Summarize
+
+```{r, include=F}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+The number of observations in each group can be summarized in a **frequency table**:
+
+```{r}
+penguins %>%
+  count(species)
+```
+
+### Visualize
+
+The same information can be visualized with **bar charts**, which display the number of observations in each group as the height of the bar:
+
+
+```{r}
+penguins %>%
+  ggplot(aes(x = species)) +
+  geom_bar()
+```
+
+Other visualization options include pie charts.
+
+### Describe
+
+* Which category has the most number of observations? The least?
+* Are observations spread relatively evenly across categories, or do one or two categories have the majority of the observations?
+
+## Quantitative variables
+
+### Summarize
+
+Many summary statistics can be calculated for quantitative variables. We often calculate the mean or median to summarize the center of the distribution, and the standard deviation or IQR to summarize the spread of the distribution. If the data are highly skewed, the median and IQR are often more appropriate measures of center and spread.
+
+Note that if NAs (missing values) are present in the data, then we need to remove them before calculating summary statistics. This can be done by removing all rows with NAs (`drop_na()`), or by ignoring NAs when we calculate the summary statistics (`na.rm=TRUE`).
+
+```{r}
+penguins %>%
+  summarize(mean_mass = mean(body_mass_g, na.rm=TRUE),
+            median_mass = median(body_mass_g, na.rm=TRUE),
+            sd_mass = sd(body_mass_g, na.rm=TRUE),
+            iqr_mass = IQR(body_mass_g, na.rm=TRUE))
+```
+
+### Visualize
+
+A good choice for visualize the distribution of a quantitative variable is with a **histogram**. A histogram divides the range of the data into evenly spaced bins, and then displays the number of observations which fall into each bin. Since the number of bins affects how the histogram looks, it is good practice to experiment with several different numbers of bins. This can be specified with the `bins` argument in `geom_histogram`.
+
+```{r, message=F}
+penguins %>%
+  ggplot(aes(x = body_mass_g)) +
+  geom_histogram(bins = 20)
+```
