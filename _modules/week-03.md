@@ -14,9 +14,11 @@ September 8
 
 September 10
 : **Lab**{: .label .label-purple } Lab 3 -- simple linear regression
-  : [Slides](#), [Lab 3](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_9.html), [Lab 3](https://sta112-f21.github.io/labs/lab_3.html)
+  
+: [Data exploration cheat sheet](https://sta112-f21.github.io/homework/data_visualization_summary_cheat_sheet.html)
 
 : **HW 2 due**{: .label .label-red }
 
 : **HW 3 released**{: .label .label-yellow }
-  : [HW 3](#)
+  : [HW 3](https://sta112-f21.github.io/homework/homework_3.html)
