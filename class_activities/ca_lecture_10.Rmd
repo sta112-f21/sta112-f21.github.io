@@ -1,0 +1,60 @@
+---
+title: "Class Activity, September 13"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice checking the shape, constant variance, and independence assumptions for the Honda Accord data.
+
+## Setup
+
+The data are contained in the `AccordPrice` dataset from the `Stat2Data` package. The activity template contains copies of the code and questions below. Run the setup chunk in the template before you begin.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_10_template.Rmd)
+
+1. Fill in the code below to fit the linear regression model of price (response) on mileage (predictor), and save the fitted model as `accord_lm` in R:
+
+```r
+accord_lm <- lm(... ~ ..., data = ...)
+```
+
+2. Run the code below to make a scatterplot with price on the y-axis and mileage on the x-axis, with the fitted regression line shown in blue:
+
+```r
+AccordPrice %>%
+  mutate(yhat = predict(accord_lm)) %>%
+  ggplot(aes(x = Mileage)) +
+  geom_point(aes(y = Price)) +
+  geom_line(aes(y = yhat), lwd=1.2, color="blue") +
+  labs(x = "Number of miles (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme_bw()
+```
+
+3. Fill in the code below to make a residual plot for the fitted model:
+
+```r
+AccordPrice %>%
+  mutate(yhat = ...,
+         residuals = Price - yhat) %>%
+  ggplot(aes(x = ..., y = ...)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted price",
+       y = "Residual") +
+  theme_bw()
+```
+
+Now let's assess some of the conditions. Recall that:
+
+* the shape assumption is reasonable if the residuals appear to be scattered randomly above and below 0, with no clear patterns.
+* the constant variance assumption is reasonable if the band of residuals has relatively constant width.
+
+4. Using the residual plot, do the shape and constant variance assumptions seem reasonable? 
+
+5. The `AccordPrice` data was collected from a sample of cars listed on an online used car site. Does the independence assumption seem reasonable? That is, if one seller changes the asking price of their used car, would that influence the asking price of another seller?

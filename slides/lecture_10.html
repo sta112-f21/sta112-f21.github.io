@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Model Assumptions and Diagnostics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Model Assumptions and Diagnostics
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+---
+
+## Recap: regression
+
+**Regression:** model the relationship between predictor `\(x\)` and response `\(y\)`
+
+**Regression model:** `\(y = f(x) + \varepsilon\)`
+
+* `\(f\)` = systematic information that `\(x\)` provides about `\(y\)`
+* `\(\varepsilon\)` = random noise
+
+--
+
+**Linear regression:** `\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+
+---
+
+## Recap: linear regression
+
+**Observed data (sample):**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+--
+
+**Regression model (population):**
+
+.center[
+`\(\text{Weight} = \beta_0 + \beta_1 \text{WingLength} + \varepsilon\)`
+]
+
+--
+
+**Estimated regression line (from sample):**
+
+.center[
+`\(\widehat{\text{Weight}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{WingLength}\)`
+]
+
+---
+
+## Recap: fitting linear regression
+
+**Model:**
+.center[
+`\(\text{Weight} = \beta_0 + \beta_1 \text{WingLength} + \varepsilon\)`
+]
+
+**Fitting the model:**
+
+
+```r
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+```
+## 
+## Call:
+## lm(formula = Weight ~ WingLength, data = Sparrows)
+## 
+## Coefficients:
+## (Intercept)   WingLength  
+##      1.3655       0.4674
+```
+
+--
+
+**Estimated regression line:**
+
+.center[
+`\(\widehat{\text{Weight}} = 1.366 + 0.467 \ \text{WingLength}\)`
+]
+
+---
+
+## Recap: interpretation
+
+.center[
+`\(\widehat{\text{Weight}} = 1.366 + 0.467 \ \text{WingLength}\)`
+]
+
+**Interpreting `\(\widehat{\beta}_0\)`:** If wing length = 0cm, we predict a weight of 1.366 g.
+
+**Interpreting `\(\widehat{\beta}_1\)`:** An increase of 1cm in wing length is associated with an increase of 0.467 g, on average, in weight
+
+---
+
+## Concept check
+
+Interested in the relationship between mileage and price for used Honda Accords.
+
+.pull-left[
+**Observed data (sample):**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+We will use linear regression. Write the regression model:
+
+.abox[
+`\(\text{price} = \beta_0 + \beta_1 \text{miles}\)`
+]
+
+.bbox[
+`\(\text{price} = \beta_0 + \beta_1 \text{miles} + \varepsilon\)`
+]
+
+.cbox[
+`\(\widehat{\text{price}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{miles}\)`
+]
+
+.dbox[
+`\(\widehat{\text{price}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{miles} + \varepsilon\)`
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+**Observed data (sample):**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+Least-squares fit:
+
+
+```
+## 
+## Call:
+## lm(formula = Price ~ Mileage, data = AccordPrice)
+## 
+## Coefficients:
+## (Intercept)      Mileage  
+##     20.8096      -0.1198
+```
+]
+
+
+.pull-right[
+What is the equation of the fitted regression line?
+
+.abox[
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+]
+
+.bbox[
+`\(\text{price} = \beta_0 + \beta_1 \text{miles}\)`
+]
+
+.cbox[
+`\(\widehat{\text{price}} = -0.12 + 20.81 \ \text{miles}\)`
+]
+
+.dbox[
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \widehat{\text{miles}}\)`
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+**Fitted line:**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+
+]
+
+
+.pull-right[
+Interpret the estimated &lt;ins&gt;intercept&lt;/ins&gt;:
+
+.abox[
+The estimated mileage for a car which costs $0 is 20,810 miles
+]
+
+.bbox[
+The intercept cannot be interpreted in this situation
+]
+
+.cbox[
+The estimated price for a car with 0 miles is $20,810
+]
+
+.dbox[
+Every additional 1000 miles on the car is associated with a decrease of $120 in price
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+**Fitted line:**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+
+]
+
+
+.pull-right[
+Interpret the estimated &lt;ins&gt;slope&lt;/ins&gt;:
+
+.abox[
+Every additional 1000 miles on the car is associated with an increase of $120 in price, on average
+]
+
+.bbox[
+Driving another 1000 miles causes the car to increase $120 in price
+]
+
+.cbox[
+Driving another 1000 miles causes the car to decrease $120 in price
+]
+
+.dbox[
+Every additional 1000 miles on the car is associated with a decrease of $120 in price, on average
+]
+
+]
+
+---
+
+## Uses for regression
+
+**Prediction:** How much should I expect to pay for a used Honda Accord with 65,000 miles?
+
+--
+
+**Inference:** Is the number of miles on a used Honda Accord negatively associated with sales price?
+
+--
+
+**Causal inference:** If I drive my used Honda Accord across the country, how will that change its value?
+
+--
+
+Now suppose I fit a linear regression regression model to the Accord prices data, using least squares. What assumptions do I need for each use of regression to be valid?
+
+---
+
+## Formal assumptions for inference
+
+* Shape
+* Constant variance
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Formal assumptions for inference
+
+* **Shape**
+* **Constant variance**
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Shape
+
+**Assumption:** the shape of the regression model is at least approximately correct
+
+--
+
+Linear regression model:
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+]
+
+When using linear regression, the shape assumption is that the relationship is (at least approximately) linear.
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Constant variance
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+]
+
+**Assumption:** Variance of the noise `\(\varepsilon\)` is the same for all values of the predictor `\(x\)`
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Assessing shape and constant variance: residual plots
+
+**Residual plot:** plot residuals `\(y - \widehat{y}\)` on vertical axis, and predicted values `\(\widehat{y}\)` on horizontal axis. Add a horizontal line at 0.
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Residual plots
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+Shape assumption is reasonable if: 
+* residuals appear to be scattered randomly above and below 0
+* no clear patterns in the residuals
+
+Constant variance assumption is reasonable if:
+* the band of residuals has relatively constant width
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Formal assumptions for inference
+
+* Shape
+* Constant variance
+* **Independence**
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Independence
+
+**Assumption:** Observations are independent -- one point falling above or below the line has no influence on the location of another point
+
+--
+
+Independence can't be checked with plots. We need to think about how the data were collected.
+
+---
+
+## Independence?
+
+.pull-left[
+**Scenario:** You collect a sample of 116 sparrows from Kent island. For each sparrow, you record their wing length and weight. Your data has 116 rows (one for each sparrow), and two columns.
+]
+
+.pull-right[
+Is it reasonable to assume the observations are independent?
+
+.abox[
+Yes
+]
+
+.bbox[
+No
+]
+]
+
+---
+
+## Independence?
+
+.pull-left[
+**Scenario:** You go to Kent island, and find a sparrow. For 116 consecutive days, you record its weight and wing length. Your data has 116 rows, and two columns.
+]
+
+.pull-right[
+Is it reasonable to assume the observations are independent?
+
+.abox[
+Yes
+]
+
+.bbox[
+No
+]
+]
+
+---
+
+## Class activity
+
+Practice with residual plots and checking assumptions on the Honda Accord data.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

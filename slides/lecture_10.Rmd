@@ -1,0 +1,695 @@
+---
+author: "Dr. Ciaran Evans"
+title: Model Assumptions and Diagnostics
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+---
+
+## Recap: regression
+
+**Regression:** model the relationship between predictor $x$ and response $y$
+
+**Regression model:** $y = f(x) + \varepsilon$
+
+* $f$ = systematic information that $x$ provides about $y$
+* $\varepsilon$ = random noise
+
+--
+
+**Linear regression:** $y = \beta_0 + \beta_1 x + \varepsilon$
+
+---
+
+## Recap: linear regression
+
+**Observed data (sample):**
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(Stat2Data)
+library(tidyverse)
+data(Sparrows)
+
+Sparrows %>%
+  ggplot(aes(x = WingLength, y = Weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  labs(y = "Weight (g)", 
+       x = "Wing Length (cm)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+--
+
+**Regression model (population):**
+
+.center[
+$\text{Weight} = \beta_0 + \beta_1 \text{WingLength} + \varepsilon$
+]
+
+--
+
+**Estimated regression line (from sample):**
+
+.center[
+$\widehat{\text{Weight}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{WingLength}$
+]
+
+---
+
+## Recap: fitting linear regression
+
+**Model:**
+.center[
+$\text{Weight} = \beta_0 + \beta_1 \text{WingLength} + \varepsilon$
+]
+
+**Fitting the model:**
+
+```{r}
+lm(Weight ~ WingLength, data = Sparrows)
+```
+
+--
+
+**Estimated regression line:**
+
+.center[
+$\widehat{\text{Weight}} = 1.366 + 0.467 \ \text{WingLength}$
+]
+
+---
+
+## Recap: interpretation
+
+.center[
+$\widehat{\text{Weight}} = 1.366 + 0.467 \ \text{WingLength}$
+]
+
+**Interpreting $\widehat{\beta}_0$:** If wing length = 0cm, we predict a weight of 1.366 g.
+
+**Interpreting $\widehat{\beta}_1$:** An increase of 1cm in wing length is associated with an increase of 0.467 g, on average, in weight
+
+---
+
+## Concept check
+
+Interested in the relationship between mileage and price for used Honda Accords.
+
+.pull-left[
+**Observed data (sample):**
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+data("AccordPrice")
+AccordPrice %>%
+  ggplot(aes(x = Mileage, y = Price)) +
+  geom_point() +
+  labs(x = "Number of miles (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+]
+
+
+.pull-right[
+We will use linear regression. Write the regression model:
+
+.abox[
+$\text{price} = \beta_0 + \beta_1 \text{miles}$
+]
+
+.bbox[
+$\text{price} = \beta_0 + \beta_1 \text{miles} + \varepsilon$
+]
+
+.cbox[
+$\widehat{\text{price}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{miles}$
+]
+
+.dbox[
+$\widehat{\text{price}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{miles} + \varepsilon$
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+**Observed data (sample):**
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+AccordPrice %>%
+  ggplot(aes(x = Mileage, y = Price)) +
+  geom_point() +
+  labs(x = "Number of miles (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+Least-squares fit:
+
+```{r, echo=F}
+lm(Price ~ Mileage, data = AccordPrice)
+```
+]
+
+
+.pull-right[
+What is the equation of the fitted regression line?
+
+.abox[
+$\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}$
+]
+
+.bbox[
+$\text{price} = \beta_0 + \beta_1 \text{miles}$
+]
+
+.cbox[
+$\widehat{\text{price}} = -0.12 + 20.81 \ \text{miles}$
+]
+
+.dbox[
+$\widehat{\text{price}} = 20.81 - 0.12 \ \widehat{\text{miles}}$
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+**Fitted line:**
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4, message=F}
+AccordPrice %>%
+  ggplot(aes(x = Mileage, y = Price)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  labs(x = "Number of miles (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+$\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}$
+
+]
+
+
+.pull-right[
+Interpret the estimated <ins>intercept</ins>:
+
+.abox[
+The estimated mileage for a car which costs $0 is 20,810 miles
+]
+
+.bbox[
+The intercept cannot be interpreted in this situation
+]
+
+.cbox[
+The estimated price for a car with 0 miles is $20,810
+]
+
+.dbox[
+Every additional 1000 miles on the car is associated with a decrease of $120 in price
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+**Fitted line:**
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4, message=F}
+AccordPrice %>%
+  ggplot(aes(x = Mileage, y = Price)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  labs(x = "Number of miles (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+$\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}$
+
+]
+
+
+.pull-right[
+Interpret the estimated <ins>slope</ins>:
+
+.abox[
+Every additional 1000 miles on the car is associated with an increase of $120 in price, on average
+]
+
+.bbox[
+Driving another 1000 miles causes the car to increase $120 in price
+]
+
+.cbox[
+Driving another 1000 miles causes the car to decrease $120 in price
+]
+
+.dbox[
+Every additional 1000 miles on the car is associated with a decrease of $120 in price, on average
+]
+
+]
+
+---
+
+## Uses for regression
+
+**Prediction:** How much should I expect to pay for a used Honda Accord with 65,000 miles?
+
+--
+
+**Inference:** Is the number of miles on a used Honda Accord negatively associated with sales price?
+
+--
+
+**Causal inference:** If I drive my used Honda Accord across the country, how will that change its value?
+
+--
+
+Now suppose I fit a linear regression regression model to the Accord prices data, using least squares. What assumptions do I need for each use of regression to be valid?
+
+---
+
+## Formal assumptions for inference
+
+* Shape
+* Constant variance
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Formal assumptions for inference
+
+* **Shape**
+* **Constant variance**
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Shape
+
+**Assumption:** the shape of the regression model is at least approximately correct
+
+--
+
+Linear regression model:
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+]
+
+When using linear regression, the shape assumption is that the relationship is (at least approximately) linear.
+
+.pull-left[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+data.frame(x = 1:100,
+           y = 1:100 + rnorm(100, sd=20)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = "Relationship could be linear") +
+  theme_bw() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        text = element_text(size=20))
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+data.frame(x = 1:100,
+           y = log(10*(1:100)) + rnorm(100, sd=0.3)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = "Relationship probably not linear") +
+  theme_bw() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        text = element_text(size=20))
+```
+]
+
+---
+
+## Constant variance
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+]
+
+**Assumption:** Variance of the noise $\varepsilon$ is the same for all values of the predictor $x$
+
+.pull-left[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+data.frame(x = 1:100,
+           y = 1:100 + rnorm(100, sd=20)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = "Noise variance looks constant") +
+  theme_bw() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        text = element_text(size=20))
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+data.frame(x = 1:100,
+           y = 1:100 + rnorm(100, sd=20)*(1:100)*0.02) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = "Noise variance does not look constant") +
+  theme_bw() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        text = element_text(size=20))
+```
+]
+
+---
+
+## Assessing shape and constant variance: residual plots
+
+**Residual plot:** plot residuals $y - \widehat{y}$ on vertical axis, and predicted values $\widehat{y}$ on horizontal axis. Add a horizontal line at 0.
+
+```{r, echo = F, message=F, fig.align='center', fig.width=6, fig.height=4}
+library(latex2exp)
+data.frame(x = 1:100,
+           y = rnorm(100, sd=20)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(title = "Residual plot",
+       x = TeX("$\\widehat{y}$"),
+       y = TeX("$y - \\widehat{y}$")) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+---
+
+## Residual plots
+
+```{r, echo = F, message=F, fig.align='center', fig.width=6, fig.height=4}
+data.frame(x = 1:100,
+           y = rnorm(100, sd=20)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(title = "Residual plot",
+       x = TeX("$\\widehat{y}$"),
+       y = TeX("$y - \\widehat{y}$")) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+Shape assumption is reasonable if: 
+* residuals appear to be scattered randomly above and below 0
+* no clear patterns in the residuals
+
+Constant variance assumption is reasonable if:
+* the band of residuals has relatively constant width
+
+---
+
+## Concept check
+
+.pull-left[
+```{r, echo = F, message=F, fig.align='center', fig.width=6, fig.height=6}
+data.frame(x = 1:100,
+           y = rnorm(100, sd=20)*(1:100)*0.02) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size=1.5) +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(title = "Residual plot",
+       x = TeX("$\\widehat{y}$"),
+       y = TeX("$y - \\widehat{y}$")) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+```{r, echo = F, message=F, fig.align='center', fig.width=6, fig.height=6}
+sim_dat <- data.frame(x = seq(-50, 50),
+           y = 0.02*seq(-50, 50)^2 + rnorm(101, sd=10)*(1:101)*0.02)
+sim_reg <- lm(y ~ x, data = sim_dat)
+
+data.frame(pred = sim_reg$fitted.values,
+           res = sim_reg$residuals) %>%
+  ggplot(aes(x = pred, y = res)) +
+  geom_point(size=1.5) +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(title = "Residual plot",
+       x = TeX("$\\widehat{y}$"),
+       y = TeX("$y - \\widehat{y}$")) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+```{r, echo = F, message=F, fig.align='center', fig.width=6, fig.height=6}
+sim_dat <- data.frame(x = seq(-50, 50),
+           y = 0.02*seq(-50, 50)^2 + rnorm(101, sd=10))
+sim_reg <- lm(y ~ x, data = sim_dat)
+
+data.frame(pred = sim_reg$fitted.values,
+           res = sim_reg$residuals) %>%
+  ggplot(aes(x = pred, y = res)) +
+  geom_point(size=1.5) +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(title = "Residual plot",
+       x = TeX("$\\widehat{y}$"),
+       y = TeX("$y - \\widehat{y}$")) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Concept check
+
+.pull-left[
+```{r, echo = F, message=F, fig.align='center', fig.width=6, fig.height=6}
+data.frame(x = 1:100,
+           y = rnorm(100, sd=20)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(title = "Residual plot",
+       x = TeX("$\\widehat{y}$"),
+       y = TeX("$y - \\widehat{y}$")) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+---
+
+## Formal assumptions for inference
+
+* Shape
+* Constant variance
+* **Independence**
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Independence
+
+**Assumption:** Observations are independent -- one point falling above or below the line has no influence on the location of another point
+
+--
+
+Independence can't be checked with plots. We need to think about how the data were collected.
+
+---
+
+## Independence?
+
+.pull-left[
+**Scenario:** You collect a sample of 116 sparrows from Kent island. For each sparrow, you record their wing length and weight. Your data has 116 rows (one for each sparrow), and two columns.
+]
+
+.pull-right[
+Is it reasonable to assume the observations are independent?
+
+.abox[
+Yes
+]
+
+.bbox[
+No
+]
+]
+
+---
+
+## Independence?
+
+.pull-left[
+**Scenario:** You go to Kent island, and find a sparrow. For 116 consecutive days, you record its weight and wing length. Your data has 116 rows, and two columns.
+]
+
+.pull-right[
+Is it reasonable to assume the observations are independent?
+
+.abox[
+Yes
+]
+
+.bbox[
+No
+]
+]
+
+---
+
+## Class activity
+
+Practice with residual plots and checking assumptions on the Honda Accord data.

@@ -90,10 +90,22 @@ All diets are present in each generation, with roughly equal numbers of flies in
 ## Question 4
 
 ```{r}
-
+drosophila %>%
+  select(Generation, DietHistory) %>%
+  arrange(Generation) %>%
+  distinct()
 ```
 
-Type your answer to question 4 here...
+All three diet histories are present in F0. In F1 and F2, some diet histories are missing -- two from F1 (SP and SR), and 12 from F2. The diet histories missing from F2 appear to be ones involving the standard diet -- SPx and SRx are missing because SP and SR were missing in F1, and not all F1 standard groups appear to have been bred for all F2 diets (e.g., RSP is missing).
+
+**Grading:** 
+
+There are many different ways of figuring out which diet histories are missing. Any of them are valid.
+
+* 10/10: Useful code, correct answer.
+* 7/10: Useful code, mostly correct answer
+* 5/10: Either code not included, or answer not included
+* 0/10: everything missing
 
 ## Question 5
 
@@ -105,6 +117,14 @@ drosophila %>%
 ```
 
 Average mass and larval time appear to be negatively related, with higher average mass associated with lower average larval time (quicker development). The relationship appears to hold across generations.
+
+**Grading:** 
+
+* 10/10: correct statistics are calculated (with correct grouping), code included, and correct interpretation in written answer
+* 7/10: correct statistics calculated, code included, some errors in written answer
+* 5/10: Code not included or wrong, some errors in written answer
+* 3/10: Code included, no interpretation
+* 0/10: everything missing
 
 ## Question 6
 
@@ -126,30 +146,89 @@ drosophila %>%
        title = "Distribution of larval time by diet in each generation")
 ```
 
+**Grading:** 
+
+The question asks them to create a plot, but doesn't specify boxplots. As long as they create a readable plot that allows them to answer the question, it doesn't have to be boxplots (e.g., faceting histograms by both diet and generation are acceptable, as are violin plots instead of boxplots). However, some students may make plots which display the correct variables, but are really hard to read -- e.g., overlapping histograms colored by diet, or scatterplots instead of boxplots. If the plot shows the correct variables but is hard to read, they will lose some points.
+
+* 10/10: useful plots, code is included.
+* 7/10: Plots show the correct variables but are hard to read, code is included
+* 4/10: Plots show mix of correct and incorrect variables
+* 0/10: missing, or completely wrong plots
+
 ## Question 7
 
-Diet does appear to be associated with differences in development. We can see that flies with poor diets tend to have smaller mass and take longer to develop, compared to flies with righ or standard diets. This relationship holds true across generations.
+Diet does appear to be associated with differences in development. We can see that flies with poor diets tend to have smaller mass and take longer to develop, compared to flies with righ or standard diets. This relationship holds across generations.
+
+**Grading:** 
+
+The correct answer compares the distribution of mass and larval time between the different diets, within each generation. 
+
+* 10/10: correct answer, with justification
+* 7/10: Correct answer, missing some justification
+* 4/10: Incorrect answer, attempt at justification
+* 0/10: no answer, or completely incorrect with no justification
 
 ## Question 8
 
 ```{r}
+drosophila %>%
+  filter(Generation == "F1") %>%
+  ggplot(aes(x = DietHistory, y = Mass)) +
+  geom_boxplot() +
+  facet_wrap(~Diet) +
+  labs(x = "Diet History", 
+       y = "Mass (mg)",
+       title = "Mass by diet and diet history in F1 flies")
 
+drosophila %>%
+  filter(Generation == "F1") %>%
+  ggplot(aes(x = DietHistory, y = LarvalTime)) +
+  geom_boxplot() +
+  facet_wrap(~Diet) +
+  labs(x = "Diet History", 
+       y = "Larval time (days)",
+       title = "Larval time by diet and diet history in F1 flies")
 ```
+
+**Grading:** 
+
+The question asks them to create a plot, but doesn't specify boxplots. As long as they create a readable plot that allows them to answer the question, it doesn't have to be boxplots (e.g., faceting histograms by both diet history and diet are acceptable, as are violin plots instead of boxplots). However, some students may make plots which display the correct variables, but are really hard to read -- e.g., overlapping histograms colored by diet history, or scatterplots instead of boxplots. If the plot shows the correct variables but is hard to read, they will lose some points.
+
+* 10/10: useful plots, code is included.
+* 7/10: Plots show the correct variables but are hard to read, code is included
+* 4/10: Plots show mix of correct and incorrect variables
+* 0/10: missing, or completely wrong plots
 
 ## Question 9
 
-Type your answer to question 9 here...
+There may be some association between diet history and fruit fly development, after conditioning on diet. Examining F1 flies with rich diets, we can see that those whose parents had rich diets tend to have slightly higher mass than those whose parents had poor diets. Similarly, for F1 flies with standard diets, those whose parents had poor diets tend to have somewhat lower mass. Likewise, RR flies tend to have shorter development times than PR flies, and RP flies tend to have shorter development times than PP flies. However, if there is a relationship between diet history and fruit fly development, the effect is not as large as the association between diet and fruit fly development.
+
+**Grading:** 
+
+The correct answer compares the distribution of mass and larval time between the different diet histories, within each diet. 
+
+* 10/10: correct answer, with justification
+* 7/10: Correct answer, missing some justification
+* 4/10: Incorrect answer, attempt at justification
+* 0/10: no answer, or completely incorrect with no justification
 
 ## Question 10
 
-* *Data matching:* 
-* *Exhaustive:* 
-* *Skeptical:* 
-* *Second-order:* 
+* *Data matching:* 10 We are interested in assessing the relationships between diet, diet history and fruit fly development, and the data directly measure these variables. Furthermore, since the data come from a randomized experiment, we don't need to worry about other variables which might be associated with both diet history and fly development.
+* *Exhaustive:* 5 There is some exhaustiveness, as both summary statistics and plots were used to investigate the research question. 
+* *Skeptical:* 3 There is a little skepticism, with fly development measured by two different variables. However, only diet and diet history are considered as predictors, with no alternative explanations considered. (Note that in this case -- a randomized experiment -- skepticism is not necessary for the analysis).
+* *Second-order:* 1 There aren't really any second order details in the analysis done in the homework questions. Second-order context is provided in the introduction to the assignment, but not in the exercises themselves.
 * *Transparency:* 10 The analysis depends entirely on a few visualizations and summary statistics, and so is very transparent.
-* *Reproducibility:* 
+* *Reproducibility:* 10 The analysis is very reproducible -- the data is publicly available from the research paper, which also describes the experimental design and data collection process. The analysis completed here includes all code.
 
-## Citations and acknowledgments
 
-Cite any outside resources used, and acknowledge any collaborators
+**Grading:** 
 
+Since I provided the transparency section, there are 5 principles they need to analyze, and they get 2 points per principle. They don't have to get exactly the same number or answer as me, but their response should roughly agree with what I have written to get credit for a principle.
+
+* 10/10: all 5 remaining principles
+* 8/10: 4 principles
+* 6/10: 3 principles
+* 4/10: 2 principles
+* 2/10: 1 principles
+* 0/10: no answer
