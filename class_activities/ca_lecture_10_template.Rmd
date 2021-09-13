@@ -1,0 +1,69 @@
+---
+---
+---
+title: "Class Activity, September 10"
+author: "Your Name"
+output: html_document
+---
+
+## Setup
+
+Run the setup chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Stat2Data)
+library(tidyverse)
+data("AccordPrice")
+```
+
+## Question 1
+
+Fill in the code below to fit the linear regression model of price (response) on mileage (predictor), and save the fitted model as `accord_lm` in R:
+
+```{r}
+accord_lm <- lm(... ~ ..., data = ...)
+```
+
+
+## Question 2
+
+Run the code below to make a scatterplot with price on the y-axis and mileage on the x-axis, with the fitted regression line shown in blue:
+
+```{r}
+AccordPrice %>%
+  mutate(yhat = predict(accord_lm)) %>%
+  ggplot(aes(x = Mileage)) +
+  geom_point(aes(y = Price)) +
+  geom_line(aes(y = yhat), lwd=1.2, color="blue") +
+  labs(x = "Number of miles (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme_bw()
+```
+
+## Question 3
+
+Fill in the code below to make a residual plot for the fitted model:
+
+```{r}
+AccordPrice %>%
+  mutate(yhat = ...,
+         residuals = Price - yhat) %>%
+  ggplot(aes(x = ..., y = ...)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted price",
+       y = "Residual") +
+  theme_bw()
+```
+
+
+## Question 4
+
+Using the residual plot, do the shape and constant variance assumptions seem reasonable? 
+
+
+## Question 5
+
+The `AccordPrice` data was collected from a sample of cars listed on an online used car site. Does the independence assumption seem reasonable? That is, if one seller changes the asking price of their used car, would that influence the asking price of another seller?

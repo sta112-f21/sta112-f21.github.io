@@ -5,10 +5,14 @@ title: Beginning linear regression
 September 6
 : Principles of data analysis and introduction to regression
   : [Slides](https://sta112-f21.github.io/slides/lecture_7.html)
+  
+: Textbook 1.1
 
 September 8
 : Least squares
   : [Slides](https://sta112-f21.github.io/slides/lecture_8.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_8.html)
+
+: Textbook 1.1
   
 : **Quiz 1**{: .label .label-red}
 

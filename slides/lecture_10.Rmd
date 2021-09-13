@@ -15,6 +15,22 @@ editor_options:
 
 ## Agenda
 
+* Course feedback:
+    * adding textbook references to course webpage
+    * class activities vs. labs vs. homeworks
+        * class activities: learn fundamental skills
+        * labs: practice combining fundamental skills in context
+        * homeworks: apply skills to real data and real questions
+* TA: Johe Johnson
+    * gives feedback on homework in comments
+    * MSC hours: Monday 12-2pm, Thursday 3-4pm
+* Quiz 2 next Wednesday (September 22)
+    * Covers through today
+* Today:
+    * Recap intro to linear regression
+    * Assumptions and diagnostics
+
+
 ---
 
 ## Recap: regression
@@ -44,7 +60,6 @@ data(Sparrows)
 Sparrows %>%
   ggplot(aes(x = WingLength, y = Weight)) +
   geom_point() +
-  geom_smooth(method = "lm", se=F) +
   labs(y = "Weight (g)", 
        x = "Wing Length (cm)") +
   theme_bw() +
@@ -693,3 +708,5 @@ No
 ## Class activity
 
 Practice with residual plots and checking assumptions on the Honda Accord data.
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_10.html](https://sta112-f21.github.io/class_activities/ca_lecture_10.html)
