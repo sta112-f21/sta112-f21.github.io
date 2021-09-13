@@ -158,10 +158,48 @@ We will use linear regression. Write the regression model:
 
 ## Concept check
 
+Interested in the relationship between mileage and price for used Honda Accords.
+
 .pull-left[
 **Observed data (sample):**
 
 &lt;img src="lecture_10_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+We will use linear regression. Write the regression model:
+
+.abox[
+`\(\text{price} = \beta_0 + \beta_1 \text{miles}\)`
+]
+
+.bbox[
+`\(\text{price} = \beta_0 + \beta_1 \text{miles} + \varepsilon\)`
+]
+
+.cbox[
+`\(\widehat{\text{price}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{miles}\)`
+]
+
+.dbox[
+`\(\widehat{\text{price}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{miles} + \varepsilon\)`
+]
+
+]
+
+Solution: `\(\text{price} = \beta_0 + \beta_1 \text{miles} + \varepsilon\)` 
+
+Remember that the regression *model* describes our model for the relationship in the population.
+
+---
+
+## Concept check
+
+.pull-left[
+**Observed data (sample):**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 Least-squares fit:
 
@@ -204,9 +242,44 @@ What is the equation of the fitted regression line?
 ## Concept check
 
 .pull-left[
+**Observed data (sample):**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.pull-right[
+What is the equation of the fitted regression line?
+
+.abox[
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+]
+
+.bbox[
+`\(\text{price} = \beta_0 + \beta_1 \text{miles}\)`
+]
+
+.cbox[
+`\(\widehat{\text{price}} = -0.12 + 20.81 \ \text{miles}\)`
+]
+
+.dbox[
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \widehat{\text{miles}}\)`
+]
+
+]
+
+Solution: `\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+
+---
+
+## Concept check
+
+.pull-left[
 **Fitted line:**
 
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 
 `\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
 
@@ -241,7 +314,44 @@ Every additional 1000 miles on the car is associated with a decrease of $120 in 
 .pull-left[
 **Fitted line:**
 
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+
+]
+
+
+.pull-right[
+Interpret the estimated &lt;ins&gt;intercept&lt;/ins&gt;:
+
+.abox[
+The estimated mileage for a car which costs $0 is 20,810 miles
+]
+
+.bbox[
+The intercept cannot be interpreted in this situation
+]
+
+.cbox[
+The estimated price for a car with 0 miles is $20,810
+]
+
+.dbox[
+Every additional 1000 miles on the car is associated with a decrease of $120 in price
+]
+
+]
+
+Solution: The estimated price for a car with 0 miles is $20,810
+
+---
+
+## Concept check
+
+.pull-left[
+**Fitted line:**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 `\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
 
@@ -268,6 +378,43 @@ Every additional 1000 miles on the car is associated with a decrease of $120 in 
 ]
 
 ]
+
+---
+
+## Concept check
+
+.pull-left[
+**Fitted line:**
+
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\text{price}} = 20.81 - 0.12 \ \text{miles}\)`
+
+]
+
+
+.pull-right[
+Interpret the estimated &lt;ins&gt;slope&lt;/ins&gt;:
+
+.abox[
+Every additional 1000 miles on the car is associated with an increase of $120 in price, on average
+]
+
+.bbox[
+Driving another 1000 miles causes the car to increase $120 in price
+]
+
+.cbox[
+Driving another 1000 miles causes the car to decrease $120 in price
+]
+
+.dbox[
+Every additional 1000 miles on the car is associated with a decrease of $120 in price, on average
+]
+
+]
+
+Solution: Every additional 1000 miles on the car is associated with a decrease of $120 in price, on average
 
 ---
 
@@ -326,11 +473,11 @@ Linear regression model:
 When using linear regression, the shape assumption is that the relationship is (at least approximately) linear.
 
 .pull-left[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -344,11 +491,11 @@ When using linear regression, the shape assumption is that the relationship is (
 **Assumption:** Variance of the noise `\(\varepsilon\)` is the same for all values of the predictor `\(x\)`
 
 .pull-left[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -357,13 +504,13 @@ When using linear regression, the shape assumption is that the relationship is (
 
 **Residual plot:** plot residuals `\(y - \widehat{y}\)` on vertical axis, and predicted values `\(\widehat{y}\)` on horizontal axis. Add a horizontal line at 0.
 
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Residual plots
 
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 Shape assumption is reasonable if: 
 * residuals appear to be scattered randomly above and below 0
@@ -377,7 +524,7 @@ Constant variance assumption is reasonable if:
 ## Concept check
 
 .pull-left[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -406,7 +553,38 @@ Neither shape nor constant variance
 ## Concept check
 
 .pull-left[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+Solution: the constant variance assumption is violated, because the spread of the residuals changes as we move along the x-axis. However, the shape assumption is reasonable, because the residuals are randomly scattered above and below 0 with no clear pattern.
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -435,7 +613,99 @@ Neither shape nor constant variance
 ## Concept check
 
 .pull-left[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+Solution: neither the shape nor constant variance assumptions look reasonable here. The variability of the residuals increases for larger values of `\(\widehat{y}\)`, so the constant variance assumption does not look reasonable. And there is a clear pattern to the residuals, rather than a random scatter around 0: as `\(\widehat{y}\)` increases, the residuals are all above 0, then all below 0, then above 0 again.
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+Which assumption looks reasonable?
+
+.abox[
+Shape
+]
+
+.bbox[
+Constant variance
+]
+
+.cbox[
+Both shape and constant variance
+]
+
+.dbox[
+Neither shape nor constant variance
+]
+
+]
+
+Solution: the constant variance assumption looks reasonable, but the shape assumption does not. The variability of the residuals looks pretty constant for different values of `\(\widehat{y}\)`. However, there is a clear pattern to the residuals, rather than a random scatter around 0: as `\(\widehat{y}\)` increases, the residuals are generally above 0, then below 0, then above 0 again.
+
+---
+
+## Concept check
+
+.pull-left[
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -464,7 +734,7 @@ Neither shape nor constant variance
 ## Concept check
 
 .pull-left[
-&lt;img src="lecture_10_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_10_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -487,6 +757,8 @@ Neither shape nor constant variance
 ]
 
 ]
+
+Solution: Both the shape and constant variance assumptions look reasonable here. This plot is what we hope our residual plots look like: a nice random scatter around 0, with the same variance for different values of `\(\widehat{y}\)`.
 
 ---
 
@@ -534,6 +806,28 @@ No
 ## Independence?
 
 .pull-left[
+**Scenario:** You collect a sample of 116 sparrows from Kent island. For each sparrow, you record their wing length and weight. Your data has 116 rows (one for each sparrow), and two columns.
+]
+
+.pull-right[
+Is it reasonable to assume the observations are independent?
+
+.abox[
+Yes
+]
+
+.bbox[
+No
+]
+]
+
+Solution: In this case, it is reasonable to assume the observations are independent. We don't expect that one sparrow's measurements will tell us much about another's. There may be some sparrows in the data which are related, but usually we treat independence as reasonable -- if we only observed pairs of identical twins, then we *would* worry about dependence in the data.
+
+---
+
+## Independence?
+
+.pull-left[
 **Scenario:** You go to Kent island, and find a sparrow. For 116 consecutive days, you record its weight and wing length. Your data has 116 rows, and two columns.
 ]
 
@@ -548,6 +842,28 @@ Yes
 No
 ]
 ]
+
+---
+
+## Independence?
+
+.pull-left[
+**Scenario:** You go to Kent island, and find a sparrow. For 116 consecutive days, you record its weight and wing length. Your data has 116 rows, and two columns.
+]
+
+.pull-right[
+Is it reasonable to assume the observations are independent?
+
+.abox[
+Yes
+]
+
+.bbox[
+No
+]
+]
+
+Solution: the independence assumption is not reasonable here. A sparrow's measurements on one day will be strongly dependent on what they were the day before.
 
 ---
 
