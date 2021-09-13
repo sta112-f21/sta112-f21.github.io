@@ -22,6 +22,25 @@ Download the activity template: [activity template](https://sta112-f21.github.io
 accord_lm <- lm(... ~ ..., data = ...)
 ```
 
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+```r
+accord_lm <- lm(Price ~ Mileage, data = AccordPrice)
+```
+</DIV>
+
 2. Run the code below to make a scatterplot with price on the y-axis and mileage on the x-axis, with the fitted regression line shown in blue:
 
 ```r
@@ -50,6 +69,24 @@ AccordPrice %>%
   theme_bw()
 ```
 
+<BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
+
+<DIV ID="q3_solution" STYLE="display:none">
+```r
+AccordPrice %>%
+  mutate(yhat = predict(accord_lm),
+         residuals = Price - yhat) %>%
+  ggplot(aes(x = yhat, y = residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted price",
+       y = "Residual") +
+  theme_bw()
+```
+(Remember, the residual plot has the residuals on the y-axis and the predicted values on the x-axis. We can get the predicted values from the `predict()` function.)
+</DIV>
+
 Now let's assess some of the conditions. Recall that:
 
 * the shape assumption is reasonable if the residuals appear to be scattered randomly above and below 0, with no clear patterns.
@@ -57,4 +94,16 @@ Now let's assess some of the conditions. Recall that:
 
 4. Using the residual plot, do the shape and constant variance assumptions seem reasonable? 
 
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+Yes, both the shape and constant variance assumptions seem reasonable. The residuals appear randomly scattered above and below 0 with no clear pattern, and the spread of the residuals appears constant.
+</DIV>
+
 5. The `AccordPrice` data was collected from a sample of cars listed on an online used car site. Does the independence assumption seem reasonable? That is, if one seller changes the asking price of their used car, would that influence the asking price of another seller?
+
+<BUTTON ONCLICK="ShowAndHide('q5_solution')">Solution</BUTTON>
+
+<DIV ID="q5_solution" STYLE="display:none">
+We don't expect one seller changing the asking price of their car to influence the asking price of another seller. So the independence assumption does seem reasonable.
+</DIV>
