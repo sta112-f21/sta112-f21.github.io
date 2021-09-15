@@ -1,0 +1,450 @@
+---
+author: "Dr. Ciaran Evans"
+title: Model Assumptions, Diagnostics, and Transformations
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Lab 3 due this Friday
+* HW 3 due *next* Friday
+* Finish overview of regression assumptions and diagnostics
+* Class activity
+* Transformation
+
+---
+
+## Regression assumptions for inference
+
+* Shape
+* Constant variance
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Regression assumptions for inference
+
+* Shape
+* Constant variance
+* Independence
+* **Randomness**
+* Zero mean
+* Normality
+
+---
+
+## Randomness
+
+**Assumption:** The data are obtained using a random process, such as a random sample or randomized experiment
+
+.pull-left[
+<ins>Randomness assumption is reasonable</ins>
+
+We collect data on a random sample of 116 sparrows from Kent island. For each sparrow, we record weight and wing length.
+]
+
+.pull-right[
+<ins>Randomness assumption is not reasonable</ins>
+
+We collect data on the weight and wing length of sparrows from Kent island. To collect the data, I deliberately choose sparrows that are very heavy, with very short wings.
+]
+
+---
+
+## Randomness
+
+**Assumption:** The data are obtained using a random process, such as a random sample or randomized experiment
+
+.pull-left[
+<ins>Randomness assumption is reasonable</ins>
+
+We collect data on a random sample of 116 sparrows from Kent island. For each sparrow, we record weight and wing length.
+
+**Conclusions from the estimated regression line can be generalized to a population of interest.**
+]
+
+.pull-right[
+<ins>Randomness assumption is not reasonable</ins>
+
+We collect data on the weight and wing length of sparrows from Kent island. To collect the data, I deliberately choose sparrows that are very heavy, with very short wings.
+
+**Conclusions from the estimated regression line do not generalize.**
+]
+
+---
+
+## Randomness
+
+**Assumption:** The data are obtained using a random process, such as a random sample or randomized experiment
+
+* Assumption about data collection process
+* Necessary for defining the scope of inference
+* Can't be checked with plots
+
+---
+
+## Zero mean
+
+**Linear regression model:**
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+]
+
+**Assumption:** The noise term $\varepsilon$ is centered at 0
+
+--
+
+We can't check the zero mean assumption. A property of least squares linear regression is that $\sum \limits_{i=1}^n (y_i - \widehat{y}_i) = 0$.
+
+---
+
+## Normality
+
+**Linear regression model:**
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+]
+
+**Assumption:** The noise term $\varepsilon$ follows a <ins>normal</ins> distribution
+
+Example of a normal distribution:
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(tidyverse)
+data.frame(x = seq(-4, 4, 0.1),
+           y = dnorm(seq(-4, 4, 0.1))) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(lwd=1.2) +
+  theme_classic() +
+  labs(x = "x", y = "Density")
+```
+
+---
+
+## Normal distributions
+
+Parameterized by mean $\mu$ and variance $\sigma^2$:
+
+.center[
+$N(\mu, \sigma^2)$
+]
+
+.pull-left[
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(tidyverse)
+data.frame(x = seq(-10, 10, 0.1),
+           y = dnorm(seq(-10, 10, 0.1))) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(lwd=1.2) +
+  theme_classic() +
+  labs(x = "x", y = "Density",
+       title = "N(0, 1)") +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(tidyverse)
+data.frame(x = seq(-8, 12, 0.1),
+           y = dnorm(seq(-8, 12, 0.1), 2, 3)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(lwd=1.2) +
+  theme_classic() +
+  labs(x = "x", y = "Density",
+       title = "N(2, 9)") +
+  theme(text = element_text(size=20))
+```
+]
+
+---
+
+## Assessing normality
+
+**Quantile-quantile (QQ) plots:** quantiles of residuals on y-axis, quantiles of theoretical normal distribution on x-axis.
+
+If residuals are normal, plot should look approximately linear.
+
+.pull-left[
+
+<ins>Residuals look normal</ins>
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(2)
+temp_x = 1:50
+temp_y = 1:50 + rnorm(50, sd=10)
+temp_lm <- lm(temp_y ~ temp_x)
+
+data.frame(res = residuals(temp_lm)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq(size = 2) +
+  geom_qq_line(size = 1.2) +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic() +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+
+<ins>Residuals do not look normal</ins>
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(2)
+temp_x = 1:50
+temp_y = 1:50 + rexp(50, rate = 1)
+temp_lm <- lm(temp_y ~ temp_x)
+
+data.frame(res = residuals(temp_lm)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq(size = 2) +
+  geom_qq_line(size = 1.2) +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic() +
+  theme(text = element_text(size=20))
+```
+]
+
+---
+
+## QQ plot examples
+
+.pull-left[
+
+<ins>Residuals look normal</ins>
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(5)
+temp_x = seq(1, 50, 0.5)
+temp_y = seq(1, 50, 0.5) + rnorm(99, sd=10)
+temp_lm <- lm(temp_y ~ temp_x)
+
+data.frame(res = residuals(temp_lm)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq(size = 2) +
+  geom_qq_line(size = 1.2) +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic() +
+  theme(text = element_text(size=20))
+```
+]
+
+.pull-right[
+
+<ins>Residuals do not look normal</ins>
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(2)
+temp_x = seq(1, 50, 0.5)
+temp_y = seq(1, 50, 0.5) + runif(99)*10
+temp_lm <- lm(temp_y ~ temp_x)
+
+data.frame(res = residuals(temp_lm)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq(size = 2) +
+  geom_qq_line(size = 1.2) +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic() +
+  theme(text = element_text(size=20))
+```
+]
+
+---
+
+## Putting it all together
+
+For a quantitative response $y$ and a single quantitative predictor $x$, the <ins>simple linear regression model</ins> is
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+]
+
+where $\varepsilon \sim N(0, \sigma_{\varepsilon}^2)$, and the noise $\varepsilon$ are independent from one another.
+
+--
+
+When we fit the model with a sample $(x_1, y_1), ..., (x_n, y_n)$, we also assume the data are generated by a random process that allows us to generalize to the population of interest.
+
+---
+
+## Summary: checking assumptions for inference
+
+* Shape and constant variance: residual plot
+* independence and randomness: think about data generation and collection
+* normality: QQ plot
+* zero mean: can't check
+
+---
+
+## Modeling process
+
+.center[
+<img src="modeling_process.png" width="600">
+]
+
+---
+
+## Class activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_11.html](https://sta112-f21.github.io/class_activities/ca_lecture_11.html)
+
+---
+
+## Transformations
+
+**Transformations** can sometimes be used to address violations of shape, constant variance, and normality assumptions.
+
+.pull-left[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+library(gapminder)
+gapminder %>%
+  filter(year == 2007) %>%
+  ggplot(aes(x = gdpPercap, 
+             y = lifeExp)) +
+  geom_point() +
+  labs(x = "GDP per capita (US $)",
+       y = "Life expectancy at birth (years)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+gapminder %>%
+  filter(year == 2007) %>%
+  ggplot(aes(x = log(gdpPercap), 
+             y = lifeExp)) +
+  geom_point() +
+  labs(x = "log(GDP per capita)",
+       y = "Life expectancy at birth (years)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## Transformations
+
+**Transformations** can sometimes be used to address violations of shape, constant variance, and normality assumptions.
+
+.pull-left[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+library(Stat2Data)
+data("CountyHealth")
+CountyHealth %>%
+  ggplot(aes(x = Hospitals, 
+             y = MDs)) +
+  geom_point(size=2) +
+  labs(x = "Number of hospitals",
+       y = "Number of doctors") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+CountyHealth %>%
+  ggplot(aes(x = Hospitals, 
+             y = sqrt(MDs))) +
+  geom_point(size=2) +
+  labs(x = "Number of hospitals",
+       y = "Sqrt(Number of doctors)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## Transformations
+
+**Transformations** can sometimes be used to address violations of shape, constant variance, and normality assumptions.
+
+.pull-left[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+data("SpeciesArea")
+SpeciesArea %>%
+  ggplot(aes(x = Area, 
+             y = Species)) +
+  geom_point(size=2) +
+  labs(x = "Area of island (sq km)",
+       y = "Number of species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+SpeciesArea %>%
+  ggplot(aes(x = log(Area), 
+             y = log(Species))) +
+  geom_point(size=2) +
+  labs(x = "log(Area)",
+       y = "log(Number of species)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## Choosing transformations
+
+* Choose a transformation for $x$ that looks like the relationship
+* Experiment with transforming $x$ and/or $y$
+* See section 1.4 in book for intuition
+
+```{r, echo=F, fig.align='center', fig.width=8, fig.height=6}
+library(patchwork)
+p1 <- data.frame(x = 1:100) %>%
+  ggplot(aes(x = x, y = sqrt(x))) +
+  geom_line(size = 1.2) +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Square root")
+
+p2 <- data.frame(x = 1:100) %>%
+  ggplot(aes(x = x, y = x^2)) +
+  geom_line(size = 1.2) +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Square")
+
+p3 <- data.frame(x = 1:100) %>%
+  ggplot(aes(x = x, y = log(x))) +
+  geom_line(size = 1.2) +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Log")
+
+p4 <- data.frame(x = 1:100) %>%
+  ggplot(aes(x = x, y = 1/x)) +
+  geom_line(size = 1.2) +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Reciprocal")
+
+(p1 + p2)/(p3 + p4)
+```

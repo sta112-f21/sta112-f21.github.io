@@ -1,0 +1,172 @@
+---
+title: "Class Activity, September 15"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice checking the assumptions for linear regression models.
+
+## Setup
+
+This activity investigates the relationship between the number of doctors in a county, and the number of hospitals. The data are contained in the `CountyHealth` dataset from the `Stat2Data` package. The activity template contains copies of the code and questions below. Run the setup chunk in the template before you begin.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_11_template.Rmd)
+
+## Choose
+
+We will begin with a linear regression model for the relationship between the number of hospitals and the number of doctors:
+
+$\text{doctors} = \beta_0 + \beta_1 \text{hospitals} + \varepsilon$
+
+## Fit
+
+1. Fill in the code below to fit the linear regression model, and save the fitted model as `health_lm` in R:
+
+```r
+health_lm <- lm(... ~ ..., data = ...)
+```
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+```r
+health_lm <- lm(MDs ~ Hospitals, data = CountyHealth)
+```
+</DIV>
+
+## Assess
+
+```{marginfigure}
+The `predict` function takes in a fitted model (in this case, `health_lm`), and outputs predictions for the observed data. The `residuals` function takes in a fitted model, and outputs the observed residuals.
+```
+
+2. Run the code below to make a residual plot for the fitted model:
+
+```r
+CountyHealth %>%
+  mutate(yhat = predict(health_lm),
+         residuals = residuals(health_lm)) %>%
+  ggplot(aes(x = yhat, y = residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted number of doctors",
+       y = "Residual") +
+  theme_bw()
+```
+
+```{marginfigure}
+`geom_qq` adds the points to the QQ plot, while `geom_qq_line` adds the ideal line. If the points fall close to the line, the normality assumption is reasonable.
+```
+
+3. Run the code below to make a QQ plot for the fitted model:
+
+```r
+CountyHealth %>%
+  mutate(residuals = residuals(health_lm)) %>%
+  ggplot(aes(sample = residuals)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic()
+```
+
+Now let's assess some of the conditions. Recall that:
+
+* the shape assumption is reasonable if the residuals appear to be scattered randomly above and below 0, with no clear patterns.
+* the constant variance assumption is reasonable if the band of residuals has relatively constant width.
+* the normality assumption is reasonable if the QQ plot looks approximately linear (the points fall close to the line)
+
+4. Using the residual plot and the QQ plot, assess whether the shape, constant variance, and normality assumptions are reasonable.
+
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+The constant variance assumption does not look reasonable. We can see that the variability of the residuals increases for larger predicted value. The normality assumption also does not look reasonable -- the tails of the residuals do not fall close to the line. The shape assumption might be reasonable, but there does look to be a bit of a pattern -- for a predicted number of doctors close to 0, all the residuals are positive, while for a predicted number of doctors between 500 and 2000, the residuals are mostly negative.
+</DIV>
+
+## Choose (again)
+
+Sometimes, transforming the response and/or predictor can address issues with the model assumptions. Here we will use a square root transformation of the response:
+
+$\sqrt{\text{doctors}} = \beta_0 + \beta_1 \text{hospitals} + \varepsilon$
+
+5. Fill in the following code to create a new data frame called `CountyHealth_new`, with a new column that is the square root of the number of doctors in each county. (In R, the square root function is `sqrt`).
+
+```r
+CountyHealth_new <- CountyHealth %>%
+  ...(sqrt_mds = ...)
+```
+
+<BUTTON ONCLICK="ShowAndHide('q5_solution')">Solution</BUTTON>
+
+<DIV ID="q5_solution" STYLE="display:none">
+```r
+CountyHealth_new <- CountyHealth %>%
+  mutate(sqrt_mds = sqrt(MDs))
+```
+</DIV>
+
+## Fit
+
+Now let's fit the new regression model, using our transformed data.
+
+6. Fill in the code below to fit the new linear regression model (with the transformed response), and save the fitted model as `health_lm_new` in R:
+
+```r
+... <- lm(... ~ ..., data = ...)
+```
+
+<BUTTON ONCLICK="ShowAndHide('q6_solution')">Solution</BUTTON>
+
+<DIV ID="q6_solution" STYLE="display:none">
+```r
+health_lm_new <- lm(sqrt_mds ~ Hospitals, data = CountyHealth_new)
+```
+</DIV>
+
+7. Modify the code from 2 and 3 to create a residual plot and QQ plot for the new fitted model (with the transformed response). Do the assumptions look reasonable now?
+
+<BUTTON ONCLICK="ShowAndHide('q7_solution')">Solution</BUTTON>
+
+<DIV ID="q7_solution" STYLE="display:none">
+```r
+CountyHealth_new %>%
+  mutate(yhat = predict(health_lm_new),
+         residuals = residuals(health_lm_new)) %>%
+  ggplot(aes(x = yhat, y = residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted number of doctors",
+       y = "Residual") +
+  theme_bw()
+  
+CountyHealth_new %>%
+  mutate(residuals = residuals(health_lm_new)) %>%
+  ggplot(aes(sample = residuals)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic()
+```
+
+The shape, constant variance, and normality assumptions all look reasonable for the transformed response.
+</DIV>
