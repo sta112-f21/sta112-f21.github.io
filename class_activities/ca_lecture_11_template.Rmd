@@ -1,0 +1,90 @@
+---
+---
+---
+title: "Class Activity, September 15"
+author: "Your Name"
+output: html_document
+---
+
+## Setup
+
+Run the setup chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Stat2Data)
+library(tidyverse)
+data("CountyHealth")
+```
+
+## Question 1
+
+Fill in the code below to fit the linear regression model, and save the fitted model as `health_lm` in R:
+
+```{r}
+health_lm <- lm(... ~ ..., data = ...)
+```
+
+
+## Question 2
+
+Run the code below to make a residual plot for the fitted model:
+
+```{r}
+CountyHealth %>%
+  mutate(yhat = predict(health_lm),
+         residuals = residuals(health_lm)) %>%
+  ggplot(aes(x = yhat, y = residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted number of doctors",
+       y = "Residual") +
+  theme_bw()
+```
+
+## Question 3
+
+Run the code below to make a QQ plot for the fitted model:
+
+```{r}
+CountyHealth %>%
+  mutate(residuals = residuals(health_lm)) %>%
+  ggplot(aes(sample = residuals)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_classic()
+```
+
+
+## Question 4
+
+Using the residual plot and the QQ plot, assess whether the shape, constant variance, and normality assumptions are reasonable.
+
+
+## Question 5
+
+Fill in the following code to create a new data frame called `CountyHealth_new`, with a new column that is the square root of the number of doctors in each county. (In R, the square root function is `sqrt`).
+
+```{r}
+CountyHealth_new <- CountyHealth %>%
+  ...(sqrt_mds = ...)
+```
+
+## Question 6
+
+Fill in the code below to fit the new linear regression model (with the transformed response), and save the fitted model as `health_lm_new` in R:
+
+```{r}
+... <- lm(... ~ ..., data = ...)
+```
+
+## Question 7
+
+Modify the code from 2 and 3 to create a residual plot and QQ plot for the new fitted model (with the transformed response). Do the assumptions look reasonable now?
+
+```{r}
+
+```
