@@ -203,7 +203,137 @@ PalmBeach %>%
 
 ---
 
+## Impact of influential points
+
+$\widehat{\beta}_0$ and $\widehat{\beta}_1$ minimize $\sum \limits_{i=1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x_i)^2$
+
+
+```{r echo=F, fig.width=7, fig.height=5, fig.align='center'}
+lm_1 <- lm(Buchanan ~ Bush, data = PalmBeach)
+lm_2 <- lm(Buchanan ~ Bush, 
+           data = PalmBeach %>%
+             filter(County != "PALM BEACH"))
+
+PalmBeach %>%
+  mutate(pred_1 = predict(lm_1),
+         pred_2 = predict(lm_2, 
+                          newdata = PalmBeach)) %>%
+  ggplot(aes(x = Bush)) +
+  geom_segment(aes(x = 152846, y = 796.81,
+                   xend = 152846, yend = 3407)) +
+  geom_point(aes(y = Buchanan), 
+             size = 2) +
+  geom_line(aes(y = pred_1), color = "blue",
+            lwd = 1.2) +
+  geom_line(aes(y = pred_2), color = "red",
+            lwd = 1.2, lty=2) +
+  labs(x = "Votes for Bush",
+       y = "Votes for Buchanan") +
+  theme_bw() +
+  theme(text= element_text(size=20))
+```
+
+---
+
+## Potential for influence
+
+Points with $x$ far from $\overline{x}$ have more *potential* to be influential
+
+.pull-left[
+<ins>Possibly influential</ins>
+```{r echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(1)
+
+x  = 1:100
+y = 1:100 + rnorm(100, sd=10)
+
+data.frame(x = x,
+           y = y) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 1.5) +
+  geom_point(aes(x = 50, y = 120), color="red",
+             size = 2) +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+<ins>More influential</ins>
+```{r echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(1)
+
+x  = 1:100
+y = 1:100 + rnorm(100, sd=10)
+
+data.frame(x = x,
+           y = y) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 1.5) +
+  geom_point(aes(x = 100, y = 30), color="red",
+             size = 2) +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## Influential points
+
+Influence depends on both $x$ and $y$
+
+.pull-left[
+<ins>Possibly influential</ins>
+```{r echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(1)
+
+x  = 1:100
+y = 1:100 + rnorm(100, sd=10)
+
+data.frame(x = x,
+           y = y) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 1.5) +
+  geom_point(aes(x = 50, y = 120), color="red",
+             size = 2) +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+<ins>Not influential</ins>
+```{r echo=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(1)
+
+x  = 1:100
+y = 1:100 + rnorm(100, sd=10)
+
+data.frame(x = x,
+           y = y) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 1.5) +
+  geom_point(aes(x = 100, y = 100), color="red",
+             size = 2) +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
 ## Handling outliers and influential points
 
+If the observation is clearly a measurement error:
+* Remove it
+
+Otherwise:
 * Fit line with and without point, see how the estimated line changes
 * If the estimated line changes substantially, report both fits
+
+---
+
+## Lab 4
+
+[https://sta112-f21.github.io/labs/lab_4.html](https://sta112-f21.github.io/labs/lab_4.html)

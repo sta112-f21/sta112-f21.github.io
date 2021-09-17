@@ -16,4 +16,6 @@ September 15
 
 September 17
 : **Lab**{: .label .label-purple } Lab 4 -- assessing model assumptions
-  : [Slides](#), [Lab 4](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_12.html), [Lab 4](https://sta112-f21.github.io/labs/lab_4.html)
+  
+: Textbook 1.5

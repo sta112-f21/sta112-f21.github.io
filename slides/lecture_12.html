@@ -164,10 +164,61 @@ Votes for George Bush and Pat Buchanan, in Florida counties in 2000:
 
 ---
 
+## Impact of influential points
+
+`\(\widehat{\beta}_0\)` and `\(\widehat{\beta}_1\)` minimize `\(\sum \limits_{i=1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x_i)^2\)`
+
+
+&lt;img src="lecture_12_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Potential for influence
+
+Points with `\(x\)` far from `\(\overline{x}\)` have more *potential* to be influential
+
+.pull-left[
+&lt;ins&gt;Possibly influential&lt;/ins&gt;
+&lt;img src="lecture_12_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;ins&gt;More influential&lt;/ins&gt;
+&lt;img src="lecture_12_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Influential points
+
+Influence depends on both `\(x\)` and `\(y\)`
+
+.pull-left[
+&lt;ins&gt;Possibly influential&lt;/ins&gt;
+&lt;img src="lecture_12_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;ins&gt;Not influential&lt;/ins&gt;
+&lt;img src="lecture_12_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
 ## Handling outliers and influential points
 
+If the observation is clearly a measurement error:
+* Remove it
+
+Otherwise:
 * Fit line with and without point, see how the estimated line changes
 * If the estimated line changes substantially, report both fits
+
+---
+
+## Lab 4
+
+[https://sta112-f21.github.io/labs/lab_4.html](https://sta112-f21.github.io/labs/lab_4.html)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
