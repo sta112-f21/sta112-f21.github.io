@@ -1,0 +1,142 @@
+---
+title: "Lab 2 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gapminder)
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+new_gapminder <- gapminder %>%
+  filter(year == 2007, 
+         lifeExp >= 70, 
+         gdpPercap <= 20000)
+```
+
+## Exercise 2
+
+```{r}
+new_gapminder <- gapminder %>%
+  select(country, continent) %>%
+  distinct()
+```
+
+## Exercise 3
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  count(continent)
+```
+
+## Exercise 4
+
+```{r}
+new_gapminder <- gapminder %>%
+  mutate(log_gdp_percap = log(gdpPercap))
+```
+
+## Exercise 5
+
+```{r}
+gapminder %>%
+  mutate(log_gdp_percap = log(gdpPercap)) %>%
+  filter(year == 2007, lifeExp >= 70) %>%
+  summarize(median_log_gdp = median(log_gdp_percap))
+```
+
+
+## Exercise 6
+
+```{r}
+gapminder %>%
+  mutate(log_gdp_percap = log(gdpPercap)) %>%
+  filter(year == 2007, lifeExp >= 70) %>%
+  group_by(continent) %>%
+  summarize(median_log_gdp = median(log_gdp_percap))
+```
+
+## Exercise 7
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  ggplot(aes(x = gdpPercap, 
+             y = lifeExp,
+             color = continent)) +
+  geom_point() +
+  labs(x = "GDP per capita (US $)",
+       y = "Life expectancy at birth (years)",
+       title = "Life expectancy vs. GDP per capita",
+       color = "Continent") +
+  theme_bw()
+```
+
+## Exercise 8
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarize(median_life_exp = median(lifeExp))
+```
+
+## Exercise 9
+
+There appears to be a strong, positive nonlinear relationship between GDP per capita and life expectancy at birth. The relationship is curved, with the life expectancy leveling off as GDP per capita increases (possibly because of biological limits to human life expectancy). From the scatterplot and summary statistics, we can see that African countries tend to have lower GDP per capita and life expectancy than countries in other continents, while European countries tend to have the highest life expectancy and GDP per capita.
+
+## Exercise 10
+
+```{r}
+gapminder %>%
+  ggplot(aes(x = gdpPercap, 
+             y = lifeExp,
+             color = continent)) +
+  geom_point() +
+  facet_wrap(~year) +
+  labs(x = "GDP per capita (US $)",
+       y = "Life expectancy at birth (years)",
+       title = "Life expectancy vs. GDP per capita, by year",
+       color = "Continent") +
+  theme_bw()
+```
+
+
+## Exercise 11
+
+```{r}
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(median_life_exp = median(lifeExp)) %>%
+  ggplot(aes(x = year, 
+             y = median_life_exp, 
+             color = continent)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", 
+       y = "Median life expectancy at birth (years)",
+       color = "Continent",
+       title = "Median life expectancy over time") +
+  theme_bw()
+```
+
+
+## Exercise 12
+
+From the plot in exercise 10, we can see that countries around the world have made gains in life expectancy, and GDP per capita has increased for many countries. However, it is hard to tell from exercise 10 whether inequality has decreased. It is easier to assess inequality from exercise 11. We can see that the Americas and Asia have almost caught up to Europe and Oceania when it comes to median life expectancy. However, Africa is still just as far away as it was 50 years ago.
+
+While these plots start to address the research question, there are some drawbacks. First, by taking the median life expectancy in each continent, we ignore variability in life expectancy *within* each continent. Second, we're not measuring inequality directly. If we created a measure of inequality that we could track directly, it might be easier to answer our question.
+
+## Exercise 13
+
+* *Data matching:* 7 The data match our research question reasonably well. However, we only measure two variables to summarize global health and economic development. A data set which included other measurements of global health and economic development would have higher data matching.
+* *Exhaustive:* 5 This is a moderately exhaustive analysis, as several different plots are used to address the research question. However, the analysis could be more exhaustive by trying different statistics to directly measure global inequality in each year, and tracking this over time.
+* *Skeptical:* 2 The analysis is not very skeptical -- we only look at the relationship between life expectancy and gdp per capita. A more skeptical analysis would investigate other measures of global development as well.
+* *Second-order:* 1 There is no second-order context in this analysis. Examples of second-order context could include background on driving forces for global inequality, or the impacts of inequality on people's lives.
+* *Transparency:* 10 Our analysis relies on a few plots and summary statistics, so is very transparent.
+* *Reproducibility:* 10 The data is publicly available, and all our code is included in the lab file.

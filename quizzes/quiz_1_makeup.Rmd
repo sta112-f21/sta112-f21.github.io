@@ -1,0 +1,75 @@
+---
+title: "Quiz 1"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: top=1in
+fontsize: 12pt
+---
+
+**Name:**
+
+**Instructions:** You have 15 minutes to complete this quiz. You may use any notes or resources, including your laptop and the internet (R documentation, StackOverflow, Wikipedia, etc.). You may not communicate with anyone else during the quiz.
+
+There is one question. Relax and do your best! Try to answer as much as possible.
+
+The scenario is described on page 2. The question is on page 3. The scenario uses the `mpg` data we saw in class, which is included in the `ggplot2` package. A summary of the `mpg` data is provided for reference:
+
+## Data
+
+The `mpg` data contains information on fuel efficiency of cars in 1999 and 2008. There are 234 rows and 11 variables:
+
+* `manufacturer`: manufacturer name
+* `model`: model name
+* `displ`: engine displacement, in liters
+* `year`: year of manufacture (1999 or 2008)
+* `cyl`: number of cylinders
+* `trans`: type of transmission
+* `drv`: type of drive train (e.g., front-wheel drive)
+* `cty`: city miles per gallon
+* `hwy`: highway miles per gallon
+* `fl`: fuel type
+* `class`: type of car (SUV, compact, pickup truck, etc.)
+
+\newpage
+
+## Scenario
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+Your friend wants to use the `mpg` data to examine the relationship between engine displacement and city mileage of different cars. They try to make the following plot:
+
+```{r, echo=F, fig.align='center', fig.width=10, fig.height=6}
+mpg %>%
+  ggplot(aes(x = displ, y = cty, 
+             color = class)) +
+  geom_point(size=1.5) +
+  facet_wrap(~year) +
+  labs(x = "Engine displacement (liters)",
+       y = "City mileage (mpg)",
+       color = "Class of car") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+Unfortunately, they made several errors in their code. Here is the code they tried:
+
+```r
+mpg +
+  ggplot(aes(x = "Engine displacement", y = hwy, 
+             shape = class, facet = year)) +
+  geom_dot() +
+  labs(x = fl,
+       y = "City mileage (mpg)",
+       color = Class of car) +
+  theme_bw()
+```
+
+\newpage
+
+## Question
+
+Circle all the errors, then write the correct code below.

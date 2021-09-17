@@ -1,0 +1,98 @@
+---
+title: "Lab 4, September 17"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Friday, September 24, 12:00pm (noon) on Canvas. Knit your R Markdown file and submit the resulting HTML file to Canvas.
+
+You are welcome to work in groups, but everyone should submit their own lab.
+
+**Learning goals:** By the end of this lab, you will be able to
+
+* Use diagnostic plots to assess the validity of linear regression assumptions
+* Investigate potential outliers and influential points
+* Explore transformations to address violations of linear regression assumptions
+
+# Setup
+
+**Template file:** [lab_04_template.Rmd](https://sta112-f21.github.io/labs/lab_04_template.Rmd)
+
+**Data:** In this lab, we will look at data from an experiment conducted at Kenyon College. The biology department planted 1000 pine trees in 1990, and measured their size in 1990, 1996, and 1997. In this lab we will look at their size in 1997 as measured by their diameter (`Diam97`) and their height (`Hgt97`). The data are contained in the `Pines` dataset in the `Stat2Data` package.
+
+**Research question:** What is the relationship between diameter and height?
+
+## Questions
+
+1. Not all trees survived until 1997. As a result, the `Pines` dataset has some missing observations in 1997. Create a new dataset by removing rows containing missing values from `Pines`, and save it as `pines_new`. **Use `pines_new` for the rest of the lab.**
+
+2. Make a plot showing the relationship between diameter (on the x-axis) and height (on the y-axis); remember to provide good axis labels, with units, and a title. Summarize the relationship:
+
+* does there appear to be a relationship?
+* if so, does the relationship appear to be positive or negative?
+* what is the general shape of the relationship? Does it look linear?
+* if the relationship looks linear, what is the sample correlation?
+
+3. Fit a linear regression of height (response) on diameter (predictor). Save the fitted regression as `pines_lm`.
+
+4. Re-make the scatterplot from exercise 2 and add a line for the fitted regression line. Also report the equation of the fitted line.
+
+5. Modify code from the class activity on September 15 to create a residual plot and a QQ plot for the fitted regression in exercise 3.
+
+6. Use the plots in exercise 5 to assess the shape, constant variance, and normality assumptions.
+
+Next, we'll check for any outliers and influential points
+
+7. Run the code below to summarize the fitted model. What is the estimated standard deviation of the residuals, $\widehat{\sigma}_\varepsilon$?
+
+```r
+summary(pines_lm)
+```
+
+8. Run the code below to plot the studentized residuals for the fitted model. Are there any potential outliers?
+
+```r
+pines_new %>%
+  mutate(studentized_resids = rstudent(pines_lm),
+         yhat = predict(pines_lm)) %>%
+  ggplot(aes(x = yhat, y = studentized_resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd=1.2) +
+  geom_abline(slope = 0, intercept = c(-3, -2, 2, 3),
+              color = "orange", lty = 2, lwd=1.2) +
+  labs(x = "Predicted height in 1997 (cm)",
+       y = "Studentized residuals") +
+  theme_bw()
+```
+
+9. There are several points with very positive or very negative studentized residuals. Fill in the code below to create a new dataset which removes the point with the most negative studentized residual, and then refits the line. Does the equation of the fitted line change much after removing that point?
+
+```r
+pines_new_2 <- pines_new %>%
+  mutate(studentized_resid = ...) %>%
+  filter(studentized_resid != min(...))
+  
+pines_lm_2 <- lm(Hgt97 ~ Diam97, data = ...)
+```
+
+Now let's try some transformations.
+
+10. From the plots in exercise 5, it looks like there could be slight violations of one or two assumptions. Experiment with a few different transformations of the predictor and/or response. For each transformation, refit the linear regression and check the shape, constant variance, and normality assumptions.
+
+11. Do any of your transformations make the assumptions look more reasonable? (It is ok if they don't! Transformations don't always help).
+
+# Grading
+
+Grading will be based on completion, with points assigned according to the table below. An exercise is complete if you have made an honest effort to fill in the code chunk and answer the question for that exercise.
+
+| **Total** | **100pts** |
+| --------- | ---------- |
+| Filename lab_02_your_name.html | 0 pt |
+| Changed `author` in YAML | 0 pts |
+| Exercises 1--9, 11 | 9 pts each |
+| Exercises 10 | 10 pts |
