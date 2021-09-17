@@ -198,8 +198,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>There are several points with very positive or very negative studentized residuals. Fill in the code below to create a new dataset which removes the point with the most negative studentized residual, and then refits the line. Does the equation of the fitted line change much after removing that point?</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pines_new_2 <span class="ot">&lt;-</span> pines_new <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">studentized_resid =</span> ...) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(studentized_resid <span class="sc">!=</span> <span class="fu">min</span>(...))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">studentized_resids =</span> ...) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(studentized_resids <span class="sc">!=</span> <span class="fu">min</span>(...))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pines_lm_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Hgt97 <span class="sc">~</span> Diam97, <span class="at">data =</span> ...)</span></code></pre></div>
 <p>Now let’s try some transformations.</p>

@@ -74,8 +74,8 @@ pines_new %>%
 
 ```r
 pines_new_2 <- pines_new %>%
-  mutate(studentized_resid = ...) %>%
-  filter(studentized_resid != min(...))
+  mutate(studentized_resids = ...) %>%
+  filter(studentized_resids != min(...))
   
 pines_lm_2 <- lm(Hgt97 ~ Diam97, data = ...)
 ```

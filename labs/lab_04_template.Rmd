@@ -1,0 +1,92 @@
+---
+---
+---
+title: "Lab 4"
+author: "Your Name"
+date: "9/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Stat2Data)
+data("Pines")
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+
+```
+
+## Exercise 2
+
+```{r}
+
+```
+
+Type your answer to question 2 here...
+
+## Exercise 3
+
+```{r}
+
+```
+
+## Exercise 4
+
+```{r}
+
+```
+
+Type your answer to question 4 here...
+
+## Exercise 5
+
+```{r}
+
+```
+
+
+## Exercise 6
+
+Type your answer to question 6 here...
+
+## Exercise 7
+
+```{r}
+
+```
+
+## Exercise 8
+
+```{r}
+
+```
+
+Type your answer to question 8 here...
+
+## Exercise 9
+
+```{r}
+
+```
+
+Type your answer to question 9 here...
+
+## Exercise 10
+
+```{r}
+
+```
+
+
+## Exercise 11
+
+Type your answer to question 11 here...
+
+
+## Citations and acknowledgments
+
+Cite any outside resources used, and acknowledge any collaborators
