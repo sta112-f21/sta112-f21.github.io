@@ -1,0 +1,72 @@
+---
+title: "Class Activity, September 20"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice calculating p-values and constructing confidence intervals for the slope of a regression line.
+
+## Setup
+
+This activity investigates the relationship between the wing length and weight of sparrows on Kent island. The data are contained in the `Sparrows` dataset from the `Stat2Data` package. The activity template contains copies of the code and questions below. Run the setup chunk in the template before you begin.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_13_template.Rmd)
+
+## Questions
+
+We are interested in whether there is a relationship between wing length and weight for sparrows. Our model is
+
+$\text{weight} = \beta_0 + \beta_1 \text{wing length} + \varepsilon$
+
+Under this model, "no relationship" means $\beta_1 = 0$. We will construct a confidence interval for $\beta_1$, and calculate a p-value for the hypotheses
+
+$H_0: \beta_1 = 0$
+
+$H_A: \beta_1 \neq 0$
+
+1. Run the code below to fit the linear regression model, save it is `sparrow_lm`, and then summarize the results.
+
+```r
+sparrow_lm <- lm(Weight ~ WingLength, data = Sparrows)
+summary(sparrow_lm)
+```
+
+2. From the output in 1, what is the estimate $\widehat{\beta}_1$ of the slope?
+
+3. From the output in 1, what is the estimate $SE_{\widehat{\beta}_1}$ of the standard error of $\widehat{\beta}_1$?
+
+4. From the output in 1, what is the test statistic $t$? Confirm that $t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}}$.
+
+5. From the output in 1, what is the p-value for the hypotheses $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 \neq 0$?
+
+6. Now let's check the p-value manually. Fill in the code below to calculate the p-value using the `pt` function. Confirm that it agrees with exercise 5. (Note: R just reports `< 2e-16` when p-values are below $2 \times 10^{-16}$).
+
+```r
+pt(..., df = ..., lower.tail = TRUE) + pt(..., df = ..., lower.tail = FALSE)
+```
+
+:::{.question}
+*What's going on here?*
+
+The `pt` function calculates tail probabilities for a $t$ distribution (The `p` in `pt` stands for "probability", while the `t` indicates the $t$ distribution). The `df` argument allows you to specify the degrees of freedom (for simple linear regression, df = $n-2$). The `lower.tail` argument specifies whether you are calculating a left-tail or right-tail probability. For a two-sided test, we calculate a left-tail probability for $-|t|$, and a right-tail probability for $|t|$, and add them together. (Since the $t$-distribution is symmetric, we could also calculate one of them and multiply by 2).
+:::
+
+7. Next, we will want to calculate a confidence interval. But we need the critical value $t^*$. Fill in the code below to find $t^*$ for a 99% confidence interval:
+
+```r
+qt(..., df = ..., lower.tail = FALSE)
+```
+
+:::{.question}
+*What's going on here?*
+
+The `qt` function calculates quantiles for a $t$ distribution (The `q` in `qt` stands for "quantile", while the `t` indicates the $t$ distribution). The `df` argument allows you to specify the degrees of freedom (for simple linear regression, df = $n-2$).
+:::
+
+8. Using your answer to exercise 7, calculate a 99% confidence interval for the true slope $\beta_1$ of the relationship between wing length and weight. Remember that the confidence interval is given by
+
+$\widehat{\beta}_1 \pm t^* SE_{\widehat{\beta}_1}$
