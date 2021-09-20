@@ -162,13 +162,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sparrow_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> WingLength, <span class="at">data =</span> Sparrows)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sparrow_lm)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li><p>From the output in 1, what is the estimate <span class="math inline">\(\widehat{\beta}_1\)</span> of the slope?</p></li>
-<li><p>From the output in 1, what is the estimate <span class="math inline">\(SE_{\widehat{\beta}_1}\)</span> of the standard error of <span class="math inline">\(\widehat{\beta}_1\)</span>?</p></li>
-<li><p>From the output in 1, what is the test statistic <span class="math inline">\(t\)</span>? Confirm that <span class="math inline">\(t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}}\)</span>.</p></li>
-<li><p>From the output in 1, what is the p-value for the hypotheses <span class="math inline">\(H_0: \beta_1 = 0\)</span> vs. <span class="math inline">\(H_A: \beta_1 \neq 0\)</span>?</p></li>
-<li><p>Now let’s check the p-value manually. Fill in the code below to calculate the p-value using the <code>pt</code> function. Confirm that it agrees with exercise 5. (Note: R just reports <code>&lt; 2e-16</code> when p-values are below <span class="math inline">\(2 \times 10^{-16}\)</span>).</p></li>
+<li>From the output in 1, what is the estimate <span class="math inline">\(\widehat{\beta}_1\)</span> of the slope?</li>
+</ol>
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+<BUTTON ONCLICK="ShowAndHide(&#39;q2_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q2_solution" style="display:none">
+<p><span class="math inline">\(\widehat{\beta}_1 = 0.467\)</span></p>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>From the output in 1, what is the estimate <span class="math inline">\(SE_{\widehat{\beta}_1}\)</span> of the standard error of <span class="math inline">\(\widehat{\beta}_1\)</span>?</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q3_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q3_solution" style="display:none">
+<p><span class="math inline">\(SE_{\widehat{\beta}_1} = 0.035\)</span></p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>From the output in 1, what is the test statistic <span class="math inline">\(t\)</span>? Confirm that <span class="math inline">\(t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}}\)</span>.</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q4_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q4_solution" style="display:none">
+<p><span class="math inline">\(t = 13.463 \approx \dfrac{0.467}{0.035}\)</span> (answer is slightly different depending on when you round)</p>
+</div>
+<ol start="5" style="list-style-type: decimal">
+<li>From the output in 1, what is the p-value for the hypotheses <span class="math inline">\(H_0: \beta_1 = 0\)</span> vs. <span class="math inline">\(H_A: \beta_1 \neq 0\)</span>?</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q5_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q5_solution" style="display:none">
+<p>p-value <span class="math inline">\(&lt; 2\times 10^{-16}\)</span>. The observed slope is <em>very</em> unusual if there really is no relationship between wing length and weight, so we have strong evidence that there is a relationship between wing length and weight in the population of sparrows.</p>
+</div>
+<ol start="6" style="list-style-type: decimal">
+<li>Now let’s check the p-value manually. Fill in the code below to calculate the p-value using the <code>pt</code> function. Confirm that it agrees with exercise 5. (Note: R just reports <code>&lt; 2.2e-16</code> when p-values are below <span class="math inline">\(2.2 \times 10^{-16}\)</span>).</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>(..., <span class="at">df =</span> ..., <span class="at">lower.tail =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">pt</span>(..., <span class="at">df =</span> ..., <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<BUTTON ONCLICK="ShowAndHide(&#39;q6_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q6_solution" style="display:none">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>(<span class="sc">-</span><span class="fl">13.463</span>, <span class="at">df =</span> <span class="dv">114</span>, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">pt</span>(<span class="fl">13.463</span>, <span class="at">df =</span> <span class="dv">114</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>The resulting number is <span class="math inline">\(2.623 \times 10^{-25}\)</span>, which is indeed less than <span class="math inline">\(2.2 \times 10^{-16}\)</span></p>
+</div>
 <div class="question">
 <p><em>What’s going on here?</em></p>
 <p>The <code>pt</code> function calculates tail probabilities for a <span class="math inline">\(t\)</span> distribution (The <code>p</code> in <code>pt</code> stands for “probability”, while the <code>t</code> indicates the <span class="math inline">\(t\)</span> distribution). The <code>df</code> argument allows you to specify the degrees of freedom (for simple linear regression, df = <span class="math inline">\(n-2\)</span>). The <code>lower.tail</code> argument specifies whether you are calculating a left-tail or right-tail probability. For a two-sided test, we calculate a left-tail probability for <span class="math inline">\(-|t|\)</span>, and a right-tail probability for <span class="math inline">\(|t|\)</span>, and add them together. (Since the <span class="math inline">\(t\)</span>-distribution is symmetric, we could also calculate one of them and multiply by 2).</p>
@@ -176,7 +225,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol start="7" style="list-style-type: decimal">
 <li>Next, we will want to calculate a confidence interval. But we need the critical value <span class="math inline">\(t^*\)</span>. Fill in the code below to find <span class="math inline">\(t^*\)</span> for a 99% confidence interval:</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(..., <span class="at">df =</span> ..., <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(..., <span class="at">df =</span> ..., <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<BUTTON ONCLICK="ShowAndHide(&#39;q7_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q7_solution" style="display:none">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.005</span>, <span class="at">df =</span> <span class="dv">114</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Remember that we for a 99% confidence interval, we want 0.5% <em>in each tail</em>, so we get the quantile for 0.005, rather than 0.01.</p>
+</div>
 <div class="question">
 <p><em>What’s going on here?</em></p>
 <p>The <code>qt</code> function calculates quantiles for a <span class="math inline">\(t\)</span> distribution (The <code>q</code> in <code>qt</code> stands for “quantile”, while the <code>t</code> indicates the <span class="math inline">\(t\)</span> distribution). The <code>df</code> argument allows you to specify the degrees of freedom (for simple linear regression, df = <span class="math inline">\(n-2\)</span>).</p>
@@ -185,6 +241,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Using your answer to exercise 7, calculate a 99% confidence interval for the true slope <span class="math inline">\(\beta_1\)</span> of the relationship between wing length and weight. Remember that the confidence interval is given by</li>
 </ol>
 <p><span class="math inline">\(\widehat{\beta}_1 \pm t^* SE_{\widehat{\beta}_1}\)</span></p>
+<BUTTON ONCLICK="ShowAndHide(&#39;q8_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q8_solution" style="display:none">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.467</span> <span class="sc">-</span> <span class="fl">2.62</span><span class="sc">*</span><span class="fl">0.035</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fl">0.467</span> <span class="sc">+</span> <span class="fl">2.62</span><span class="sc">*</span><span class="fl">0.035</span></span></code></pre></div>
+<p>So we are 99% confident that an increase of 1mm in wing length is associated with an average increase in weight of between 0.375g and 0.559g, in the population of sparrows.</p>
+</div>
 </div>
 
 
