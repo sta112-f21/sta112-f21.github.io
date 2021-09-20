@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Inference for linear regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Inference for linear regression
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+---
+
+## Inference
+
+Is there a relationship between mileage and price for used Honda Accords?
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+It looks like it, but is that just a fluke?
+
+---
+
+## Is the observed relationship a fluke?
+
+What if the population scatterplot looks like this?
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Translating the question
+
+Is there a relationship between mileage and price for used Honda Accords?
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+**Model:** `\(\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon\)`
+
+**Estimated line:** `\(\widehat{\text{price}} = 20.8 - 0.12 \ \text{mileage}\)`
+
+**Question:** Is `\(\beta_1 = 0\)`?
+
+---
+
+## Inference
+
+**Model:** `\(\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon\)`
+
+**Estimated line:** `\(\widehat{\text{price}} = 20.8 - 0.12 \ \text{mileage}\)`
+
+**Question:** Is `\(\beta_1 = 0\)`?
+
+**Hypotheses:**
+.center[
+`\(H_0: \beta_1 = 0\)` 
+
+`\(H_A: \beta_1 \neq 0\)`
+]
+
+.question[
+If `\(\beta_1 = 0\)`, how unusual would `\(\widehat{\beta}_1 = -0.12\)` be?
+]
+
+--
+
+Need to know:
+* Variability of `\(\widehat{\beta}_1\)` from sample to sample
+* Sampling distribution of `\(\widehat{\beta}_1\)`
+
+---
+
+## How unusual is the observed slope?
+
+**Standardize:** `\(\ \ \ \ t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}}\)`
+
+where `\(SE_{\widehat{\beta}_1}\)` is the estimated standard error (standard deviation) of `\(\widehat{\beta}_1\)`
+
+--
+
+**Accord data:**
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+summary(accord_lm)
+```
+
+.center[
+&lt;img src="annotated_slope_t.png" width="600"&gt;
+]
+
+---
+
+## How unusual is the observed slope?
+
+**Standardize:** `\(\ \ \ \ t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}}\)`
+
+where `\(SE_{\widehat{\beta}_1}\)` is the estimated standard error (standard deviation) of `\(\widehat{\beta}_1\)`
+
+**Accord data:**
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+summary(accord_lm)
+```
+
+.center[
+&lt;img src="annotated_slope_t_2.png" width="600"&gt;
+]
+
+.center[
+`\(t = \dfrac{-0.12}{0.014} = -8.5\)`
+]
+
+---
+
+## How unusual is the observed slope?
+
+.center[
+`\(t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}}\)`
+]
+
+If `\(\beta_1 = 0\)`, then `\(t\)` follows a `\(t\)`-distribution with `\(n-2\)` degrees of freedom (df)
+
+.center[
+&lt;ins&gt;t-distributions&lt;/ins&gt;
+
+&lt;img src="t_dists.png" width="300"&gt;
+]
+
+---
+
+## How unusual is the observed slope?
+
+`\(t = \dfrac{-0.12}{0.014} = -8.5\)`, `\(\ \ \ \ n - 2 = 28\)`
+
+`\(t_{28}\)` distribution:
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## How unusual is the observed slope?
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+.question[
+What fraction of the time do we see `\(t &lt; -8.5\)` or `\(t &gt; 8.5\)`?
+]
+
+--
+
+
+```r
+pt(-8.5, df=28, lower.tail = TRUE) + 
+  pt(8.5, df=28, lower.tail = FALSE)
+```
+
+```
+## [1] 3.056239e-09
+```
+
+---
+
+## How unusual is the observed slope?
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+
+```r
+pt(-8.5, df=28, lower.tail = TRUE) + 
+  pt(8.5, df=28, lower.tail = FALSE)
+```
+
+```
+## [1] 3.056239e-09
+```
+
+.question[
+*If* `\(\beta_1 = 0\)`, the probability of observing an estimate slope less than `\(-0.12\)` or greater than `\(0.12\)` is approximately `\(0.0000000003\)`
+]
+
+---
+
+## How unusual is the observed slope?
+
+&lt;img src="lecture_13_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+.question[
+*If* `\(\beta_1 = 0\)`, the probability of observing an estimate slope less than `\(-0.12\)` or greater than `\(0.12\)` is approximately `\(0.000000003\)`
+]
+
+*p-value* = `\(0.000000003\)`
+
+---
+
+## Putting it together
+
+Is there a relationship between mileage and price for used Honda Accords?
+
+**Model:** `\(\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon\)`
+
+**Estimated line:** `\(\widehat{\text{price}} = 20.8 - 0.12 \ \text{mileage}\)`
+
+**Question:** Is `\(\beta_1 = 0\)`?
+
+**Hypotheses:**
+.center[
+`\(H_0: \beta_1 = 0\)` 
+
+`\(H_A: \beta_1 \neq 0\)`
+]
+
+**Test statistic:** `\(\ \ \ \ t = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}} = \dfrac{-0.12}{0.014} = -8.5\)`
+
+**p-value:** 0.000000003
+
+**Conclusion:** The observed slope of -0.12 would be &lt;ins&gt;very&lt;/ins&gt; unusual if there were no relationship between mileage and price for used Honda Accords, so we have strong evidence that there is a relationship between mileage and price.
+
+---
+
+## In R
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+summary(accord_lm)
+```
+
+.center[
+&lt;img src="annotated_slope_t_3.png" width="600"&gt;
+]
+
+---
+
+## Interpreting the p-value
+
+* **p-value:** probability of the observed data, or more "extreme" data, if the null hypothesis is true
+* measures how *unusual* the observed data are, under `\(H_0\)`
+* requires model assumptions to be valid
+
+What the p-value is NOT:
+* The probability `\(H_0\)` is true
+* Proof that `\(H_0\)` is true/false
+
+---
+
+## Confidence intervals for the slope
+
+.question[
+What is a "reasonable" range of possible values for `\(\beta_1\)`, given the observed data?
+]
+
+--
+
+**Confidence interval:**
+
+.center[
+`\(\widehat{\beta}_1 \ \pm \ t^* SE_{\widehat{\beta}_1}\)`
+]
+
+where `\(t^*\)` = critical value of `\(t_{n-2}\)` distribution
+
+---
+
+## `\(t^*\)`
+
+What is `\(t^*\)` for a 95% confidence interval?
+
+.center[
+&lt;img src="t_star_95.png" width="600"&gt;
+]
+
+---
+
+## In R
+
+Accord data: `\(n - 2 = 28\)`
+
+.center[
+&lt;img src="t_star_95.png" width="400"&gt;
+]
+
+
+```r
+qt(0.025, df=28, lower.tail=F)
+```
+
+```
+## [1] 2.048407
+```
+
+`\(t^* = 2.05\)`
+
+---
+
+## `\(t^*\)`
+
+What is `\(t^*\)` for a 90% confidence interval?
+
+.center[
+&lt;img src="t_star_90.png" width="400"&gt;
+]
+
+
+```r
+qt(0.05, df=28, lower.tail=F)
+```
+
+```
+## [1] 1.701131
+```
+
+`\(t^* = 1.7\)`
+
+---
+
+## Calculating confidence intervals
+
+.center[
+`\(\widehat{\beta}_1 \ \pm \ t^* SE_{\widehat{\beta}_1}\)`
+]
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+summary(accord_lm)
+```
+
+.center[
+&lt;img src="annotated_slope_t.png" width="600"&gt;
+]
+
+95% CI: [-0.149, -0.091]
+
+
+```r
+-0.12 - 2.05*0.014
+```
+
+```
+## [1] -0.1487
+```
+
+```r
+-0.12 + 2.05*0.014
+```
+
+```
+## [1] -0.0913
+```
+
+---
+
+## Calculating confidence intervals
+
+.center[
+`\(\widehat{\beta}_1 \ \pm \ t^* SE_{\widehat{\beta}_1}\)`
+]
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+summary(accord_lm)
+```
+
+.center[
+&lt;img src="annotated_slope_t.png" width="600"&gt;
+]
+
+95% CI: [-0.149, -0.091]
+
+We are 95% confidence that as mileage increases by 1000 miles, the average price decreases between `$91` and `$149` in the population of all used Accords.
+
+---
+
+## Understanding confidence intervals
+
+* If I collect many datasets, with my model assumptions met, and calculate a 95% CI for each one, then I expect 95% of my CIs to contain the corresponding `\(\beta_1\)`
+* requires model assumptions to be valid
+
+Wrong interpretation:
+* there is a 95% probability that `\(\beta_1\)` is in [-0.149, -0.091]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
