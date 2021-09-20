@@ -12,7 +12,7 @@ In this activity, you will practice calculating p-values and constructing confid
 
 ## Setup
 
-This activity investigates the relationship between the wing length and weight of sparrows on Kent island. The data are contained in the `Sparrows` dataset from the `Stat2Data` package. The activity template contains copies of the code and questions below. Run the setup chunk in the template before you begin.
+This activity investigates the relationship between the wing length and weight of sparrows on Kent island. The data are contained in the `Sparrows` dataset from the `Stat2Data` package. Run the setup chunk in the template before you begin.
 
 Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_13_template.Rmd)
 

@@ -15,6 +15,18 @@ editor_options:
 
 ## Agenda
 
+* HW 2 will be returned soon
+    * Please make sure to look at Johe's comments
+    * Contact Johe if you have any questions
+* Optional extension to HW 3 or Lab 4, to Monday (Sept 27) at noon
+    * If you take the extension, email me by this Friday
+    * If you don't take the extension, you can apply it to a future assignment (hw or lab)
+* Quiz on Wednesday. Similar to last time:
+    * 15 minutes
+    * Open note
+    * Covers through Monday Sept 13 (inclusive)
+* Today: p-values and confidence intervals
+
 ---
 
 ## Inference
@@ -244,7 +256,7 @@ pt(-8.5, df=28, lower.tail = TRUE) +
 ```
 
 .question[
-*If* $\beta_1 = 0$, the probability of observing an estimate slope less than $-0.12$ or greater than $0.12$ is approximately $0.0000000003$
+*If* $\beta_1 = 0$, the probability of observing $t < -8.5$ or $t > 8.5$ is approximately $0.0000000003$
 ]
 
 ---
@@ -266,7 +278,7 @@ data.frame(x = seq(-10, 10, 0.1),
 ```
 
 .question[
-*If* $\beta_1 = 0$, the probability of observing an estimate slope less than $-0.12$ or greater than $0.12$ is approximately $0.000000003$
+*If* $\beta_1 = 0$, the probability of observing $t < -8.5$ or $t > 8.5$ is approximately $0.0000000003$
 ]
 
 *p-value* = $0.000000003$
@@ -435,3 +447,9 @@ We are 95% confidence that as mileage increases by 1000 miles, the average price
 
 Wrong interpretation:
 * there is a 95% probability that $\beta_1$ is in [-0.149, -0.091]
+
+---
+
+## Class activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_13.html](https://sta112-f21.github.io/class_activities/ca_lecture_13.html)

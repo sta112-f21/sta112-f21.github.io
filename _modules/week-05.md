@@ -1,0 +1,26 @@
+---
+title: Inference for simple linear regression
+---
+
+September 20
+: p-values and confidence intervals for slope
+  : [Slides](https://sta112-f21.github.io/slides/lecture_13.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_13.html)
+  
+: Textbook 2.1
+
+September 22
+: Partitioning variability
+  : [Slides](#)
+
+: Textbook 2.2
+  
+: **Quiz 2**{: .label .label-red}
+
+September 24
+: Continuing inference
+  : [Slides](#)
+
+: **HW 3 due**{: .label .label-red }
+
+: **HW 4 released**{: .label .label-yellow }
+  : [HW 4](#)
