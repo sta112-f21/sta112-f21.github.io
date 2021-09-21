@@ -1,0 +1,191 @@
+---
+author: "Dr. Ciaran Evans"
+title: Intervals for prediction
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+---
+
+## Recap: confidence interval for $\widehat{\beta}_1$
+
+.center[
+$\widehat{\beta}_1 \pm t^* SE_{\widehat{\beta}_1}$
+]
+
+* $t^*$ = critical value of $t_{n-2}$ distribution
+* $SE_{\widehat{\beta}_1}$ = estimated standard error of $\widehat{\beta}_1$
+
+---
+
+## Confidence intervals for the response
+
+.center[
+$\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon$
+]
+
+<ins>Question 1:</ins> What is a confidence interval for the average price of used Honda Accords with 50000 miles?
+
+<br>
+
+<ins>Question 2:</ins> I have a used Honda Accord with 50000 miles. What is a confidence interval for the price I can sell it for?
+
+---
+
+## Confidence intervals for the response
+
+.center[
+$\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon$
+]
+
+<ins>Question 1:</ins> What is a confidence interval for the average price of used Honda Accords with 50000 miles?
+* **Confidence interval for mean response**
+
+<br>
+
+<ins>Question 2:</ins> I have a used Honda Accord with 50000 miles. What is a confidence interval for the price I can sell it for?
+* **Confidence interval for individual response** (aka **prediction interval**)
+
+---
+
+## Confidence intervals for the response
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+]
+
+**Confidence interval for mean response:** When $x = x^*$, the mean response is $\mu_y = \beta_0 + \beta_1 x^*$. What is a confidence interval for $\mu_y$, given $x^*$?
+
+<br>
+
+**Prediction interval:** I observe a new data point with $x = x^*$. What is a confidence interval for $y$?
+
+---
+
+## Confidence intervals for the response
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+
+$\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x$
+]
+
+**Confidence interval for mean response:** When $x = x^*$, a confidence interval for $\mu_y = \beta_0 + \beta_1 x^*$ is
+
+.center[
+$\widehat{y} \pm t^* SE_{\widehat{\mu}}$
+]
+
+<br>
+
+**Prediction interval:** When $x = x^*$, a confidence interal for a new response $y$ is
+
+.center[
+$\widehat{y} \pm t^* SE_{\widehat{y}}$
+]
+
+---
+
+## Confidence intervals for the response
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+
+$\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x$
+]
+
+**Confidence interval for mean response:** $\widehat{y} \pm t^* SE_{\widehat{\mu}}$
+
+<br>
+
+**Prediction interval:** $\widehat{y} \pm t^* SE_{\widehat{y}}$
+
+<br>
+
+$SE_{\widehat{\mu}} = \widehat{\sigma}_{\varepsilon} \sqrt{\dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}$
+
+$SE_{\widehat{y}} = \widehat{\sigma}_{\varepsilon} \sqrt{1 + \dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}$
+
+---
+
+## Confidence intervals for the response
+
+.center[
+$y = \beta_0 + \beta_1 x + \varepsilon$
+
+$\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x$
+]
+
+**Confidence interval for mean response:** $\widehat{y} \pm t^* SE_{\widehat{\mu}}$
+
+**Prediction interval:** $\widehat{y} \pm t^* SE_{\widehat{y}}$
+
+$SE_{\widehat{\mu}} = \widehat{\sigma}_{\varepsilon} \sqrt{\dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}$
+
+$SE_{\widehat{y}} = \widehat{\sigma}_{\varepsilon} \sqrt{1 + \dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}$
+
+* $SE_{\widehat{y}} > SE_{\widehat{\mu}}$
+* $SE_{\widehat{y}}^2 = SE_{\widehat{\mu}}^2 + \widehat{\sigma}_{\varepsilon}^2$
+* Both depend on how close $x^*$ is to $\overline{x}$
+
+---
+
+## Accord data
+
+Interested in used Accords with 50000 miles:
+.center[
+$\widehat{\text{price}} = 20.8 - 0.12(50) =$ `$14,800`
+]
+
+**95% Confidence interval for mean response:**
+
+```{r echo=F, include=F}
+library(Stat2Data)
+library(tidyverse)
+data("AccordPrice")
+```
+
+```{r}
+accord_lm <- lm(Price ~ Mileage, data = AccordPrice)
+predict(accord_lm, 
+        newdata = data.frame(Mileage=50),
+        interval = "confidence",
+        level = 0.95)
+```
+
+**Interpretation:** We are 95% confident that the true mean price of used Honda Accords with 50000 miles is between `$13,658` and `$15,980`.
+
+---
+
+## Accord data
+
+Interested in used Accords with 50000 miles:
+.center[
+$\widehat{\text{price}} = 20.8 - 0.12(50) =$ `$14,800`
+]
+
+**95% Prediction interval:**
+
+```{r}
+accord_lm <- lm(Price ~ Mileage, data = AccordPrice)
+predict(accord_lm, 
+        newdata = data.frame(Mileage=50),
+        interval = "prediction",
+        level = 0.95)
+```
+
+**Interpretation:** We are 95% confident that the sales price of a used Honda Accord with 50000 miles will be between `$8,394` and `$21,244`.
+
+---
+
+## Class activity

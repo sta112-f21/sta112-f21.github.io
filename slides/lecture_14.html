@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Intervals for prediction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Intervals for prediction
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+---
+
+## Recap: confidence interval for `\(\widehat{\beta}_1\)`
+
+.center[
+`\(\widehat{\beta}_1 \pm t^* SE_{\widehat{\beta}_1}\)`
+]
+
+* `\(t^*\)` = critical value of `\(t_{n-2}\)` distribution
+* `\(SE_{\widehat{\beta}_1}\)` = estimated standard error of `\(\widehat{\beta}_1\)`
+
+---
+
+## Confidence intervals for the response
+
+.center[
+`\(\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon\)`
+]
+
+&lt;ins&gt;Question 1:&lt;/ins&gt; What is a confidence interval for the average price of used Honda Accords with 50000 miles?
+
+&lt;br&gt;
+
+&lt;ins&gt;Question 2:&lt;/ins&gt; I have a used Honda Accord with 50000 miles. What is a confidence interval for the price I can sell it for?
+
+---
+
+## Confidence intervals for the response
+
+.center[
+`\(\text{price} = \beta_0 + \beta_1 \text{mileage} + \varepsilon\)`
+]
+
+&lt;ins&gt;Question 1:&lt;/ins&gt; What is a confidence interval for the average price of used Honda Accords with 50000 miles?
+* **Confidence interval for mean response**
+
+&lt;br&gt;
+
+&lt;ins&gt;Question 2:&lt;/ins&gt; I have a used Honda Accord with 50000 miles. What is a confidence interval for the price I can sell it for?
+* **Confidence interval for individual response** (aka **prediction interval**)
+
+---
+
+## Confidence intervals for the response
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+]
+
+**Confidence interval for mean response:** When `\(x = x^*\)`, the mean response is `\(\mu_y = \beta_0 + \beta_1 x^*\)`. What is a confidence interval for `\(\mu_y\)`, given `\(x^*\)`?
+
+&lt;br&gt;
+
+**Prediction interval:** I observe a new data point with `\(x = x^*\)`. What is a confidence interval for `\(y\)`?
+
+---
+
+## Confidence intervals for the response
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+
+`\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+**Confidence interval for mean response:** When `\(x = x^*\)`, a confidence interval for `\(\mu_y = \beta_0 + \beta_1 x^*\)` is
+
+.center[
+`\(\widehat{y} \pm t^* SE_{\widehat{\mu}}\)`
+]
+
+&lt;br&gt;
+
+**Prediction interval:** When `\(x = x^*\)`, a confidence interal for a new response `\(y\)` is
+
+.center[
+`\(\widehat{y} \pm t^* SE_{\widehat{y}}\)`
+]
+
+---
+
+## Confidence intervals for the response
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+
+`\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+**Confidence interval for mean response:** `\(\widehat{y} \pm t^* SE_{\widehat{\mu}}\)`
+
+&lt;br&gt;
+
+**Prediction interval:** `\(\widehat{y} \pm t^* SE_{\widehat{y}}\)`
+
+&lt;br&gt;
+
+`\(SE_{\widehat{\mu}} = \widehat{\sigma}_{\varepsilon} \sqrt{\dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}\)`
+
+`\(SE_{\widehat{y}} = \widehat{\sigma}_{\varepsilon} \sqrt{1 + \dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}\)`
+
+---
+
+## Confidence intervals for the response
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+
+`\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+**Confidence interval for mean response:** `\(\widehat{y} \pm t^* SE_{\widehat{\mu}}\)`
+
+**Prediction interval:** `\(\widehat{y} \pm t^* SE_{\widehat{y}}\)`
+
+`\(SE_{\widehat{\mu}} = \widehat{\sigma}_{\varepsilon} \sqrt{\dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}\)`
+
+`\(SE_{\widehat{y}} = \widehat{\sigma}_{\varepsilon} \sqrt{1 + \dfrac{1}{n} + \dfrac{(x^* - \overline{x})^2}{\sum_i (x_i - \overline{x})^2}}\)`
+
+* `\(SE_{\widehat{y}} &gt; SE_{\widehat{\mu}}\)`
+* `\(SE_{\widehat{y}}^2 = SE_{\widehat{\mu}}^2 + \widehat{\sigma}_{\varepsilon}^2\)`
+* Both depend on how close `\(x^*\)` is to `\(\overline{x}\)`
+
+---
+
+## Accord data
+
+Interested in used Accords with 50000 miles:
+.center[
+`\(\widehat{\text{price}} = 20.8 - 0.12(50) =\)` `$14,800`
+]
+
+**95% Confidence interval for mean response:**
+
+
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+predict(accord_lm, 
+        newdata = data.frame(Mileage=50),
+        interval = "confidence",
+        level = 0.95)
+```
+
+```
+##        fit      lwr      upr
+## 1 14.81902 13.65787 15.98016
+```
+
+**Interpretation:** We are 95% confident that the true mean price of used Honda Accords with 50000 miles is between `$13,658` and `$15,980`.
+
+---
+
+## Accord data
+
+Interested in used Accords with 50000 miles:
+.center[
+`\(\widehat{\text{price}} = 20.8 - 0.12(50) =\)` `$14,800`
+]
+
+**95% Prediction interval:**
+
+
+```r
+accord_lm &lt;- lm(Price ~ Mileage, data = AccordPrice)
+predict(accord_lm, 
+        newdata = data.frame(Mileage=50),
+        interval = "prediction",
+        level = 0.95)
+```
+
+```
+##        fit      lwr      upr
+## 1 14.81902 8.393807 21.24422
+```
+
+**Interpretation:** We are 95% confident that the sales price of a used Honda Accord with 50000 miles will be between `$8,394` and `$21,244`.
+
+---
+
+## Class activity
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
