@@ -1,0 +1,120 @@
+---
+title: "Class Activity, September 22"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice computing prediction intervals and confidence intervals for the mean response.
+
+## Setup
+
+This activity investigates the relationship between the wing length and weight of sparrows on Kent island. The data are contained in the `Sparrows` dataset from the `Stat2Data` package. Run the setup chunk in the template before you begin.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_14_template.Rmd)
+
+## Questions
+
+We are interested in whether there is a relationship between wing length and weight for sparrows. Our model is
+
+$\text{weight} = \beta_0 + \beta_1 \text{wing length} + \varepsilon$
+
+1. Run the code below to fit the linear regression model, and save it is `sparrow_lm`.
+
+```r
+sparrow_lm <- lm(Weight ~ WingLength, data = Sparrows)
+```
+
+```{r, include=F}
+library(Stat2Data)
+library(tidyverse)
+data("Sparrows")
+sparrow_lm <- lm(Weight ~ WingLength, data = Sparrows)
+```
+
+:::{.question}
+*What's going on here?*
+
+Remember that the `lm` function in R fits a linear regression model, with the specified predictor and response. The output of the `lm` function is a linear model object in R, which we have stored here as `sparrow_lm`. There are many functions we can apply to linear model objects, such as `summary`, `predict`, `residuals`, and `rstudent`. The goal of saving the model as `sparrow_lm` is to make it easy to use the fitted regression line later on.
+:::
+
+2. We are interested in the mean weight of Sparrows with a wing length of 25mm. Fill in the code below to calculate a 99% confidence interval for the mean response when the wing length is 25mm.
+
+```r
+predict(sparrow_lm, 
+        newdata = data.frame(WingLength = ...),
+        interval = ...,
+        level = ...)
+```
+
+:::{.question}
+*What's going on here?*
+
+The `predict` function is used to make predictions for estimated regression models. If we just ran `predict(sparrow_lm)`, we would get the predictions ($\widehat{\text{weight}}$) for the data used the fit the  model. To make predictions on new observations, we use the `newdata` argument, where we specify the values of `WingLength` that we want to make predictions for. The data needs to be passed as a data frame, hence `data.frame(...)`. For `interval`, we can specify either "none" (in which case we just get $\widehat{\text{weight}}$), "confidence" (for the confidence interval for the mean response), or "prediction" (for a prediction interval). The `level` argument corresponds to our desired level of confidence. For example, for a 95% confidence interval, `level = 0.95`.
+:::
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+```{r}
+predict(sparrow_lm, 
+        newdata = data.frame(WingLength = 25),
+        interval = "confidence",
+        level = 0.99)
+```
+
+The estimated mean weight of sparrows with a wing length of 25mm is 13.05g. We are 99% confident that the true mean weight of sparrows with a wing length of 25mm is between 12.65g and 13.45g.
+</DIV>
+
+3. Now modify the code in question 2 to calculate a 99% *prediction* interval for sparrow weight when the wing length is 25mm. Confirm that your prediction interval is wider than the confidence interval in question 2.
+
+<BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
+
+<DIV ID="q3_solution" STYLE="display:none">
+```{r}
+predict(sparrow_lm, 
+        newdata = data.frame(WingLength = 25),
+        interval = "prediction",
+        level = 0.99)
+```
+
+The estimated mean weight of sparrows with a wing length of 25mm is 13.05g. We are 99% confident that a sparrow with a wing length of 25mm will have a weight between 9.36g and 16.74g.
+
+Note the difference between the intervals in 2 and 3. In question 2, we want an interval for the <ins>average</ins> weight of sparrows with wing length 25mm. In question 3, we want an interval for the weight of an <ins>individual</ins> sparrow with wing length 25mm. As a result, the interval in question 3 is wider.
+</DIV>
+
+4. Finally, let's think about a wing length of 20mm instead. Modify your code from questions 2 and 3 to calculate a 99% confidence interval for the mean response, and a 99% prediction interval, when wing length is 20mm. Why are the intervals wider than in questions 2 and 3?
+
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+```{r}
+predict(sparrow_lm, 
+        newdata = data.frame(WingLength = 20),
+        interval = "confidence",
+        level = 0.99)
+
+predict(sparrow_lm, 
+        newdata = data.frame(WingLength = 20),
+        interval = "prediction",
+        level = 0.99)
+```
+
+The estimated mean weight of sparrows with a wing length of 20mm is 10.71g. We are 99% confident that the true mean weight of sparrows with wing length 20mm is between 9.97g and 11.46g. We are 99% confident that a sparrow with wing length 20mm will have a weight between 6.97g and 14.46g.
+
+The intervals are wider for 20mm than for 25mm, because 25mm is closer to the mean wing length in the dataset (which is about 27mm).
+</DIV>

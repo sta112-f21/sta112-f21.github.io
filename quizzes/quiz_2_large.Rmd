@@ -1,0 +1,91 @@
+---
+title: "Quiz 2"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: top=1in
+header-includes:
+- \usepackage[fontsize=22pt]{scrextend}
+---
+
+**Name:**
+
+**Instructions:** You have 15 minutes to complete this quiz. You may use any notes or resources, including your laptop and the internet (R documentation, StackOverflow, Wikipedia, etc.). You may not communicate with anyone else during the quiz.
+
+There are three short questions. Relax and do your best! Try to answer as much as possible.
+
+The data is described on page 2. The scenario is described on pages 3-4. The questions are on pages 5-6. 
+
+\newpage
+
+## Data
+
+Is there a relationship between a house's distance from bike trails, and its selling price?  The `RailsTrails` data looks at a sample of 104 houses in Northampton, MA, and includes the following variables:
+
+* `Price`: the sale price (in $1000's)
+* `Distance`: distance (in feet) to the nearest bike trail
+
+\newpage
+
+## Scenario
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("RailsTrails")
+```
+
+The scatterplot below plots Distance and Price for the sample of 104 homes.
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+RailsTrails %>%
+  ggplot(aes(x = Distance, y = Price2014)) +
+  geom_point(size=3) +
+  labs(x = "Distance (feet)", y = "Price ($1000's)") +
+  theme_bw() +
+  theme(text = element_text(size=24))
+```
+
+You want to model the relationship between Distance and Price in the population of all houses in Northampton, MA. You decide to use simple linear regression. You fit the regression model in R, producing the output below:
+
+\newpage
+
+```{r, echo=F}
+RailsTrails %>%
+  mutate(Price = Price2014) %>%
+  lm(Price ~ Distance, data = .)
+```
+
+To assess the shape and constant variance assumptions of your linear regression model, you also create a residual plot:
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+rt_lm <- RailsTrails %>%
+  mutate(Price = Price2014) %>%
+  lm(Price ~ Distance, data = .)
+
+data.frame(x = predict(rt_lm),
+           y = residuals(rt_lm)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size=3) +
+  geom_abline(slope = 0, intercept = 0,
+              lwd = 1.2, color="blue") +
+  theme_bw() +
+  labs(x = "Predicted price ($1000's)",
+       y = "Residuals") +
+  theme(text = element_text(size = 24))
+```
+
+\newpage
+
+## Questions
+
+**Question 1:** Write down the linear regression model for the relationship between Distance and Price in the population.
+
+\vspace{4cm}
+
+**Question 2:** Using the R output above, write the equation of the fitted regression line which predicts Price from Distance.
+
+\newpage
+
+**Question 3:** Use the residual plot to assess the shape and constant variance assumptions. Do these two assumptions look reasonable? Explain.

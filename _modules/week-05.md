@@ -9,15 +9,15 @@ September 20
 : Textbook 2.1
 
 September 22
-: Partitioning variability
-  : [Slides](#)
+: Intervals for predictions
+  : [Slides](https://sta112-f21.github.io/slides/lecture_14.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_14.html)
 
-: Textbook 2.2
+: Textbook 2.4
   
 : **Quiz 2**{: .label .label-red}
 
 September 24
-: Continuing inference
+: Wrapping up simple linear regression
   : [Slides](#)
 
 : **HW 3 due**{: .label .label-red }

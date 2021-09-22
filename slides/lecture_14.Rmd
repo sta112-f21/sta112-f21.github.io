@@ -15,6 +15,14 @@ editor_options:
 
 ## Agenda
 
+* HW 2 grades released; look at comments, contact Johe or me with any questions
+* Today: 
+    * intervals for prediction
+    * Quiz 2
+* Friday: wrapping up simple linear regression
+* Next week:
+    * beginning multiple linear regression
+    * Project 1 released
 ---
 
 ## Recap: confidence interval for $\widehat{\beta}_1$
@@ -140,6 +148,69 @@ $SE_{\widehat{y}} = \widehat{\sigma}_{\varepsilon} \sqrt{1 + \dfrac{1}{n} + \dfr
 
 ---
 
+## Impact of $x^* - \overline{x}$
+
+Accord data:
+
+```{r echo=F, include=F}
+library(Stat2Data)
+library(tidyverse)
+data("AccordPrice")
+```
+
+.pull-left[
+
+```{r echo=F, message=F, fig.align='center', fig.width=6, fig.height=4}
+p <- AccordPrice %>%
+  ggplot(aes(x = Mileage, y = Price)) +
+  geom_point(alpha = 0.5, size=2)
+
+for(i in 1:30){
+  accord_samp <- AccordPrice %>%
+    sample_n(30, replace=T)
+  
+  samp_lm <- lm(Price ~ Mileage, data = accord_samp)
+  
+  p <- p +
+    geom_abline(slope = coef(samp_lm)[2],
+                intercept = coef(samp_lm)[1],
+                alpha = 0.7)
+}
+
+p <- p +
+  geom_smooth(method = "lm", se=F, lwd=2) +
+  theme_bw() + 
+  labs(x = "Mileage (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme(text = element_text(size = 20))
+
+p
+```
+
+Blue line = estimated line from observed data
+Black lines = estimated lines from other possible samples
+]
+
+.pull-right[
+```{r echo=F, message=F, fig.align='center', fig.width=6, fig.height=4}
+AccordPrice %>%
+  ggplot(aes(x = Mileage, y = Price)) +
+  geom_point(size=2) +
+  geom_smooth(method="lm", se=T) +
+  theme_bw() +
+  labs(x = "Mileage (in 1000's)",
+       y = "Price (in $1000's)") +
+  theme(text = element_text(size = 20))
+```
+
+With `geom_line(method="lm", se=TRUE)` (displays confidence interval for mean response at each point)
+]
+
+* There is more variability in the fitted line for larger $x - \overline{x}$
+* For similar reasons, points with $x - \overline{x}$ have more potential to be influential
+
+---
+
 ## Accord data
 
 Interested in used Accords with 50000 miles:
@@ -148,12 +219,6 @@ $\widehat{\text{price}} = 20.8 - 0.12(50) =$ `$14,800`
 ]
 
 **95% Confidence interval for mean response:**
-
-```{r echo=F, include=F}
-library(Stat2Data)
-library(tidyverse)
-data("AccordPrice")
-```
 
 ```{r}
 accord_lm <- lm(Price ~ Mileage, data = AccordPrice)
@@ -189,3 +254,5 @@ predict(accord_lm,
 ---
 
 ## Class activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_14.html](https://sta112-f21.github.io/class_activities/ca_lecture_14.html)
