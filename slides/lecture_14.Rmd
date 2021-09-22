@@ -25,7 +25,7 @@ editor_options:
     * Project 1 released
 ---
 
-## Recap: confidence interval for $\widehat{\beta}_1$
+## Recap: confidence interval for $\beta_1$
 
 .center[
 $\widehat{\beta}_1 \pm t^* SE_{\widehat{\beta}_1}$
