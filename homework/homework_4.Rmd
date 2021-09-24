@@ -1,0 +1,142 @@
+---
+title: "Homework 4"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Monday, October 4, 12:00pm (noon) on Canvas
+
+# Instructions
+
+In this assignment, you will practice writing a data analysis report. Your report will address the research question from HW 3, and you will combine many of your answers to HW 3 into the report document.
+
+The **Format** section below describes how to organize and write the report. The **Writing a report for the bryozoan data** section provides detailed information on what you should include in each section of the report, with pointers to relevant questions in HW 3.
+
+### Submission
+
+A template file is provided, which includes the five section headings:
+
+Once you have completed the report, submit *both* your 
+knitted HTML file and the R Markdown file to Canvas.
+
+# Format
+
+## Sections
+
+Your data analysis report will contain five sections:
+
+* **Introduction:** The Introduction motivates the research question, why you want to study it, and the data you will use to study it. This is a good place for second-order details that provide context to the research question and data.
+* **Methods:** The Methods section provides further details on the data you will use to answer the research question (such as its size, what variables are recorded, whether there are any missing observations, etc.). It also translates the general research question into one or more statistical questions, which can be answered with methods like statistical models and hypothesis tests.
+* **Results:** In the Results section, you describe the final results of your statistical analysis, such as the equation of the final model, and results of confidence intervals or hypothesis tests. 
+* **Discussion:** The Discussion interprets the Results in the context of the original research question. Where the Methods section translates the research question into a statistical question, the Discussion section translates a statistical result back into the original context.
+* **Appendix:** The Appendix provides any supplementary details that were not included in the main report.
+
+
+## Appearance and style
+
+### Writing
+
+The report should be written like an article or research paper: in full sentences and paragraphs, with headings for each section. You should not write your report with question numbers or as a list of bullet points. Scientific articles are generally written in third person, though "we" can also be acceptable ("we can see from Figure 1...") in some disciplines.
+
+### Code
+
+As with previous assignments, you will write the document in R Markdown. However, in full reports, the only output that should be visible from code chunks are figures and tables. If a code chunk does not produce a figure or table, you can hide it from the knitted document with `include=F`:
+
+````
+```{r, include=F}`r ''`
+
+```
+````
+
+If a code chunk produces a figure or table, only the figure or table should be visible in the knitted document. You can hide the chunk but display the output with `echo=F, message=F, warning=F`:
+
+````
+```{r, echo=F, message=F, warning=F}`r ''`
+
+```
+````
+
+### Figures
+
+Figures should have labeled axes, and should be clear and easy to read. Figures should also be captioned and numbered; to caption a figure, use `fig.cap = "..."` in the chunk options. For example (scroll to the right on the code to see it all),
+
+````
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Bill depth vs. bill length for penguins near Palmer Station, Antarctica."}`r ''`
+penguins %>%
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm)) +
+  geom_point() +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)") +
+  theme_bw()
+```
+````
+
+is displayed as
+
+```{r include=F}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Bill depth vs. bill length for penguins near Palmer Station, Antarctica."}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm)) +
+  geom_point() +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)") +
+  theme_bw()
+```
+
+Captions should provide enough information to understand what is being plotted, but interpretation can be left to the main text. Refer to figures by their number in the text. Make sure that any figures you include are discussed in the text.
+
+# Writing a report for the bryozoan data
+
+### Introduction
+
+Write 1-2 paragraphs which:
+
+* Motivate the research question. Why do researchers want to study the relationship between mass and metabolism? What is their specific research question about this relationship?
+* Describe where the data came from. Who collected it? Which species were measured in the data?
+* Provide background on the dataset. What are marine bryozoan? What are their developmental stages?
+* Finish by summarizing what you will do in the report.
+
+### Methods
+
+Write 2-3 paragraphs which:
+
+* Describe details of the data. What does a row in the data represent? How many rows and columns? What information do the variables record? Are there any missing data? You already wrote about these details in Question 1 of HW 3.
+* Describe any data manipulation. Did you remove any missing values? Did you focus only on a subset of the data? For the bryozoan data, you should talk about how you focused on the bugula larvae, and explain why. Use your answer to Question 5 on HW 3, including the plot, to explain why you focused only on one species and one developmental stage.
+* Describe the models that will be fit. In this case, we fit two models: a linear model with mass and metabolic rate, and a linear model with log mass and log metabolic rate. Here you should write down the two models, and motivate the purpose of transformations in the second model. See Question 7 from HW 3, and the text immediately before Question 13 on HW 3.
+* Summarize the model assumptions and how they will be assessed. Summarize the assumptions for inference with linear models, and which diagnostic tools we use to evaluate them. Note that you don't check the assumptions here; that happens in the Results section.
+
+### Results
+
+Write 2-3 paragraphs which:
+
+* Report the software used to fit the models. In this case, you can say "All analysis was completed using R", and list any specific packages used.
+* Report the equation of the fitted *final* model. For the bryozoan data, the final model was the model you fit with the log-transformed data. You do not need to report the results of the first model. Include a scatterplot showing the relationship between log mass and log metabolic rate, with the fitted regression line. See Question 14 on HW 3.
+* Interpret the coefficients (estimated slope and estimated intercept) of the fitted final model. However, we don't address the research question yet -- assessing the results in the context of the research question happens in the Discussion.
+* Assess assumptions for the final model. See Questions 9, 15, and 16 on HW 3.
+* Report a confidence interval for the slope of the fitted final model. Look back at the class activity for September 20 for help. 
+* Report a p-value for the slope of the fitted final model. Note that the hypotheses depend on the research question. For the bryozoan data, we fit a linear model with log mass and log metabolic rate. The researchers are interested in whether larger organisms are more energy efficient, after accounting for body size. This corresponds to the hypotheses
+
+$H_0: \beta_1 = 1 \hspace{1cm} H_A: \beta_1 < 1$
+
+To calculate a p-value, use the test statistic $t = \dfrac{\widehat{\beta}_1 - 1}{SE_{\widehat{\beta}_1}}$, and calculate a one-sided p-value (use only the left (lower) tail).
+
+### Discussion
+
+Write 1-2 paragraphs which:
+
+* Summarize what you learned from your final model, and how it addresses the original research question
+* Discuss any limitations to the analysis, and how they could be improved in future work
+
+### Appendix
+
+* Include any exploratory data analysis that was relevant. In this case, see Question 2 from HW 3.
+* Report the results for any other models apart from the final model. For the bryozoan data, you fit an initial model with mass and metabolic rate. Report the results for that initial model (Questions 8, 10, 11, and 12 from HW 3).
