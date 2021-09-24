@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Simple linear regression recap, Data analysis reports</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Simple linear regression recap, Data analysis reports
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* HW 4 out today
+    * practice writing a data analysis report with the bryozoan data from HW 3
+* Today:
+    * simple linear regression recap
+    * writing a data analysis report
+* Next week: Project 1 released. Provided with a dataset and asked to:
+    * develop a research question
+    * address your research question with simple linear regression
+    * write up analysis in report
+    
+---
+
+## Simple linear regression recap
+
+**Model:**
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+]
+
+where `\(\varepsilon \sim N(0, \sigma_{\varepsilon}^2)\)`, and the `\(\varepsilon\)` are independent from each other.
+
+**Estimated line:**
+
+.center[
+`\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+]
+
+---
+
+## Fitting the model
+
+.question[
+What method do we use to calculate `\(\widehat{\beta}_0\)` and `\(\widehat{\beta}_1\)`?
+]
+
+--
+
+**Least squares:** minimize `\(\sum \limits_{i=1}^n (y_i - \widehat{y}_i)^2\)`
+
+---
+
+## Interpretation
+
+.question[
+How do I interpret `\(\widehat{\beta}_0\)` and `\(\widehat{\beta}_1\)`?
+]
+
+--
+
+`\(\widehat{\beta}_0\)`: the estimated average value of `\(y\)` when `\(x = 0\)`
+
+`\(\widehat{\beta}_1\)`: a unit increase in `\(x\)` is associated with a change of `\(\widehat{\beta}_1\)` units in `\(y\)`, on average
+
+---
+
+## Inference
+
+Inference with the simple linear regression model:
+
+* Confidence interval for `\(\beta_1\)`
+* Test hypotheses about `\(\beta_1\)`, such as
+.center[
+`\(H_0: \beta_1 = 0\)`
+
+`\(H_A: \beta_1 \neq 0\)`
+]
+* Calculate prediction intervals and confidence intervals for the mean response, given `\(x = x^*\)`
+
+---
+
+## Assumptions for inference
+
+.question[
+What are the six assumptions we need for inference with a regression model?
+]
+
+--
+
+* Shape
+* Constant variance
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Diagnostics
+
+.question[
+Which diagnostic plots can I use to check the shape, constant variance, and normality assumptions?
+]
+
+--
+
+* Shape and constant variance: residual plot
+* Normality: quantile-quantile (QQ) plot
+
+---
+
+## Outliers and influential points
+
+.question[
+How do I check for potential outliers?
+]
+
+--
+
+Studentized residual plot
+
+--
+
+.question[
+What do I do if my data has an outlier?
+]
+
+--
+
+* If the point is clearly a measurement error: remove it
+* Otherwise:
+    * If not influential, keep it in data
+    * If influential, report results both with and without the point
+    
+---
+
+## Prediction vs. Inference
+
+**Inference:** Want to understand the relationship between my variables
+
+**Prediction:** Just want to make good predictions
+
+**Assumptions for prediction:** 
+* Independence 
+* Randomness -- need to generalize predictions to new data
+* Shape (sort of) -- don't have to get shape exactly right, but need to be roughly correct for predictions to be useful
+
+Constant variance and normality aren't necessary, but predictions can be better if more assumptions are met.
+
+---
+
+## The modeling process
+
+.center[
+&lt;img src="modeling_process.png" width="600"&gt;
+]
+
+---
+
+## The modeling process
+
+* **Choose:** specify the model, usually based on exploratory data analysis. Examples:
+    * `\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+    * `\(\sqrt{y} = \beta_0 + \beta_1 x + \varepsilon\)`
+* **Fit:** Fit the model in R
+    * `lm(... ~ ..., data = ...)`
+    * `\(\widehat{y} = \widehat{\beta}_0 + \widehat{\beta}_1 x\)`
+* **Assess:** check assumptions and outliers
+    * Residual plots, QQ plots, Studentized residuals
+* **Use:** use the final model to answer your research question
+    * predictions
+    * interpretation of `\(\widehat{\beta}_1\)`
+    * confidence interval for `\(\beta_1\)`
+    * p-value for hypotheses about `\(\beta_1\)`
+    * prediction interval for response
+    * confidence interval for mean response
+
+---
+
+## Data analysis reports
+
+* **Goal:** communicate results of data analysis to an audience
+* Many potential formats and audiences
+* In this course:
+    * Audience: someone familiar with statistics, but not necessarily with the research question or data
+    * Format: IMRaD (Introduction, Methods, Results, and Discussion)
+    
+---
+
+## Format
+
+* **Introduction:** 
+* **Methods:**
+* **Results:** 
+* **Discussion:** 
+* **Appendix:** 
+
+---
+
+## Format
+
+* **Introduction:** why the research problem is interesting, what data you'll use
+* **Methods:** 
+* **Results:** 
+* **Discussion:** 
+* **Appendix:** 
+
+---
+
+## Format
+
+* **Introduction:** why the research problem is interesting, what data you'll use
+* **Methods:** data details, describe the statistical methods you will use
+* **Results:** 
+* **Discussion:** 
+* **Appendix:** 
+
+---
+
+## Format
+
+* **Introduction:** why the research problem is interesting, what data you'll use
+* **Methods:** data details, describe the statistical methods you will use
+* **Results:** report results of the statistical methods (estimated models, CIs, p-values)
+* **Discussion:** 
+* **Appendix:** 
+
+---
+
+## Format
+
+* **Introduction:** why the research problem is interesting, what data you'll use
+* **Methods:** data details, describe the statistical methods you will use
+* **Results:** report results of the statistical methods (estimated models, CIs, p-values)
+* **Discussion:** what do your results mean in context of the original research question?
+* **Appendix:**
+
+---
+
+## Format
+
+* **Introduction:** why the research problem is interesting, what data you'll use
+* **Methods:** data details, describe the statistical methods you will use
+* **Results:** report results of the statistical methods (estimated models, CIs, p-values)
+* **Discussion:** what do your results mean in context of the original research question?
+* **Appendix:** further details not included in main text
+
+---
+
+## Format
+
+* **Introduction:** research question
+* **Methods:** translate research question into statistical question
+* **Results:** statistical results
+* **Discussion:** translate statistical results into research results
+* **Appendix:** further details not included in main text
+
+---
+
+## HW 4
+
+[https://sta112-f21.github.io/homework/homework_4.html](https://sta112-f21.github.io/homework/homework_4.html)
+
+* write a data analysis report using the bryozoan data and your analysis from HW 3
+* **Research question:** are larger organisms more energy efficient, proportional to body size?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
