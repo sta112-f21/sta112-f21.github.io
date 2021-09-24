@@ -1,0 +1,26 @@
+---
+---
+---
+title: "Homework 4"
+author: "Your Name"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+```
+
+## Introduction
+
+## Methods
+
+## Results
+
+## Discussion
+
+## Appendix
+
+## Citations and acknowledgments
+

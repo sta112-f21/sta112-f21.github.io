@@ -17,7 +17,7 @@ The **Format** section below describes how to organize and write the report. The
 
 ### Submission
 
-A template file is provided, which includes the five section headings:
+A template file is provided, which includes the five section headings: [hw_04_template.Rmd](https://sta112-f21.github.io/homework/hw_04_template.Rmd)
 
 Once you have completed the report, submit *both* your 
 knitted HTML file and the R Markdown file to Canvas.
@@ -112,7 +112,7 @@ Write 2-3 paragraphs which:
 * Describe details of the data. What does a row in the data represent? How many rows and columns? What information do the variables record? Are there any missing data? You already wrote about these details in Question 1 of HW 3.
 * Describe any data manipulation. Did you remove any missing values? Did you focus only on a subset of the data? For the bryozoan data, you should talk about how you focused on the bugula larvae, and explain why. Use your answer to Question 5 on HW 3, including the plot, to explain why you focused only on one species and one developmental stage.
 * Describe the models that will be fit. In this case, we fit two models: a linear model with mass and metabolic rate, and a linear model with log mass and log metabolic rate. Here you should write down the two models, and motivate the purpose of transformations in the second model. See Question 7 from HW 3, and the text immediately before Question 13 on HW 3.
-* Summarize the model assumptions and how they will be assessed. Summarize the assumptions for inference with linear models, and which diagnostic tools we use to evaluate them. Note that you don't check the assumptions here; that happens in the Results section.
+* Summarize the model assumptions and how they will be assessed. Here we are using linear models, so summarize the assumptions for inference with linear models, and which diagnostic tools we use to evaluate them. Note that you don't check the assumptions here; that happens in the Results section.
 
 ### Results
 
@@ -122,6 +122,7 @@ Write 2-3 paragraphs which:
 * Report the equation of the fitted *final* model. For the bryozoan data, the final model was the model you fit with the log-transformed data. You do not need to report the results of the first model. Include a scatterplot showing the relationship between log mass and log metabolic rate, with the fitted regression line. See Question 14 on HW 3.
 * Interpret the coefficients (estimated slope and estimated intercept) of the fitted final model. However, we don't address the research question yet -- assessing the results in the context of the research question happens in the Discussion.
 * Assess assumptions for the final model. See Questions 9, 15, and 16 on HW 3.
+* Use a studentized residual plot to check for outliers. If there are outliers, do they substantially change the estimated line?
 * Report a confidence interval for the slope of the fitted final model. Look back at the class activity for September 20 for help. 
 * Report a p-value for the slope of the fitted final model. Note that the hypotheses depend on the research question. For the bryozoan data, we fit a linear model with log mass and log metabolic rate. The researchers are interested in whether larger organisms are more energy efficient, after accounting for body size. This corresponds to the hypotheses
 
