@@ -18,9 +18,9 @@ September 22
 
 September 24
 : Wrapping up simple linear regression
-  : [Slides](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_15.html)
 
 : **HW 3 due**{: .label .label-red }
 
 : **HW 4 released**{: .label .label-yellow }
-  : [HW 4](#)
+  : [HW 4](https://sta112-f21.github.io/homework/homework_4.html)
