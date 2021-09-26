@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regression with a categorical predictor</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regression with a categorical predictor
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+
+    
+---
+
+## Simple linear regression
+
+**Model:**
+
+.center[
+`\(y = \beta_0 + \beta_1 x + \varepsilon\)`
+]
+
+where `\(x\)` and `\(y\)` are both **quantitative**.
+
+`\(\beta_0 + \beta_1 x\)` is the mean value of `\(y\)`, given `\(x\)`.
+
+.question[
+What if `\(x\)` is *categorical*?
+]
+
+---
+
+## Categorical predictor
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+* How do we model the relationship between species and bill length?
+* Can we test for a relationship between bill length and species?
+
+---
+
+## Categorical predictor
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \text{mean Adelie bill length} + \varepsilon\)`
+
+If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \text{mean Chinstrap bill length} + \varepsilon\)`
+
+If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{mean Gentoo bill length} + \varepsilon\)`
+
+---
+
+## Categorical predictor
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \beta_0 + \varepsilon\)`
+
+* `\(\beta_0\)` = mean bill length of Adelie penguins
+
+If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \text{mean Chinstrap bill length} + \varepsilon\)`
+
+If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{mean Gentoo bill length} + \varepsilon\)`
+
+---
+
+## Categorical predictor
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \beta_0 + \varepsilon\)`
+
+* `\(\beta_0\)` = mean bill length of Adelie penguins
+
+If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \beta_0 + \beta_1 + \varepsilon\)`
+
+* `\(\beta_0 + \beta_1\)` = mean bill length of Chinstrap penguins
+
+If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{mean Gentoo bill length} + \varepsilon\)`
+
+---
+
+## Categorical predictor
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \beta_0 + \varepsilon\)`
+
+* `\(\beta_0\)` = mean bill length of Adelie penguins
+
+If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \beta_0 + \beta_1 + \varepsilon\)`
+
+* `\(\beta_0 + \beta_1\)` = mean bill length of Chinstrap penguins
+
+If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \beta_0 + \beta_2 + \varepsilon\)`
+
+* `\(\beta_0 + \beta_2\)` = mean bill length of Gentoo penguins
+
+---
+
+## Categorical predictor
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+Putting it together:
+
+.center[
+`\(\text{bill length} = \begin{cases} \beta_0 + \varepsilon &amp; \text{species = Adelie} \\ \beta_0 + \beta_1 + \varepsilon &amp; \text{species = Chinstrap} \\ \beta_0 + \beta_2 + \varepsilon &amp; \text{species = Gentoo} \end{cases}\)`
+]
+
+--
+
+.question[
+Can we write this more concisely?
+]
+
+---
+
+## Indicator variables
+
+Let
+
+.center[
+`\(\text{IsChinstrap} = \begin{cases} 0 &amp; \text{species } \neq \text{Chinstrap} \\ 1 &amp; \text{species = Chinstrap} \end{cases}\)`
+]
+
+.center[
+`\(\text{IsGentoo} = \begin{cases} 0 &amp; \text{species } \neq \text{Gentoo} \\ 1 &amp; \text{species = Gentoo} \end{cases}\)`
+]
+
+Then:
+
+| Species | IsChinstrap | IsGentoo |
+| --- | --- | --- |
+| Adelie | 0 | 0 |
+| Chinstrap | 1 | 0 |
+| Gentoo | 0 | 1 |
+
+---
+
+## Indicator variables
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[
+`\(\text{bill length} = \begin{cases} \beta_0 + \varepsilon &amp; \text{species = Adelie} \\ \beta_0 + \beta_1 + \varepsilon &amp; \text{species = Chinstrap} \\ \beta_0 + \beta_2 + \varepsilon &amp; \text{species = Gentoo} \end{cases}\)`
+]
+
+Or, more concisely:
+
+.center[
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon\)`
+]
+
+---
+
+## Estimated model
+
+.center[
+`\(\widehat{\text{bill length}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{IsChinstrap} + \widehat{\beta}_2 \text{IsGentoo}\)`
+
+`\(\hspace{4cm} = 38.82 + 10.01 \ \text{IsChinstrap} + 8.74 \ \text{IsGentoo}\)`
+]
+
+* What is the estimated average bill length for each of the three species of penguin?
+* There are 333 penguins in the dataset used to fit the model. How many degrees of freedom does the fitted model have?
+
+---
+
+## Estimated model
+
+.center[
+`\(\widehat{\text{bill length}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{IsChinstrap} + \widehat{\beta}_2 \text{IsGentoo}\)`
+
+`\(\hspace{4cm} = 38.82 + 10.01 \ \text{IsChinstrap} + 8.74 \ \text{IsGentoo}\)`
+]
+
+| Species | `\(\widehat{\text{bill length}}\)` |
+| --- | --- |
+| Adelie | 38.82 | 
+| Chinstrap | 38.82 + 10.01 = 48.83 | 
+| Gentoo | 38.82 + 8.74 = 47.56 |
+
+--
+
+**Degrees of freedom:** 333 - 3 = 330
+* (Lose one degree of freedom for each parameter estimated)
+
+---
+
+## Fitting the model in R
+
+R will automatically create indicator variables:
+
+
+```r
+lm(bill_length_mm ~ species, data = penguins_no_nas)
+```
+
+```
+## 
+## Call:
+## lm(formula = bill_length_mm ~ species, data = penguins_no_nas)
+## 
+## Coefficients:
+##      (Intercept)  speciesChinstrap     speciesGentoo  
+##           38.824            10.010             8.744
+```
+
+---
+
+## Model assumptions
+
+.center[
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon\)`
+]
+
+where `\(\varepsilon \sim N(0, \sigma_{\varepsilon}^2)\)` and the `\(\varepsilon\)` are independent of each other.
+
+* No notion of shape assumption with single categorical predictor
+* Still want constant variance and normality assumptions
+
+---
+
+## Assessing constant variance
+
+.pull-left[
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+|species   | residual_std_dev|
+|:---------|----------------:|
+|Adelie    |             2.66|
+|Chinstrap |             3.34|
+|Gentoo    |             3.11|
+]
+
+Rule of thumb: not too concerned about constant variance if
+
+.center[
+`\(\dfrac{\text{largest standard deviation}}{\text{smallest standard deviation}} &lt; 2\)`
+]
+
+---
+
+## Assessing normality
+
+Can use a QQ plot again:
+
+&lt;img src="lecture_16_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

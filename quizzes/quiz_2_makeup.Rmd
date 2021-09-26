@@ -1,0 +1,86 @@
+---
+title: "Quiz 2"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: top=1in
+fontsize: 12pt
+---
+
+**Name:**
+
+**Instructions:** You have 15 minutes to complete this quiz. You may use any notes or resources, including your laptop and the internet (R documentation, StackOverflow, Wikipedia, etc.). You may not communicate with anyone else during the quiz.
+
+There are three short questions. Relax and do your best! Try to answer as much as possible.
+
+The scenario is described on pages 2-3. The questions are on page 4. 
+
+## Data
+
+Is there a relationship between a house's distance from bike trails, and its selling price?  The `RailsTrails` data looks at a sample of 104 houses in Northampton, MA, and includes the following variables:
+
+* `Price`: the sale price (in $1000's)
+* `Distance`: distance (in miles) to the nearest bike trail
+
+\newpage
+
+## Scenario
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("RailsTrails")
+```
+
+The scatterplot below plots Distance and Price for the sample of 104 homes.
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+RailsTrails %>%
+  ggplot(aes(x = Distance, y = Price2014)) +
+  geom_point(size=2) +
+  labs(x = "Distance (miles)", y = "Price ($1000's)") +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+You want to model the relationship between Distance and Price in the population of all houses in Northampton, MA. You decide to use simple linear regression. You fit the regression model in R, producing the output below:
+
+```{r, echo=F}
+RailsTrails %>%
+  mutate(Price = Price2014) %>%
+  lm(Price ~ Distance, data = .)
+```
+
+To assess your linear regression model, you also create a residual plot:
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+rt_lm <- RailsTrails %>%
+  mutate(Price = Price2014) %>%
+  lm(Price ~ Distance, data = .)
+
+data.frame(x = predict(rt_lm),
+           y = residuals(rt_lm)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size=2) +
+  geom_abline(slope = 0, intercept = 0,
+              lwd = 1.2, color="blue") +
+  theme_bw() +
+  labs(x = "Predicted price ($1000's)",
+       y = "Residuals") +
+  theme(text = element_text(size = 20))
+```
+
+\newpage
+
+## Questions
+
+**Question 1:** Using the R output above, write the equation of the fitted regression line which predicts Price from Distance.
+
+\vspace{2cm}
+
+**Question 2:** Use the estimated regression line to predict the price for two houses: one which is 0.5 miles from a bike trail, and one which is 2 miles from a bike trail.
+
+\vspace{4cm}
+
+**Question 3:** The true selling prices for the two houses are unlikely to be exactly equal to our predictions. Based on the residual plot, which of the two houses do you think will have a sale price closer its prediction from Question 2? Explain your reasoning.
