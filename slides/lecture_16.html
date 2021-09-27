@@ -19,7 +19,10 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
-
+* Math and Stats department town hall **today**, 4:00--4:45pm in Manchester 016. Pizza included!
+* Quiz 3 next Wednesday (covers up through today)
+* Solutions for lab 3 and 4 on Canvas
+* Today: regression with a categorical predictor
     
 ---
 
@@ -52,6 +55,8 @@ What if `\(x\)` is *categorical*?
 
 ## Categorical predictor
 
+Imagine population like this:
+
 &lt;img src="lecture_16_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 
 If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \text{mean Adelie bill length} + \varepsilon\)`
@@ -68,7 +73,7 @@ If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{me
 
 If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \beta_0 + \varepsilon\)`
 
-* `\(\beta_0\)` = mean bill length of Adelie penguins
+* `\(\beta_0\)` = true mean bill length of Adelie penguins (in the population)
 
 If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \text{mean Chinstrap bill length} + \varepsilon\)`
 
@@ -82,11 +87,11 @@ If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{me
 
 If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \beta_0 + \varepsilon\)`
 
-* `\(\beta_0\)` = mean bill length of Adelie penguins
+* `\(\beta_0\)` = true mean bill length of Adelie penguins (in the population)
 
 If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \beta_0 + \beta_1 + \varepsilon\)`
 
-* `\(\beta_0 + \beta_1\)` = mean bill length of Chinstrap penguins
+* `\(\beta_0 + \beta_1\)` = true mean bill length of Chinstrap penguins (in the population)
 
 If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{mean Gentoo bill length} + \varepsilon\)`
 
@@ -98,15 +103,15 @@ If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \text{me
 
 If `\(\text{species} = \text{Adelie}, \hspace{1cm} \text{bill length} = \beta_0 + \varepsilon\)`
 
-* `\(\beta_0\)` = mean bill length of Adelie penguins
+* `\(\beta_0\)` = true mean bill length of Adelie penguins (in the population)
 
 If `\(\text{species} = \text{Chinstrap}, \hspace{0.3cm} \text{bill length} = \beta_0 + \beta_1 + \varepsilon\)`
 
-* `\(\beta_0 + \beta_1\)` = mean bill length of Chinstrap penguins
+* `\(\beta_0 + \beta_1\)` = true mean bill length of Chinstrap penguins (in the population)
 
 If `\(\text{species} = \text{Gentoo}, \hspace{1cm} \text{bill length} = \beta_0 + \beta_2 + \varepsilon\)`
 
-* `\(\beta_0 + \beta_2\)` = mean bill length of Gentoo penguins
+* `\(\beta_0 + \beta_2\)` = true mean bill length of Gentoo penguins (in the population)
 
 ---
 

@@ -23,7 +23,7 @@ This activity investigates the relationship between diet and wing length for the
 
 Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_16_template.Rmd)
 
-In HW 2, you examined the relationship between Diet and WingLength for the `drosophila` data:
+We can visualize the relationship between diet and wing length with boxplots:
 
 ```{r echo=F, fig.align='center'}
 drosophila %>%
@@ -37,7 +37,16 @@ We will model this relationship as
 
 $\text{WingLength} = \beta_0 + \beta_1 \text{IsRich} + \beta_2 \text{IsStandard} + \varepsilon$,
 
-where $\text{IsRich}$ and $\text{IsStandard}$ are indicator variables for Diet.
+where $\text{IsRich}$ and $\text{IsStandard}$ are indicator variables for Diet:
+
+```{marginfigure}
+There are lots of different notation for indicator variables. For example, R would call these indicators `Dietrich` and `Dietstandard`. Other notation includes $I_{\text{rich}}$ and $I_{\text{standard}}$.
+```
+
+$\text{IsRich} = \begin{cases} 0 & \text{Diet } \neq \text{rich} \\ 1 & \text{Diet } = \text{rich} \end{cases}$
+
+$\text{IsStandard} = \begin{cases} 0 & \text{Diet } \neq \text{standard} \\ 1 & \text{Diet } = \text{standard} \end{cases}$
+
 
 ## Questions
 
@@ -79,7 +88,7 @@ summary(diet_lm)
 
 </DIV>
 
-3. Use `dplyr` functions to calculate the mean WingLength for each diet in the `drosophila` data. How do your answers compare to question 2?
+3. Use `dplyr` functions to calculate the sample mean WingLength for each diet in the `drosophila` data. How do your answers compare to question 2?
 
 <BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
 
