@@ -1,0 +1,178 @@
+---
+title: "Lab 4 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Stat2Data)
+data("Pines")
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+pines_new <- Pines %>%
+  drop_na()
+```
+
+## Exercise 2
+
+```{r}
+pines_new %>%
+  ggplot(aes(x = Diam97, 
+             y = Hgt97)) +
+  geom_point() +
+  labs(x = "Diameter in 1997 (cm)",
+       y = "Height in 1997 (cm)",
+       title = "Height vs. diameter for Kenyon pines in 1997") +
+  theme_bw()
+
+pines_new %>%
+  summarize(r = cor(Diam97, Hgt97))
+```
+
+There appears to be a strong, positive, reasonably linear association between diameter and height, with a sample correlation of 0.86.
+
+## Exercise 3
+
+```{r}
+pines_lm <- lm(Hgt97 ~ Diam97, data = pines_new)
+```
+
+## Exercise 4
+
+```{r}
+pines_new %>%
+  ggplot(aes(x = Diam97, 
+             y = Hgt97)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  labs(x = "Diameter in 1997 (cm)",
+       y = "Height in 1997 (cm)",
+       title = "Height vs. diameter for Kenyon pines in 1997") +
+  theme_bw()
+
+summary(pines_lm)
+```
+
+$\widehat{\text{height}} = 136.38 + 35.96 \ \text{diameter}$
+
+## Exercise 5
+
+```{r}
+pines_new %>%
+  mutate(resids = residuals(pines_lm),
+         yhat = predict(pines_lm)) %>%
+  ggplot(aes(x = yhat, 
+             y = resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              lwd = 1.2, color="blue") +
+  labs(x = "Predicted height (cm)",
+       y = "Residual",
+       title = "Residual plot for linear regression of height on diameter in 1997") +
+  theme_bw()
+
+pines_new %>%
+  mutate(resids = residuals(pines_lm)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles",
+       title = "QQ plot for linear regression of height on diameter in 1997") +
+  theme_bw()
+```
+
+
+## Exercise 6
+
+From the QQ plot, the normality assumption looks pretty good, with the points falling very close to the diagonal line. There is one point in the left tail that falls further away, but we don't expect all point to fall exactly on the line.
+
+From the residual plot, it looks like there might be slight violations of the shape and constant variance assumptions. If we look at predicted heights below 250cm, almost all the residuals fall below 0. And the variability of the residuals increased slightly with predicted height.
+
+**Note: while there might be slight violations of shape and constant variance here, they probably aren't big enough to really matter. I think inference with this model would still be reasonable, even if there are some slight violations.**
+
+## Exercise 7
+
+```{r}
+summary(pines_lm)
+```
+
+$\widehat{\sigma}_{\varepsilon}^2 = 36.47$
+
+## Exercise 8
+
+```{r}
+pines_new %>%
+  mutate(studentized_resids = rstudent(pines_lm),
+         yhat = predict(pines_lm)) %>%
+  ggplot(aes(x = yhat, y = studentized_resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd=1.2) +
+  geom_abline(slope = 0, intercept = c(-3, -2, 2, 3),
+              color = "orange", lty = 2, lwd=1.2) +
+  labs(x = "Predicted height in 1997 (cm)",
+       y = "Studentized residuals") +
+  theme_bw()
+```
+
+There are a few potential outliers, with studentized residuals > 3 or < -3. In particular, there is one point with a studentized residual close to -5.
+
+## Exercise 9
+
+```{r}
+pines_new_2 <- pines_new %>%
+  mutate(studentized_resids = rstudent(pines_lm)) %>%
+  filter(studentized_resids != min(studentized_resids))
+  
+pines_lm_2 <- lm(Hgt97 ~ Diam97, data = pines_new_2)
+pines_lm_2
+```
+
+Removing the potential outlier hardly changes the fit at all -- the estimated slope and intercept are almost identical to what they were before.
+
+## Exercise 10
+
+Here's an example with a square root transformation of both the predictor and the response:
+
+```{r}
+pines_transformed <- pines_new %>%
+  mutate(sqrt_height = sqrt(Hgt97),
+         sqrt_diameter = sqrt(Diam97))
+
+pines_transformed_lm <- lm(sqrt_height ~ sqrt_diameter, 
+                           data = pines_transformed)
+
+pines_transformed %>%
+  mutate(resids = residuals(pines_transformed_lm),
+         yhat = predict(pines_transformed_lm)) %>%
+  ggplot(aes(x = yhat, 
+             y = resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              lwd = 1.2, color="blue") +
+  labs(x = "Predicted square root height (cm)",
+       y = "Residual",
+       title = "Residual plot, square root height on square root diameter") +
+  theme_bw()
+
+pines_transformed %>%
+  mutate(resids = residuals(pines_transformed_lm)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles",
+       title = "QQ plot, square root height on square root diameter") +
+  theme_bw()
+```
+
+
+## Exercise 11
+
+Many transformations, including this one, don't change the diagnostic plots all that much. And the initial linear model is probably good enough that transformations aren't really necessary anyway.
+

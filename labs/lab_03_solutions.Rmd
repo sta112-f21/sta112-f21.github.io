@@ -1,0 +1,146 @@
+---
+title: "Lab 3 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Exercise 1
+
+```{r}
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = bill_depth_mm,
+             y = body_mass_g)) +
+  geom_point() +
+  labs(x = "Bill depth (mm)",
+       y = "Body mass (g)",
+       title = "Body mass vs. bill depth for Palmer penguins") +
+  theme_bw()
+```
+
+Looking at all the data together, there is little relationship between bill depth and body mass. At most, a weak, positive, possibly linear relationship. However, there appears to be at least two clusters in the data. Within these clusters, there appears to be a reasonably strong, positive linear relationship. 
+
+## Exercise 2
+
+```{r}
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = bill_depth_mm,
+             y = body_mass_g,
+             color = species)) +
+  geom_point() +
+  labs(x = "Bill depth (mm)",
+       y = "Body mass (g)",
+       color = "Species",
+       title = "Body mass vs. bill depth for Palmer penguins") +
+  theme_bw()
+```
+
+Yes, the relationship between bill depth and body mass does appear different based on species. Gentoo penguins tend to have a greater body mass for the same bill depth compared to Adelie and Chinstrap penguins.
+
+## Exercise 3
+
+```{r}
+gentoos <- penguins %>%
+  drop_na() %>%
+  filter(species == "Gentoo")
+```
+
+## Exercise 4
+
+There appears to be a reasonably strong, positive linear relationship between bill depth and body mass for Gentoo penguins.
+
+## Exercise 5
+
+```{r}
+gentoos %>%
+  summarize(r = cor(bill_depth_mm, body_mass_g))
+```
+
+
+## Exercise 6
+
+$\text{mass} = \beta_0 + \beta_1 \text{bill depth} + \varepsilon$
+
+## Exercise 7
+
+```{r}
+lm(body_mass_g ~ bill_depth_mm, data = gentoos)
+```
+
+## Exercise 8
+
+$\widehat{\text{mass}} = -421.8 + 367.7 \ \text{bill depth}$
+
+## Exercise 9
+
+```{r}
+gentoos %>%
+  ggplot(aes(x = bill_depth_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Bill depth (mm)", 
+       y = "Body mass (g)",
+       title = "Regression of body mass on bill depth for gentoo penguins") +
+       theme_bw()
+```
+
+## Exercise 10
+
+```{r}
+y_hat <- lm(body_mass_g ~ bill_depth_mm, data = gentoos) %>%
+  predict()
+
+gentoos %>%
+  mutate(predictions = y_hat) %>%
+  ggplot(aes(x = bill_depth_mm)) +
+  geom_point(aes(y = body_mass_g)) +
+  geom_line(aes(y = predictions), 
+            color = "blue", 
+            lwd = 1.2) +
+  labs(x = "Bill depth (mm)", 
+       y = "Body mass (g)",
+       title = "Regression of body mass on bill depth for gentoo penguins") +
+       theme_bw()
+```
+
+
+## Exercise 11
+
+Intercept: A Gentoo penguin with a bill depth of 0mm would have a predicted body mass of -421.8g. In this case, the estimated intercept doesn't make much sense, because a bill depth of 0mm is way outside the range of the data.
+
+Slope: An increase in bill depth of 1mm is associated with an increase in body mass of 367.7g, on average, for Gentoo penguins.
+
+## Exercise 12
+
+```{r}
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = bill_depth_mm,
+             y = body_mass_g,
+             color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", 
+              se=F) +
+  labs(x = "Bill depth (mm)",
+       y = "Body mass (g)",
+       color = "Species",
+       title = "Body mass vs. bill depth for Palmer penguins") +
+  theme_bw()
+```
+
+Adelie and Chinstrap penguins have almost identical fitted regression lines. Gentoo penguins have a fitted line with a larger intercept (because Gentoo penguins tend to have a larger body mass for the same bill depth), and a larger slope.
+
+## Exercise 13
+
+* *Data matching:* 10 Our research question asks how the relationship between bill depth and body mass varies across species. We have exactly these variables recorded in the `penguins` data.
+* *Exhaustive:* 7 This is a pretty exhaustive analysis. We address the research question through plots, summary statistics (correlation), and simple linear regression models.
+* *Skeptical:* 2 The analysis is not very skeptical, as we only consider bill depth, body mass, and species in our analysis. A more skeptical analysis could look at other variables -- for example, what if the relationship between bill depth and body mass really depends on where the penguins live, rather than their species? If this is the case, we would need to look at other variables, like Island.
+* *Second-order:* 1 There is no second-order context in this analysis. Examples of second-order context could include background on Palmer Station, different habitats of the different species, and intuition for different characteristics (e.g., do the species have different diets which would be associated with different beaks, like the Galapagos finches?)
+* *Transparency:* 10 Our analysis relies on a few plots and simple linear regression models, so is very transparent.
+* *Reproducibility:* 10 The data is publicly available, and all our code is included in the lab file.
