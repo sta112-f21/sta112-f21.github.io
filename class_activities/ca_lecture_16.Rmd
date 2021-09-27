@@ -1,0 +1,150 @@
+---
+title: "Class Activity, September 27"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice fitting a regression model with a quantitative response and a single categorical predictor.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
+diet_lm <- lm(WingLength ~ Diet, data = drosophila)
+```
+
+## Setup
+
+This activity investigates the relationship between diet and wing length for the drosophila in HW 2.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_16_template.Rmd)
+
+In HW 2, you examined the relationship between Diet and WingLength for the `drosophila` data:
+
+```{r echo=F, fig.align='center'}
+drosophila %>%
+  ggplot(aes(x = Diet, y = WingLength)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+``` 
+
+We will model this relationship as
+
+$\text{WingLength} = \beta_0 + \beta_1 \text{IsRich} + \beta_2 \text{IsStandard} + \varepsilon$,
+
+where $\text{IsRich}$ and $\text{IsStandard}$ are indicator variables for Diet.
+
+## Questions
+
+1. Use the `lm` function to fit the regression model with Diet as the predictor and WingLength as the response.
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+```r
+diet_lm <- lm(WingLength ~ Diet, data = drosophila)
+```
+</DIV>
+
+2. What is the estimated average WingLength for drosophila in each diet type?
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+```{r}
+summary(diet_lm)
+```
+
+| Diet | $\widehat{\text{WingLength}}$ |
+| --- | --- |
+| Poor | 1.88 |
+| Rich | 1.88 + 0.16 = 2.04 |
+| Standard | 1.88 + 0.12 = 2.00 |
+
+</DIV>
+
+3. Use `dplyr` functions to calculate the mean WingLength for each diet in the `drosophila` data. How do your answers compare to question 2?
+
+<BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
+
+<DIV ID="q3_solution" STYLE="display:none">
+```{r}
+drosophila %>%
+  group_by(Diet) %>%
+  summarize(mean_WingLength = mean(WingLength))
+```
+
+</DIV>
+
+:::{.question}
+*What's going on here?*
+
+When we have a quantitative response and a single categorical predictor, then the predicted value of the response is just the sample mean in each group!
+:::
+
+4. How many degrees of freedom does the fitted model from question 1 have?
+
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+The fitted model has 1369 = 1372 - 3 degrees of freedom (remember that we lose one degree of freedom for each parameter we estimate. We estimated $\beta_0, \beta_1, \beta_2$.)
+
+</DIV>
+
+5. Assess the constant variance and normality assumptions for the regression model. Do these assumptions appear reasonable?
+
+<BUTTON ONCLICK="ShowAndHide('q5_solution')">Solution</BUTTON>
+
+<DIV ID="q5_solution" STYLE="display:none">
+Residual boxplot:
+```{r}
+drosophila %>%
+  mutate(resids = residuals(diet_lm)) %>%
+  ggplot(aes(x = Diet, y = resids)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(x = "Diet", 
+       y = "Residuals")
+```
+
+Residual standard deviation in each group:
+
+```{r}
+drosophila %>%
+  mutate(resids = residuals(diet_lm)) %>%
+  group_by(Diet) %>%
+  summarize(residual_std_dev = sd(resids))
+```
+
+QQ plot:
+
+```{r}
+drosophila %>%
+  mutate(resids = residuals(diet_lm)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  theme_bw() +
+  labs(x = "Theoretical normal quantiles", 
+       y = "Observed residual quantiles")
+```
+
+Both the constant variance and normality assumptions appear to be violated. For the constant variance assumption, there is noticeably more variability in residuals for the Poor diet group, and the residual standard deviation for the Poor group is more than twice the residual standard deviation for the Standard group. For the normality assumption, the QQ plot shows that the left tail is far away from the theoretical normal distribution.
+
+</DIV>

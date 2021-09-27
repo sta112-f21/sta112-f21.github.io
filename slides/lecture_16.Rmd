@@ -406,7 +406,7 @@ penguins_no_nas %>%
 ```
 ]
 
-Rule of thumb: not too concerned about constant variance if
+Looking for similar variability between groups. Rule of thumb: not too concerned about constant variance if
 
 .center[
 $\dfrac{\text{largest standard deviation}}{\text{smallest standard deviation}} < 2$
