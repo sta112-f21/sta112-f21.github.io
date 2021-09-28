@@ -1,0 +1,316 @@
+---
+title: "Homework 3 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+```
+
+## Question 1
+
+```{r}
+glimpse(bryozoan)
+bryozoan %>%
+  drop_na() %>%
+  glimpse()
+```
+
+To investigate the relationship between mass and metabolic rate, Pattersen *et al.* collected data on two species of marine bryozoan -- *Bugula neritina* and *Watersipora subtorquata*. The resulting `bryozoan` data contains information on 626 bryozoan from the two species, in three different stages of life (larval, early, and late). Each row in the data represents one bryozoan, with 5 columns containing information on its mass and metabolic rate, in addition to its species, developmental stage, and the experiment run in which it was observed. There are no missing observations in the data.
+
+**Grading**:
+
+When grading this question, please comment on any parts which are missing or incorrect.
+
+* 11/11: each component is present and most are correct, and code for answering the question is included.
+* 9/11: each component is present and most are correct, but code is not included. 
+* 8/11: code is included, but one or two components are missing
+* 5/11: 3 or more components are missing, OR code is missing and one or more components is missing
+* 0/11: no answer
+
+## Question 2
+
+```{r}
+bryozoan %>%
+  ggplot(aes(x = Mass)) +
+  geom_histogram(bins = 20) +
+  labs(x = "Mass (ug)",
+       title = "Distribution of mass") +
+  theme_bw()
+
+bryozoan %>%
+  ggplot(aes(x = Metabolic)) +
+  geom_histogram(bins=20) +
+  labs(x = "Metabolic rate (mJ/hour)",
+       title = "Distribution of metabolic rate") +
+  theme_bw()
+
+bryozoan %>%
+  summarize(mean_mass = mean(Mass),
+            sd_mass = sd(Mass),
+            median_metab = median(Metabolic),
+            iqr_metab = IQR(Metabolic))
+```
+
+The distribution of Mass appears symmetric, unimodal, and bell-shaped, with a peak around 16-17 ug, a mean of 16.4 ug, and a standard deviation of 3.66 ug. Most observations have a mass between about 10 ug and 22 ug. There are no noticeable outliers or unusual features to the distribution.
+
+The distribution of Metabolic rate appears unimodal and skewed right, with a peak around 0.25 mJ/hour. Most observations have a metabolic rate below 1 mJ/hour, but the tail extends to about 1.5 mJ/hour, with a few potential outliers around 2 mJ/hour. There is possibly a second mode around 0.75 mJ/hour. The median metabolic rate in the data is 0.453, and the IQR is 0.526.
+
+**Grading:** 
+
+To get full credit, they need to include full code, and comment on each aspect of each distribution (center, shape, spread, unusual features, outliers). Acceptable plots for the distribution are histogram, density plot, or violin plot. If they make a boxplot, they can get partial credit (but boxplots don't answer questions about modality, e.g.)
+
+If they use the median/IQR for both distributions, that's fine. If they use the mean/sd for both distributions, don't take off points but leave a comment that the median might be better for a skewed right distribution like Metabolic rate.
+
+* 11/11: the correct plots and summary statistics are made, code is included, and correct descriptions of each aspect.
+* 9/11: Correct plots (or boxplot) and summary statistics are made, code is included, mostly correct descriptions.
+* 6/11: Code and/or plots are not included, but mostly correct descriptions
+* 3/11: Incorrect plots and/or descriptions
+* 0/11: no answer
+
+## Question 3
+
+```{r}
+bryozoan %>%
+  ggplot(aes(x = Mass, y = Metabolic)) +
+  geom_point() +
+  theme_bw() +
+  labs(x = "Mass (ug)",
+       y = "Metabolic rate (mJ/hour)",
+       title = "Metabolic rate vs. mass for marine bryozoa")
+```
+
+There appears to be a fairly weak, positive, roughly linear relationship between mass and metabolic rate. 
+
+**Grading:** 
+
+They need to recognize that the relationship is positive and pretty weak. They can get full credit if they say the relationship is slightly nonlinear, as long as they describe why they think it is slightly nonlinear.
+
+* 11/11: correct answer and plot
+* 6/11: Correct answer, missing plot
+* 6/11: Plot, incorrect answer or no answer
+* 3/11: Incorrect
+* 0/11: no answer
+
+## Question 4
+
+```{r}
+bryozoan %>%
+  summarize(r = cor(Mass, Metabolic))
+```
+
+**Grading:** They just had to run the provided code. These are some free points.
+
+* 11/11: they included the code
+* 0/11: missing or wrong
+
+## Question 5
+
+```{r}
+bryozoan %>%
+  ggplot(aes(x = Mass, y = Metabolic, 
+             color = Species)) +
+  geom_point() +
+  facet_wrap(~Stage) +
+  theme_bw() +
+  labs(x = "Mass (ug)",
+       y = "Metabolic rate (mJ/hour)",
+       title = "Metabolic rate vs. mass for marine bryozoa")
+```
+
+The relationship between mass and metabolic rate does appear to differ by species and stage. For a given mass, metabolic rate seems to be higher for larvae and late stages, compared to the early developmental stage. In the early stage, bugula also seem to have slightly smaller mass and metabolic rate than watersipora.
+
+**Grading:** 
+
+They need to recognize that there are differences between species and stages. They can choose different plotting options (e.g., shape instead of color, or facet_grid instead of facet_wrap), as long as the resulting plot is readable and shows what they need it to.
+
+* 11/11: correct answer and plot
+* 8/11: Correct answer, plot is hard to read
+* 6/11: Plot, incorrect answer or no answer
+* 6/11: no plot, correct answer
+* 3/11: no plot, incorrect
+* 0/11: no answer
+
+## Question 6
+
+```{r}
+bugula_larvae <- bryozoan %>%
+  filter(Stage == "larvae",
+         Species == "bugula")
+```
+
+**Grading:**
+
+They just need to use the right filtering code. It is ok if they call the resulting data frame something other than `bugula_larvae`, as long as they use that name consistently for the rest of the assignment.
+
+* 11/11 correct code
+* 6/11 incorrect code
+* 0/11 missing
+
+## Question 7
+
+$\text{metabolic rate} = \beta_0 + \beta_1 \text{mass} + \varepsilon$
+
+**Grading:**
+
+They just need to write the regression model for the population here. It is ok if they don't use LaTeX syntax to make it look nice, but there shouldn't be any hats, they need the right variable names, and they need to include the noise time $\varepsilon$.
+
+Points out of 11 -- I'll leave it up to you how to take off points, depending on what the common mistakes are.
+
+## Question 8
+
+```{r}
+bugula_lm <- lm(Metabolic ~ Mass, data = bugula_larvae)
+bugula_lm
+```
+
+$\widehat{\text{metabolic rate}} = 0.338 + 0.026 \ \text{mass}$
+
+```{r}
+bugula_larvae %>%
+  ggplot(aes(x = Mass, y = Metabolic)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "Mass (ug)",
+       y = "Metabolic rate (mJ/hour)",
+       title = "Metabolic rate vs. mass for bugula larvae") +
+  theme_bw()
+```
+
+**Grading:**
+
+They need to:
+* Fit the model (they can call it whatever they want, doesn't have to be `bugula_lm`)
+* Report the equation of the fitted line (needs to have the actual estimates 0.338 and 0.026, not just written with $\widehat{\beta}_0$ and $\widehat{\beta}_1$. Doesn't have to be LaTeXed).
+* Make a scatterplot with the fitted line (there are a number of ways they can do this, `geom_smooth` is one of them but not the only possible answer)
+
+* 11/11 correct answer, code and plot included
+* 8/11 correct code and plot, issues with equation of estimated regression line
+* 7/11 missing code or plot, correct equation
+* 3/11 missing code and plot, correct equation
+* 0/11 missing
+
+## Question 9
+
+The assumption of independence seems reasonable for this data; we don't expect the mass and metabolic rate for one bugula larva to impact the mass and metabolic rate for another bugula larva.
+
+The assumption of randomness also seems reasonable. In this case, the data were collected through samples from two locations in Victoria, Australia. These may not be random samples from the population of all *Bugula neritina*, but generalizing at least to *Bugula neritina* in Victoria seems reasonable.
+
+## Question 10
+
+```{r}
+bugula_larvae %>%
+  mutate(yhat = predict(bugula_lm),
+         resids = residuals(bugula_lm)) %>%
+  ggplot(aes(x = yhat,
+             y = resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              lwd = 1.2, color="blue") +
+  theme_bw() +
+  labs(x = "Predicted metabolic rate (mJ/hour)",
+       y = "Residuals",
+       title = "Residual plot for linear regression of metabolic rate on mass")
+```
+
+The shape and constant variance assumptions appear reasonable from this plot. The points appear randomly scattered around the line with no clear pattern, and the spread of the residuals appears constant for different values of the predicted metabolic rate.
+
+## Question 11
+
+```{r}
+bugula_larvae %>%
+  mutate(resids = residuals(bugula_lm)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  theme_bw() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles",
+       title = "QQ plot for linear regression of metabolic rate on mass")
+```
+
+The assumption of normality appears to be violated here. We can see that the tails diverge from the diagonal line in the QQ plot.
+
+## Question 12
+
+An increase in mass of 1 ug is associated with an increase in metabolic rate of 0.026 mJ/hour, on average. Since this number is positive, it supports the hypothesis that larger individuals have larger metabolism.
+
+## Question 13
+
+```{r}
+bugula_larvae <- bugula_larvae %>%
+  mutate(log_mass = log(Mass),
+         log_metabolic = log(Metabolic))
+```
+
+## Question 14
+
+```{r}
+bugula_lm_new <- lm(log_metabolic ~ log_mass, 
+                    data = bugula_larvae)
+bugula_lm_new
+```
+
+$\widehat{\log(\text{metabolic rate})} = -1.856 + 0.555 \ \log(\text{mass})$
+
+```{r}
+bugula_larvae %>%
+  ggplot(aes(x = log_mass, y = log_metabolic)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "log(Mass) (log ug)",
+       y = "log(Metabolic rate) (log mJ/hour)",
+       title = "log(Metabolic rate) vs. log(mass) for bugula larvae") +
+  theme_bw()
+```
+
+## Question 15
+
+```{r}
+bugula_larvae %>%
+  mutate(yhat = predict(bugula_lm_new),
+         resids = residuals(bugula_lm_new)) %>%
+  ggplot(aes(x = yhat,
+             y = resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              lwd = 1.2, color="blue") +
+  theme_bw() +
+  labs(x = "Predicted log metabolic rate (log mJ/hour)",
+       y = "Residuals",
+       title = "Residual plot for linear regression of log(metabolic rate) on log(mass)")
+```
+
+The shape and constant variance assumptions appear reasonable from this plot. The points appear randomly scattered around the line with no clear pattern, and the spread of the residuals appears constant for different values of the predicted metabolic rate.
+
+## Question 16
+
+```{r}
+bugula_larvae %>%
+  mutate(resids = residuals(bugula_lm_new)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  theme_bw() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles",
+       title = "QQ plot for linear regression of log(metabolic rate) on log(mass)")
+```
+
+There is still a bit of an issue with the assumption of normality here, particularly in the right tail. 
+
+## Question 17
+
+An increase in log mass of 1 unit is associated with an increase in log metabolic rate of 0.555 units, on average. Because 0 < 0.555 < 1, the estimated regression supports the researchers' hypothesis that individuals with larger mass have larger metabolism, but proportional to body size are more energy efficient.
+
+## Question 18
+
+* *Data matching:* 10 Our research question asks if larger organisms are more energy efficient, proportional to body size. The data measures this very well, with mass and metabolic rate recorded directly.
+* *Exhaustive:* 7 This is a pretty exhaustive analysis. We address the research question through plots, summary statistics (correlation), and simple linear regression models.
+* *Skeptical:* 2 The analysis isn't very skeptical, as we don't consider other variables which could potentially be associated with mass and metabolic rate.
+* *Second-order:* 1 There aren't really any second order details in the analysis done in the homework questions. Second-order context is provided in the introduction to the assignment, but not in the exercises themselves.
+* *Transparency:* 10 Our analysis relies on a few plots and simple linear regression models, so is very transparent.
+* *Reproducibility:* 10 The data are publicly available and the code for our analysis is contained in this file. 
+

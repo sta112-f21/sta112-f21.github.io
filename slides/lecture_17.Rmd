@@ -1,0 +1,306 @@
+---
+author: "Dr. Ciaran Evans"
+title: Partitioning variability, F-tests
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+
+---
+
+## Categorical predictor
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(palmerpenguins)
+library(tidyverse)
+
+penguins_no_nas <- penguins %>%
+  drop_na()
+
+penguins_no_nas %>%
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(x = "Species", 
+       y = "Bill length (mm)") +
+  theme(text = element_text(size = 20))
+```
+
+.question[
+Is there a relationship between species and bill length?
+]
+
+--
+
+**Model:** $\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon$
+
+No relationship if $\beta_1 = \beta_2 = 0$
+
+---
+
+## Hypotheses
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=3}
+penguins_no_nas %>%
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(x = "Species", 
+       y = "Bill length (mm)") +
+  theme(text = element_text(size = 20))
+```
+
+**Model:** $\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon$
+
+**Hypotheses:** 
+
+.center[
+$H_0: \beta_1 = \beta_2 = 0$ 
+
+$\hspace{3.5cm} H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+.question[
+How should we test these hypotheses?
+]
+
+---
+
+## Intuition
+
+More evidence for a relationship when *between-group* variability is larger than *within-group* variability.
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+penguins_no_nas %>%
+  mutate(bill_length_mm = bill_length_mm + 
+           ifelse(species == "Adelie", 0, 
+                  ifelse(species == "Chinstrap", 10, 5))) %>%
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(x = "Species", 
+       y = "Bill length (mm)") +
+  theme(text = element_text(size = 20),
+        axis.text.y = element_blank())
+```
+
+Large between-group variability, relative to within-group variability.
+]
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+penguins_no_nas %>%
+  mutate(bill_length_mm = bill_length_mm + 
+           rnorm(nrow(penguins_no_nas), sd=20)) %>%
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(x = "Species", 
+       y = "Bill length (mm)") +
+  theme(text = element_text(size = 20),
+        axis.text.y = element_blank())
+```
+
+Small between-group variability, relative to within-group variability.
+]
+
+---
+
+### Between-group vs. within-group variability
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=3}
+penguins_no_nas %>%
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(x = "Species", 
+       y = "Bill length (mm)") +
+  theme(text = element_text(size = 20))
+```
+
+**Between-group variance:** $\frac{1}{p-1} \sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2$ 
+
+**Within-group variance:** $\frac{1}{n-p} \sum \limits_{i=1}^n (y_i - \widehat{y}_i)^2$ 
+
+**Test statistic:** $F = \dfrac{\frac{1}{p-1} \sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\frac{1}{n-p} \sum \limits_{i=1}^n (y_i - \widehat{y}_i)^2}$ $\hspace{1cm} p$ = number of parameters in model
+
+---
+
+### Partitioning variability and degrees of freedom
+
+**Variability:** $\hspace{3cm} \sum \limits_{i=1}^n (y_i - \overline{y})^2 = \sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2 + \sum \limits_{i=1}^n (y_i - \widehat{y}_i)^2$
+
+$\hspace{6cm} SSTotal \hspace{0.5cm} = \hspace{0.5cm} SSModel \hspace{0.5cm} + \hspace{0.5cm} SSE$
+
+--
+
+**Degrees of freedom:** $\hspace{2cm} n-1 \hspace{0.5cm} = \hspace{0.5cm} (p - 1)  \hspace{0.5cm} + \hspace{0.5cm} (n - p)$
+
+--
+
+**Test statistic:** $F = \dfrac{\frac{1}{p-1} \sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\frac{1}{n-p} \sum \limits_{i=1}^n (y_i - \widehat{y}_i)^2} = \dfrac{\frac{1}{p-1} SSModel}{\frac{1}{n-p} SSE} = \dfrac{MSModel}{MSE}$ 
+
+--
+
+**Analysis of variance (ANOVA) table:**
+
+| Source | df | SS | MS | F |
+| --- | --- | --- | --- | --- |
+| Model | $p-1$ | $SSModel$ | $MSModel = \frac{SSModel}{p-1}$ | $F = \frac{MSModel}{MSE}$ |
+| Residual | $n - p$ | $SSE$ | $MSE = \frac{SSE}{n-p}$ | |
+| Total | $n-1$ | $SSTotal$ | | |
+
+---
+
+## Example
+
+.center[
+$\widehat{\text{bill length}} = 38.82 + 10.01 \ \text{IsChinstrap} + 8.74 \ \text{IsGentoo}$
+]
+
+We calculate that
+
+.center[
+$\sum \limits_{i=1}^n (\widehat{\text{bill length}}_i - \overline{\text{bill length}})^2 = 7015.4 \hspace{1cm}$ $\sum \limits_{i=1}^n (\text{bill length}_i - \widehat{\text{bill length}}_i)^2 = 2913.5 \hspace{1cm}$
+]
+
+There are 333 penguins in the dataset used to fit the model. Calculate all the numbers for the ANOVA table:
+
+| Source | df | SS | MS | F |
+| --- | --- | --- | --- | --- |
+| Model | |  | | |
+| Residual | |  |  | |
+| Total |  | | | |
+
+---
+
+## Example
+
+.center[
+$\widehat{\text{bill length}} = 38.82 + 10.01 \ \text{IsChinstrap} + 8.74 \ \text{IsGentoo}$
+]
+
+We calculate that
+
+.center[
+$\sum \limits_{i=1}^n (\widehat{\text{bill length}}_i - \overline{\text{bill length}})^2 = 7015.4 \hspace{1cm}$ $\sum \limits_{i=1}^n (\text{bill length}_i - \widehat{\text{bill length}}_i)^2 = 2913.5 \hspace{1cm}$
+]
+
+There are 333 penguins in the dataset used to fit the model. Calculate all the numbers for the ANOVA table:
+
+| Source | df | SS | MS | F |
+| --- | --- | --- | --- | --- |
+| Model | 2 | 7015.4 | 3507.7 | 397.3 |
+| Residual | 330 | 2913.5 | 8.8 | |
+| Total | 332  | 9928.9 | | |
+
+---
+
+## What we've done so far
+
+**Model:** $\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon$
+
+**Fitted model:** $\widehat{\text{bill length}} = 38.82 + 10.01 \ \text{IsChinstrap} + 8.74 \ \text{IsGentoo}$
+
+**Hypotheses:** 
+
+.center[
+$H_0: \beta_1 = \beta_2 = 0$ 
+
+$\hspace{3.5cm} H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+**Test statistic:** $F = 397.3$
+
+.question[
+How unusual is a test statistic of $F = 397.3$, if $H_0$ is true?
+]
+
+---
+
+## Calculating p-values
+
+If $H_0$ is true, then $F = \dfrac{MSModel}{MSE}$ follows an $F_{p-1, \ n-p}$ distribution.
+
+Some $F_{d_1, \ d_2}$ distributions:
+.center[
+<img src="f_dist_densities.png" width="500">
+]
+
+---
+
+## Calculating p-values
+
+**Test statistic:** $F = 397.3$
+
+**Degrees of freedom:** $p - 1 = 2$, $n - p = 330$
+
+$F_{2, \ 330}$ distribution:
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+data.frame(x = seq(0, 10, 0.1),
+           y = df(seq(0, 10, 0.1), 2, 330)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(lwd = 1.5) +
+  labs(x = "", y = "density") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+**p-value** =  $P(F_{2, \ 330} > 397.3) \approx 0$
+
+---
+
+## Summary
+
+**Model:** $\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon$
+
+**Fitted model:** $\widehat{\text{bill length}} = 38.82 + 10.01 \ \text{IsChinstrap} + 8.74 \ \text{IsGentoo}$
+
+**Hypotheses:** 
+
+.center[
+$H_0: \beta_1 = \beta_2 = 0$ 
+
+$\hspace{3.5cm} H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+**Test statistic:** $F = 397.3$
+
+**p-value** $\approx 0$
+
+**Conclusion:** The observed test statistic, $F = 397.3$, would be very unusual (p-value $\approx 0$ ) if $H_0$ were true and there were no relationship between species and bill length. Therefore, we have strong evidence that there is a relationship between species and bill length.
+
+---
+
+## In R
+
+```{r}
+species_lm <- lm(bill_length_mm ~ species, data = penguins_no_nas)
+anova(species_lm)
+```
+
+| Source | df | SS | MS | F |
+| --- | --- | --- | --- | --- |
+| Model | 2 | 7015.4 | 3507.7 | 397.3 |
+| Residual | 330 | 2913.5 | 8.8 | |
+| Total | 332  | 9928.9 | | |
+
+---
+
+## Class activity
+
+ANOVA and F-test for the `drosophila` data:
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_17.html](https://sta112-f21.github.io/class_activities/ca_lecture_16.html)
