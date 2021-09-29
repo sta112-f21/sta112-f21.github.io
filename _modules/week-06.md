@@ -10,7 +10,7 @@ September 27
 
 September 29
 : Partitioning variability, F-tests
-  : [Slides](#), [Class activity](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_17.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_17.html)
 
 : Textbook 2.2, 3.3, 5
 
