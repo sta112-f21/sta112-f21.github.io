@@ -284,7 +284,7 @@ $\hspace{3.5cm} H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
 
 **p-value** $\approx 0$
 
-**Conclusion:** The observed test statistic, $F = 397.3$, would be very unusual (p-value $\approx 0$ ) if $H_0$ were true and there were no relationship between species and bill length. Therefore, we have strong evidence that there is a relationship between species and bill length.
+**Conclusion:** Under our model, the observed test statistic, $F = 397.3$, would be very unusual (p-value $\approx 0$ ) if $H_0$ were true and there were no relationship between species and bill length. Therefore, we have strong evidence that there is a relationship between species and bill length.
 
 ---
 
