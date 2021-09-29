@@ -1,0 +1,46 @@
+---
+---
+---
+title: "Class Activity, September 29"
+author: "Your Name"
+output: html_document
+---
+
+## Setup
+
+Run the setup chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
+```
+
+## Question 1
+
+(Replace the ... to fill in the ANOVA table)
+
+| Source | df | SS | MS | F |
+| --- | --- | --- | --- | --- |
+| Model | ... | ...  | ... | ... |
+| Residual | ... | ...  | ...  | |
+| Total | ... | ... | | |
+
+
+## Question 2
+
+```{r}
+
+```
+
+
+## Question 3
+
+
+Write your answer to question 3 here...
+
+
+## Question 4
+
+Write your answer to question 4 here...
+

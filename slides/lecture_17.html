@@ -19,6 +19,10 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
+* Today: 
+    * hypothesis testing for regression with a categorical predictor
+* Friday: (slight change of plans)
+    * bootstrap hypothesis testing (requires fewer assumptions)
 
 ---
 
@@ -258,7 +262,41 @@ anova(species_lm)
 
 ANOVA and F-test for the `drosophila` data:
 
-[https://sta112-f21.github.io/class_activities/ca_lecture_17.html](https://sta112-f21.github.io/class_activities/ca_lecture_16.html)
+[https://sta112-f21.github.io/class_activities/ca_lecture_17.html](https://sta112-f21.github.io/class_activities/ca_lecture_17.html)
+
+---
+
+### How do assumption violations impact conclusions?
+
+&lt;img src="lecture_17_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+**Model:** `\(\text{WingLength} = \beta_0 + \beta_1 \text{IsRich} + \beta_2 \text{IsStandard} + \varepsilon\)`
+
+**Hypotheses:** `\(H_0: \beta_1 = \beta_2 = 0 \hspace{1cm} H_A: \text{ one of } \beta_1, \beta_2 \neq 0\)`
+
+**p-value:** `\(\approx 0\)`, so there is strong evidence of a relationship between Diet and WingLength.
+
+--
+
+.question[
+But, the constant variance and normality assumptions are violated. Does this change our conclusion?
+]
+
+---
+
+### How do assumption violations impact conclusions?
+
+&lt;img src="lecture_17_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+**Model:** `\(\text{WingLength} = \beta_0 + \beta_1 \text{IsRich} + \beta_2 \text{IsStandard} + \varepsilon\)`
+
+**Hypotheses:** `\(H_0: \beta_1 = \beta_2 = 0 \hspace{1cm} H_A: \text{ one of } \beta_1, \beta_2 \neq 0\)`
+
+**p-value:** `\(\approx 0\)`, so there is strong evidence of a relationship between Diet and WingLength.
+
+.question[
+Even with some assumption violations, there is still strong evidence of a relationship between Diet and WingLength.
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

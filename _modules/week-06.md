@@ -1,5 +1,5 @@
 ---
-title: Beginning multiple regression
+title: Regression with a categorical predictor
 ---
 
 September 27
@@ -15,10 +15,8 @@ September 29
 : Textbook 2.2, 3.3, 5
 
 October 1
-: Intro to multiple regression
-  : [Slides](#)
-  
-: Textbook 3.1
+: **Lab**{: .label .label-purple } Lab 5 -- bootstrap hypothesis testing
+  : [Slides](#), [Lab 5](#)
 
 : **Project 1 released**{: .label .label-green }
   : [Project 1](#)

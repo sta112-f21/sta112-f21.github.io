@@ -1,0 +1,85 @@
+---
+title: "Class Activity, September 29"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice hypothesis tests for a relationship between a categorical predictor and a quantitative response.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
+diet_lm <- lm(WingLength ~ Diet, data = drosophila)
+```
+
+## Setup
+
+This activity investigates the relationship between diet and wing length for the drosophila in HW 2.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_17_template.Rmd)
+
+We can visualize the relationship between diet and wing length with boxplots:
+
+```{r echo=F, fig.align='center'}
+drosophila %>%
+  ggplot(aes(x = Diet, y = WingLength)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+``` 
+
+We will model this relationship as
+
+$\text{WingLength} = \beta_0 + \beta_1 \text{IsRich} + \beta_2 \text{IsStandard} + \varepsilon$,
+
+where $\text{IsRich}$ and $\text{IsStandard}$ are indicator variables for Diet:
+
+```{marginfigure}
+There are lots of different notation for indicator variables. For example, R would call these indicators `Dietrich` and `Dietstandard`. Other notation includes $I_{\text{rich}}$ and $I_{\text{standard}}$.
+```
+
+$\text{IsRich} = \begin{cases} 0 & \text{Diet } \neq \text{rich} \\ 1 & \text{Diet } = \text{rich} \end{cases}$
+
+$\text{IsStandard} = \begin{cases} 0 & \text{Diet } \neq \text{standard} \\ 1 & \text{Diet } = \text{standard} \end{cases}$
+
+
+## Questions
+
+1. After fitting the model above, we calculate the sums of squares: $SSModel = 6.09$ and $SSE = 7.62$. There are 1372 flies in the data. Using this information, fill in the ANOVA table:
+
+| Source | df | SS | MS | F |
+| --- | --- | --- | --- | --- |
+| Model | |  | | |
+| Residual | |  |  | |
+| Total |  | | | |
+
+2. We can also get the ANOVA table for the fitted model in R. Use the `anova` function to get the ANOVA table and the p-value for the hypotheses $H_0: \beta_1 = \beta_2 = 0$ vs. $H_A: \text{one of } \beta_1, \beta_2 \neq 0$. Check that your ANOVA table from question 1 matches the R output (note that R doesn't include the "Total" row in the table, and adds a column for the p-value).
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+```r
+diet_lm <- lm(WingLength ~ Diet, data = drosophila)
+anova(diet_lm)
+```
+</DIV>
+
+3. Based on the p-value in question 2 and the boxplots above, do you think there is a relationship between diet and wing length for fruit flies?
+
+4. On Monday, we checked the constant variance and normality assumptions for this model. Do the diagnostic plots from Monday change your conclusions for question 3?
