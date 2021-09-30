@@ -1,0 +1,143 @@
+---
+title: "Lab 5, October 1"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("Diamonds")
+```
+
+## Data
+
+We are interested in the relationship between Clarity and Price per carat for diamonds. We have a sample of 351 diamonds from AwesomeGems.com, with information on their total price, price per carat, carat, color, clarity, and depth. The boxplots below visualize the relationship between clarity and price per carat in the `Diamonds` data:
+
+```{r echo=F, fig.align='center'}
+Diamonds %>%
+  ggplot(aes(x = Clarity, y = PricePerCt)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(x = "Clarity", 
+       y = "Price per carat ($)")
+``` 
+
+## Model
+
+In alphabetical order, the levels of clarity in the `Diamonds` data are IF (internally flawless), SI1, SI2, SI3 (slightly included),  VS1, VS2 (very slightly included), VVS1, VVS2 (very very slightly included). To be consistent with R, we will use this order for our regression model, with IF the baseline and indicator variables IsSI1, IsSI2, IsSI3, IsVS1, IsVS2, IsVVS1, and IsVVS2. Our model is
+
+$\text{Price per carat} = \beta_0 + \beta_1 \ \text{IsSI1} + \beta_2 \ \text{IsSI2} + \beta_3 \ \text{IsSI3} + \beta_4 \ \text{IsVS1} + \beta_5 \ \text{IsVS2} + \beta_6 \ \text{IsVVS1} + \beta_7 \ \text{IsVVS2} + \varepsilon$
+
+## Model fitting
+
+1. Fit the regression model, with clarity as the single categorical predictor and price per carat as the quantitative response. Report the equation of the estimated model.
+
+## Model assumptions
+
+If we check the model assumptions, it looks like the constant variance and normality assumptions are violated.
+
+```{r echo=F}
+diamond_lm <- lm(PricePerCt ~ Clarity, data = Diamonds)
+```
+
+Residual standard deviation in each group:
+
+```{r echo=F}
+library(knitr)
+Diamonds %>%
+  mutate(resids = residuals(diamond_lm)) %>%
+  group_by(Clarity) %>%
+  summarize(residual_std_dev = sd(resids)) %>%
+  kable()
+```
+
+QQ plot:
+
+```{r echo=F}
+Diamonds %>%
+  mutate(resids = residuals(diamond_lm)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  theme_bw() +
+  labs(x = "Theoretical normal quantiles", 
+       y = "Observed residual quantiles")
+```
+
+When our model assumptions are violated, statistical inference might no longer be valid. Our question in this lab is, what is the effect of these assumption violations? We will (1) learn how to use the bootstrap to test hypotheses, with fewer assumptions about the distribution of residuals, and (2) compare the bootstrap p-value to the parametric p-value from the F-test.
+
+## Parametric hypothesis testing
+
+We are interested in whether there is a relationship between clarity and price per carat. In the context of our model above, no relationship corresponds to $\beta_1, \beta_2,...,\beta_7 = 0$, so our hypotheses are
+
+$H_0: \beta_1 = \beta_2 = \cdots = \beta_7 = 0$
+
+$H_A: \text{ at least one } \beta_i \neq 0, \ i \in \{1,...,7\}$
+
+2. Use an F-test to test these hypotheses. Report the F-statistic and p-value, and interpret the results in context: is there evidence of a relationship between clarity and price per carat?
+
+## Bootstrap hypothesis testing
+
+### Step 1: Create null data
+
+3. Create a new data frame, `diamonds_null`, by adding a new column called `PricePerCt_null` to `Diamonds`. The `PricePerCt_null` column is defined by $\text{PricePerCt_null}_i = \overline{\text{PricePerCt}} + \text{PricePerCt}_i - \widehat{\text{PricePerCt}}_i$. In other words, `PricePerCt_null` is the average price per carat plus the residuals from our fitted model.
+
+```{r include=F}
+diamonds_null <- Diamonds %>%
+  mutate(PricePerCt_null = mean(PricePerCt) + residuals(diamond_lm))
+```
+
+### Step 2: Sample from the null distribution
+
+4. Run the following code to draw a bootstrap sample from `diamonds_null`:
+
+```r
+bootstrap_sample <- diamonds_null %>%
+  slice_sample(prop = 1, replace = TRUE)
+```
+
+### Step 3: Calculate a test statistic
+
+5. Using your `bootstrap_sample` data, fit a regression model with `PricePerCt_null` as the response and `Clarity` as the predictor. Calculate the F-statistic for the fitted model. How does it compare to the F-statistic for the original fitted model (the F-statistic in exercise 2)?
+
+### Step 4: Repeat steps 2 and 3
+
+6. Run your code for exercises 4 and 5 again. You should get different F-statistic. How does it compare to the F-statistic for the original fitted model (the F-statistic in exercise 2)?
+
+7. Now we want to repeat steps 2 and 3 *many* times. Doing that by hand would be annoying. Fortunately, we can do it very efficiently in R, using a tool called a *for loop*. Run the following code to create a vector of 5000 bootstrap F-statistics (it may take a couple minutes to run):
+
+```r
+bootstrap_f_stats <- c()
+
+for(i in 1:5000){
+  bootstrap_sample <- diamonds_null %>%
+    slice_sample(prop = 1, replace = TRUE)
+  bootstrap_lm <- lm(PricePerCt_null ~ Clarity, 
+                     data = bootstrap_sample)
+  bootstrap_f_stats[i] <- anova(bootstrap_lm)$`F value`[1]
+}
+```
+
+### Step 5: calculate a bootstrap p-value
+
+8. Let's have a look at the distribution of our bootstrap F-statistics. We'll make a histogram. Since we saved the bootstrap F-statistics in a vector called `bootstrap_f_stats`, it is easier to use the `hist` function in R, rather than convert our data to a nice data frame and use ggplot. Run the code below to make the histogram. How does our F-statistic from exercise 2 (which was F = 1.88) compare to the distribution of bootstrap F-statistics? 
+
+```r
+hist(bootstrap)
+```
+
+9. Finally, we will calculate our p-value. Since our bootstrap F-statistics were calculated from data sampled under the null hypothesis, the bootstrap F-statistics serve as an approximate sample from the null distribution. So our bootstrap p-value is calculated by the fraction of bootstrap F-statistics which are greater than the observed statistic (F = 1.88) from exercise 2:
+
+```r
+bootstrap_p_value = mean(bootstrap_f_stats > 1.88)
+```
+
+10. How does the bootstrap p-value from exercise 9 compare to the parametric p-value you calculated in exercise 2?
+
