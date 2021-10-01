@@ -1,0 +1,256 @@
+---
+author: "Dr. Ciaran Evans"
+title: Bootstrap hypothesis testing
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Project 1 released tonight
+* Today:
+    * bootstrap hypothesis testing
+    * lab 5 (not due because of fall break)
+    
+---
+
+## Recap: F-tests
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+drosophila <- read_csv("https://sta112-f21.github.io/homework/drosophila.csv")
+diet_lm <- lm(WingLength ~ Diet, data = drosophila)
+
+drosophila %>%
+  ggplot(aes(x = Diet, y = WingLength)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+.question[
+Is there a relationship between diet and wing length?
+]
+
+---
+
+## Recap: F-tests
+
+**Model:** $\text{wing length} = \beta_0 + \beta_1 \text{IsRich} + \beta_2 \text{IsStandard} + \varepsilon$
+
+**Fitted model:** $\widehat{\text{wing length}} = 1.88 + 0.16 \ \text{IsRich} + 0.12 \ \text{IsStandard}$
+
+**Hypotheses:** 
+
+.center[
+$H_0: \beta_1 = \beta_2 = 0$ 
+
+$\hspace{3.5cm} H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+**Test statistic:** $F = 546.95$
+
+**p-value** $\approx 0$
+
+**Conclusion:** Under our model, the observed test statistic, $F = 546.95$, would be very unusual (p-value $\approx 0$ ) if $H_0$ were true and there were no relationship between diet and wing length. Therefore, we have strong evidence that there is a relationship between diet and wing length.
+
+---
+
+## Checking assumptions
+
+.pull-left[
+```{r echo=F, message=F, fig.align='center', fig.width=6, fig.height=4}
+library(knitr)
+drosophila %>%
+  mutate(resids = residuals(diet_lm)) %>%
+  group_by(Diet) %>%
+  summarize(residual_std_dev = sd(resids)) %>%
+  kable()
+```
+]
+
+.pull-right[
+```{r echo=F, message=F, fig.align='center', fig.width=6, fig.height=4}
+drosophila %>%
+  mutate(resids = residuals(diet_lm)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  theme_bw() +
+  labs(x = "Theoretical normal quantiles", 
+       y = "Observed residual quantiles") +
+  theme(text = element_text(size = 20))
+```
+]
+
+.question[
+We want to do inference, but the constant variance and normality assumptions don't look reasonable. What do we do?
+]
+
+---
+
+## General hypothesis testing procedure
+
+* Calculate a test statistic
+    * Example: $F = \dfrac{MSModel}{MSE} \hspace{1cm}$ (e.g., $F = 546.95$)
+* Determine the null distribution of the test statistic (the sampling distribution under $H_0$)
+    * Example: $F_{p-1, \ n-p} \hspace{1cm}$ (e.g., $F_{2, \ 1369}$)
+    
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=5, fig.height=3}
+data.frame(x = seq(0, 10, 0.1),
+           y = df(seq(0, 10, 0.1), 2, 1369)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(lwd = 1.5) +
+  labs(x = "", y = "density") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+* Compare the observed test statistic to the null distribution to calculate a p-value
+
+---
+
+## Parametric hypothesis tests
+
+* Calculate a test statistic
+* Determine the null distribution for the test statistic
+    * **Parametric tests (like t-tests and F-tests) derive a theoretical null distribution (like the t-distribution and F-distribution)**
+* Compare the observed test statistic to the null distribution to calculate a p-value
+
+---
+
+## Bootstrap hypothesis tests
+
+* Calculate a test statistic
+* Determine the null distribution for the test statistic
+    * **Bootstrap tests approximate the null distribution by resampling observed data under $H_0$**
+* Compare the observed test statistic to the null distribution to calculate a p-value
+
+---
+
+## Bootstrap null distribution
+
+**Step 1:** Create null data
+
+**Step 2:** Re-sample the null data, to simulate a new sample under $H_0$
+
+**Step 3:** Calculate a test statistic on the bootstrap sample from Step 2
+
+**Step 4:** Repeat Steps 2 and 3 many times
+
+---
+
+## Create null data
+
+.center[
+$\text{WingLength_null}_i = \overline{\text{WingLength}} + (\text{WingLength}_i - \widehat{\text{WingLength}}_i)$
+]
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+drosophila_null <- drosophila %>%
+  mutate(WingLength_null = mean(WingLength) + residuals(diet_lm))
+
+drosophila_null %>%
+  ggplot(aes(x = Diet, y = WingLength_null)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Null data for bootstrapping")
+```
+
+---
+
+## Sample from the null data
+
+Simulate a new sample under $H_0$ by re-sampling the rows of the null data, with replacement.
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(1)
+
+drosophila_samp <- drosophila_null %>%
+  slice_sample(prop = 1, replace=T)
+
+drosophila_samp %>%
+  ggplot(aes(x = Diet, y = WingLength_null)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Bootstrap sample of null data")
+```
+
+---
+
+### Calculate a test statistic on the bootstrap sample
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+set.seed(1)
+
+drosophila_samp <- drosophila_null %>%
+  slice_sample(prop = 1, replace=T)
+
+drosophila_samp %>%
+  ggplot(aes(x = Diet, y = WingLength_null)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  labs(title = "Bootstrap sample of null data")
+
+samp_lm <- lm(WingLength_null ~ Diet, data = drosophila_samp)
+```
+
+$\widehat{\text{WingLength_null}} = 1.97 + 0.002 \ \text{IsRich} + 0.001 \ \text{IsStandard}$
+
+$F = 0.097$ (not nearly as big as 546.95, because the bootstrap data were sampled under $H_0$)
+
+---
+
+## Repeat many times
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+set.seed(1)
+
+bootstrap_f_stats <- c()
+
+for(i in 1:1000){
+  bootstrap_sample <- drosophila_null %>%
+    slice_sample(prop = 1, replace = TRUE)
+  bootstrap_lm <- lm(WingLength_null ~ Diet, 
+                     data = bootstrap_sample)
+  bootstrap_f_stats[i] <- anova(bootstrap_lm)$`F value`[1]
+}
+
+hist(bootstrap_f_stats, 
+     xlab = "Bootstrap F statistics",
+     main = "Histogram of 1000 bootstrap F statistics")
+```
+
+---
+
+### Compare the observed test statistic to the bootstrap statistics
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+hist(bootstrap_f_stats, 
+     xlab = "Bootstrap F statistics",
+     main = "Histogram of 1000 bootstrap F statistics")
+```
+
+Observed test statistic: $F = 546.95$
+
+Bootstrap p-value = $\dfrac{\#\{ \text{bootstrap statistics} > 546.95\}} {\#\{ \text{bootstrap statistics}\}}$ = 0
+
+---
+
+## Lab 5
+
+* Not due or turned in, because of fall break next week
+* Practice with bootstrap hypothesis testing
+
