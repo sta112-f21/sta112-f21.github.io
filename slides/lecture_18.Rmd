@@ -18,6 +18,7 @@ editor_options:
 * You will get comments on HW 3 later today
 * Project 1 released tonight
 * Today:
+    * IMRaD example
     * bootstrap hypothesis testing
     * lab 5 (not due because of fall break)
     
