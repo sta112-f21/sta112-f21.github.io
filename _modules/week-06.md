@@ -16,7 +16,7 @@ September 29
 
 October 1
 : **Lab**{: .label .label-purple } Lab 5 -- bootstrap hypothesis testing
-  : [Slides](#), [Lab 5](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_18.html), [Lab 5](https://sta112-f21.github.io/labs/lab_5.html)
 
 : **Project 1 released**{: .label .label-green }
   : [Project 1](#)

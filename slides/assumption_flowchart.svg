@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
+   sodipodi:docname="assumption_flowchart.svg"
+   inkscape:export-filename="/Users/evansc/Documents/Teaching/sta112-f21.github.io/slides/assumption_flowchart.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.55678311"
+     inkscape:cx="502.88882"
+     inkscape:cy="392.43288"
+     inkscape:window-width="1312"
+     inkscape:window-height="847"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible;"
+       id="marker22963"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path22961" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="marker22953"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path22951" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path22692" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="15.206399"
+       y="20.433599"
+       id="text3158"><tspan
+         sodipodi:role="line"
+         id="tspan3156"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.206399"
+         y="20.433599">Do you need the assumptions?</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.206399"
+         y="29.25305"
+         id="tspan3160">(e.g., for inference)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="221.9184"
+       y="21.108839"
+       id="text4516"><tspan
+         sodipodi:role="line"
+         id="tspan4514"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="221.9184"
+         y="21.108839">Don't worry</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="221.9184"
+         y="29.928289"
+         id="tspan4518">about it!</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="15.471671"
+       y="66.052803"
+       id="text9196"><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.471671"
+         y="66.052803"
+         id="tspan9198">Is it just the normality </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.471671"
+         y="74.872253"
+         id="tspan11282">assumption?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="140.65919"
+       y="66.033852"
+       id="text15630"><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="140.65919"
+         y="66.033852"
+         id="tspan15632">Is the data </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="140.65919"
+         y="74.853302"
+         id="tspan15636">sufficiently large?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="37.324932"
+       y="175.82401"
+       id="text17120"><tspan
+         sodipodi:role="line"
+         id="tspan17118"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="37.324932"
+         y="175.82401">Great!</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="15.829962"
+       y="116.424"
+       id="text19786"><tspan
+         sodipodi:role="line"
+         id="tspan19784"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.829962"
+         y="116.424">Try some </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.829962"
+         y="125.24345"
+         id="tspan19788">transformations. </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="15.829962"
+         y="134.0629"
+         id="tspan19790">Did they work?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="143.98561"
+       y="124.22208"
+       id="text21334"><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="143.98561"
+         y="124.22208"
+         id="tspan26616">Option 1: Report your results for the best </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="143.98561"
+         y="133.04152"
+         id="tspan27430">model, with the caveat that some </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="143.98561"
+         y="141.86098"
+         id="tspan27432">assumptions were violated.</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="143.98561"
+         y="150.68042"
+         id="tspan26612" /><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="143.98561"
+         y="159.49988"
+         id="tspan21336">Option 2: Try a more flexible  model, or </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="143.98561"
+         y="168.31932"
+         id="tspan21340">a more  flexible test (e.g.  bootstrapping)</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker22963)"
+       d="m 135.432,23.76 h 73.1808"
+       id="path22587" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="M 50.3712,35.639999 V 56.5488"
+       id="path22589" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="M 50.3712,82.209599 V 105.4944"
+       id="path22591" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker22953)"
+       d="m 50.3712,140.6592 v 24.2352"
+       id="path22593" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker22963)"
+       d="m 104.544,69.3792 h 28.0368"
+       id="path22595" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker22963)"
+       d="M 154.9152,80.783998 84.843156,121.24011"
+       id="path22597" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker22963)"
+       d="m 197.208,63.676799 29.7,-29.7"
+       id="path22599" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker22963)"
+       d="M 81.7344,131.1552 H 128.304"
+       id="path22601" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05555556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="160.6176"
+       y="16.156799"
+       id="text24237"><tspan
+         sodipodi:role="line"
+         id="tspan24235"
+         style="stroke-width:0.264583;font-size:7.05555556px"
+         x="160.6176"
+         y="16.156799">No</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="61.110809"
+       y="95.175476"
+       id="text24237-9"><tspan
+         sodipodi:role="line"
+         id="tspan24235-8"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="61.110809"
+         y="95.175476">No</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="109.10601"
+       y="97.076279"
+       id="text24237-3"><tspan
+         sodipodi:role="line"
+         id="tspan24235-0"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="109.10601"
+         y="97.076279">No</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="101.978"
+       y="126.53868"
+       id="text24237-90"><tspan
+         sodipodi:role="line"
+         id="tspan24235-7"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="101.978"
+         y="126.53868">No</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="60.8256"
+       y="47.519997"
+       id="text25285"><tspan
+         sodipodi:role="line"
+         id="tspan25283"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="60.8256"
+         y="47.519997">Yes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="110.92368"
+       y="62.393566"
+       id="text25285-9"><tspan
+         sodipodi:role="line"
+         id="tspan25283-7"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="110.92368"
+         y="62.393566">Yes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="217.84367"
+       y="58.116768"
+       id="text25285-5"><tspan
+         sodipodi:role="line"
+         id="tspan25283-3"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="217.84367"
+         y="58.116768">Yes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="54.850079"
+       y="155.05757"
+       id="text25285-99"><tspan
+         sodipodi:role="line"
+         id="tspan25283-4"
+         style="font-size:7.05556px;stroke-width:0.264583"
+         x="54.850079"
+         y="155.05757">Yes</tspan></text>
+  </g>
+</svg>
