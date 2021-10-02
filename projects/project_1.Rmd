@@ -9,7 +9,7 @@ link-citations: yes
 
 **Due:** Friday, October 15, 12:00pm (noon) on Canvas
 
-**Submission:** A template file is provided, which includes the five section headings: [project_1_template.Rmd](https://sta112-f21.github.io/homework/project_1_template.Rmd)
+**Submission:** A template file is provided, which includes the five section headings: [project_1_template.Rmd](https://sta112-f21.github.io/projects/project_1_template.Rmd)
 
 Once you have completed the report, submit *both* your 
 knitted HTML file and the R Markdown file to Canvas.
