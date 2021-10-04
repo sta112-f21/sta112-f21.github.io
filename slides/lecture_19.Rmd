@@ -15,6 +15,11 @@ editor_options:
 
 ## Agenda
 
+* Quiz 3 on Wednesday
+* Project 1 released last Friday, due October 15
+* No class this Friday (fall break)
+* Today: beginning multiple regression
+
 ---
 
 ## Relationships between > 2 variables
