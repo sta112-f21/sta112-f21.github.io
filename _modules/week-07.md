@@ -16,5 +16,7 @@ October 6
 
 : Textbook 3.3, 3.6
 
+: **Quiz 3**{: .label .label-red}
+
 October 7
 : **Fall break!**{: .label .label-pink }
