@@ -1,0 +1,234 @@
+---
+author: "Dr. Ciaran Evans"
+title: Nested F tests
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* No class this Friday (fall break)
+* Today: comparing models with nested F tests
+
+---
+
+## Recap
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=8, fig.height=5}
+library(tidyverse)
+library(palmerpenguins)
+
+penguins_no_nas <- penguins %>%
+  drop_na()
+
+penguins_no_nas %>%
+  ggplot(aes(x = body_mass_g,
+             y = bill_length_mm,
+             color = species)) +
+  geom_point(size = 2) +
+  labs(x = "Body mass (g)",
+       y = "Bill length (mm)",
+       color = "Species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Recap
+
+**Model:**
+
+.center[
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+]
+
+* Is there any relationship between the predictors (species and body mass) and the response (bill length)?
+
+.center[
+$H_0: \beta_1 = \beta_2 = \beta_3 = 0  \hspace{2cm} H_A: \text{at least one of } \beta_1, \beta_2, \beta_3 \neq 0$
+]
+
+--
+
+* After accounting for species, is there a relationship between body mass and bill length?
+
+.center[
+$H_0: \beta_3 = 0  \hspace{2cm} H_A: \beta_3 \neq 0$
+]
+
+--
+
+* After accounting for body mass, is there a relationship between species and bill length?
+
+--
+
+.center[
+$H_0: \beta_1 = \beta_2 = 0  \hspace{2cm} H_A: \text{at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+---
+
+## Testing hypotheses
+
+
+**Model:** $\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+**Hypotheses:**
+.center[
+$H_0: \beta_1 = \beta_2 = \beta_3 = 0$ 
+
+$H_A: \text{at least one of } \beta_1, \beta_2, \beta_3 \neq 0$
+]
+
+**Reduced model ( $H_0$ ):** $\ \text{bill length} = \beta_0 + \varepsilon$
+
+**Full model ( $H_A$ ):** $\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+--
+
+**Intuition:** Evidence against $H_0$ when predictions for full model are "much closer" to the observed responses
+
+--
+
+**Test statistic:** $\ F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}} \hspace{0.5cm} p = \text{total # parameters}$
+
+**Distribution:** $\ F_{\text{# parameters tested}, \ n - p} \hspace{1cm}$ under $H_0$
+
+---
+
+## In practice
+
+**Full model:**
+
+```{r}
+length_lm_full <- lm(bill_length_mm ~ species + body_mass_g,
+                     data = penguins_no_nas)
+anova(length_lm_full)
+```
+
+$SSE_{full} = 1925.7$
+
+$n - p = 329$
+
+---
+
+## In practice
+
+**Reduced model:**
+
+```{r}
+length_lm_reduced <- lm(bill_length_mm ~ 1,
+                     data = penguins_no_nas)
+anova(length_lm_reduced)
+```
+
+$SSE_{reduced} = 9928.9$
+
+$\text{# parameters tested} = 3$
+
+---
+
+## In practice
+
+**Model:** $\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+**Hypotheses:**
+.center[
+$H_0: \beta_1 = \beta_2 = \beta_3 = 0$ 
+
+$H_A: \text{at least one of } \beta_1, \beta_2, \beta_3 \neq 0$
+]
+
+* $SSE_{full} = 1925.7$
+* $SSE_{reduced} = 9928.9$
+* $n - p = 329$
+* $\text{# parameters tested} = 3$
+
+**Test statistic:** $\ F = \dfrac{(9928.9 - 1925.7)/3}{1925.7/329} = 455.8$
+
+**Distribution:** Under $H_0$, the $F$-statistic comes from an $F_{3, 329}$ distribution
+
+**p-value:** $\ \approx 0$
+
+---
+
+## A little simpler:
+
+```{r}
+anova(length_lm_reduced, length_lm_full)
+```
+
+---
+
+### Intercept-only reduced model is a special case
+
+```{r}
+length_lm <- lm(bill_length_mm ~ species + body_mass_g, data = penguins_no_nas)
+summary(length_lm)
+```
+
+---
+
+### Intercept-only reduced model is a special case
+
+```{r, eval=F}
+length_lm <- lm(bill_length_mm ~ species + body_mass_g, data = penguins_no_nas)
+summary(length_lm)
+```
+
+.center[
+<img src="lm_summary_f_stat.png" width="700">
+]
+
+---
+
+## Testing hypotheses
+
+
+**Model:** $\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+**Hypotheses:**
+.center[
+$H_0: \beta_3 = 0$ 
+
+$H_A: \beta_3 \neq 0$
+]
+
+--
+
+**Reduced model ( $H_0$ ):** $\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon$
+
+**Full model ( $H_A$ ):** $\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+--
+
+**Test statistic:** $\ F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}} \hspace{0.5cm} p = \text{total # parameters}$
+
+**Distribution:** $\ F_{\text{# parameters tested}, \ n - p} \hspace{1cm}$ under $H_0$
+
+---
+
+## In practice
+
+**Reduced model ( $H_0$ ):** $\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \varepsilon$
+
+**Full model ( $H_A$ ):** $\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+```{r}
+length_lm_reduced <- lm(bill_length_mm ~ species,
+                     data = penguins_no_nas)
+length_lm_full <- lm(bill_length_mm ~ species + body_mass_g,
+                     data = penguins_no_nas)
+anova(length_lm_reduced, length_lm_full)
+```
+
+$F = 168.76$, p-value $\approx 0$
