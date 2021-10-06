@@ -166,7 +166,7 @@ Further instructions and grading rubrics will be provided with each project.
 
 We will have short (15--20 minute) quizzes in class throughout the semester. These quizzes are designed to help you check your progress in the course. The questions will be based on material we have recently covered in class, lab, and/or homework.
 
-There is no final exam in this course. **However, we will use the scheduled final exam time to discuss the final project, so make sure you are still in Winston-Salem.** If in doubt, you can check with me before booking your flight home.
+There is no final exam in this course. The final project will be due (electronically) during final exam week.
 
 
 ## Grading

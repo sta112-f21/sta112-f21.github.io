@@ -1,0 +1,96 @@
+---
+title: "Class Activity, October 6"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will practice nested F-tests for a subset of predictors in a multiple regression model.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+```
+
+## Setup
+
+This activity investigates the relationship between body mass, species, and bill length for penguins in Antarctica, using the `penguins` dataset.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_20_template.Rmd)
+
+We will use our regression model from class:
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+In this activity, you will test the hypotheses
+
+$H_0: \beta_1 = \beta_2 = 0$
+
+$H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+
+which are associated with the nested reduced and full models
+
+**Reduced model:** $\ \text{bill length} = \beta_0 + \beta_3 \text{body mass} + \varepsilon$
+
+**Full model:** $\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+We remove NAs from the `penguins` dataset, then fit the nested models in R:
+
+```r
+penguins_no_nas <- penguins %>%
+  drop_na()
+length_lm_reduced <- lm(bill_length_mm ~ body_mass_g, 
+                        data = penguins_no_nas)
+length_lm_full <- lm(bill_length_mm ~ species + body_mass_g, 
+                     data = penguins_no_nas)
+```
+
+## Questions
+
+1. Run the following code to display the ANOVA tables for the reduced and full models:
+
+```r
+anova(length_lm_reduced)
+anova(length_lm_full)
+```
+
+2. Use the results of the two ANOVA tables to calculate the F-statistic. Recall that
+
+$F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}}$
+
+where $p$ is the total number of parameters in the full model.
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+$F = \dfrac{\frac{1}{2} (6479.1 - 1925.7)}{\frac{1}{329} (1925.7)} = 388.97$
+</DIV>
+
+3. Instead of calculating the F-statistic by hand, we can use the `anova` function in R to compare the models directly. Run the following code, and check that the F-statistic agrees (up to rounding error) with your calculation from exercise 2:
+
+```r
+anova(length_lm_reduced, length_lm_full)
+```
+
+4. Interpret the p-value from exercise 3 -- is there evidence for a relationship between species and bill length, after accounting for body mass?
+
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+The p-value is approximately 0, so we have strong evidence that there is a relationship between species and bill length, after accounting for body mass.
+</DIV>

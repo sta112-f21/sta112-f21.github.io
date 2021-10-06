@@ -20,7 +20,10 @@ class: center, middle, inverse, title-slide
 ## Agenda
 
 * No class this Friday (fall break)
-* Today: comparing models with nested F tests
+* Update to final project -- no in-person component during final exam slot
+* Today: 
+    * comparing models with nested F tests
+    * Quiz 3
 
 ---
 
@@ -37,6 +40,8 @@ class: center, middle, inverse, title-slide
 .center[
 `\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon\)`
 ]
+
+--
 
 * Is there any relationship between the predictors (species and body mass) and the response (bill length)?
 
@@ -56,7 +61,6 @@ class: center, middle, inverse, title-slide
 
 * After accounting for body mass, is there a relationship between species and bill length?
 
---
 
 .center[
 `\(H_0: \beta_1 = \beta_2 = 0  \hspace{2cm} H_A: \text{at least one of } \beta_1, \beta_2 \neq 0\)`
@@ -166,7 +170,7 @@ anova(length_lm_reduced)
 
 **Distribution:** Under `\(H_0\)`, the `\(F\)`-statistic comes from an `\(F_{3, 329}\)` distribution
 
-**p-value:** `\(\ \approx 0\)`
+**p-value:** `\(\ \approx 0\)`, so we have strong evidence that there is some relationship between body mass, species, and bill length.
 
 ---
 
@@ -188,6 +192,18 @@ anova(length_lm_reduced, length_lm_full)
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
+
+---
+
+### Intercept-only reduced model is a special case
+
+**Reduced model ( `\(H_0\)` ):** `\(\ \text{bill length} = \beta_0 + \varepsilon\)`
+
+**Full model ( `\(H_A\)` ):** `\(\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon\)`
+
+When the reduced model is intercept-only, then
+
+`\(F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}} = \dfrac{MSModel_{full}}{MSE_{full}}\)`
 
 ---
 
@@ -291,7 +307,7 @@ anova(length_lm_reduced, length_lm_full)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-`\(F = 168.76\)`, p-value `\(\approx 0\)`
+`\(F = 168.76\)`, p-value `\(\approx 0\)`, so there is strong evidence for a relationship between body mass and bill length, after accounting for species.
 
 ---
 
@@ -362,6 +378,12 @@ summary(length_lm_full)
 ]
 
 `\(F = 168.76 = 12.991^2 = t^2\)`
+
+---
+
+## Class Activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_20.html](https://sta112-f21.github.io/class_activities/ca_lecture_20.html)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

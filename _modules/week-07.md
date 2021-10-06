@@ -12,7 +12,7 @@ October 4
 
 October 6
 : Nested F-tests
-  : [Slides](#), [Class activity](#)
+  : [Slides](https://sta112-f21.github.io/slides/lecture_20.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_20.html)
 
 : Textbook 3.3, 3.6
 

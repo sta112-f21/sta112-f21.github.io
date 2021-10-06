@@ -16,7 +16,10 @@ editor_options:
 ## Agenda
 
 * No class this Friday (fall break)
-* Today: comparing models with nested F tests
+* Update to final project -- no in-person component during final exam slot
+* Today: 
+    * comparing models with nested F tests
+    * Quiz 3
 
 ---
 
@@ -51,6 +54,8 @@ penguins_no_nas %>%
 $\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
 ]
 
+--
+
 * Is there any relationship between the predictors (species and body mass) and the response (bill length)?
 
 .center[
@@ -69,7 +74,6 @@ $H_0: \beta_3 = 0  \hspace{2cm} H_A: \beta_3 \neq 0$
 
 * After accounting for body mass, is there a relationship between species and bill length?
 
---
 
 .center[
 $H_0: \beta_1 = \beta_2 = 0  \hspace{2cm} H_A: \text{at least one of } \beta_1, \beta_2 \neq 0$
@@ -157,7 +161,7 @@ $H_A: \text{at least one of } \beta_1, \beta_2, \beta_3 \neq 0$
 
 **Distribution:** Under $H_0$, the $F$-statistic comes from an $F_{3, 329}$ distribution
 
-**p-value:** $\ \approx 0$
+**p-value:** $\ \approx 0$, so we have strong evidence that there is some relationship between body mass, species, and bill length.
 
 ---
 
@@ -166,6 +170,18 @@ $H_A: \text{at least one of } \beta_1, \beta_2, \beta_3 \neq 0$
 ```{r}
 anova(length_lm_reduced, length_lm_full)
 ```
+
+---
+
+### Intercept-only reduced model is a special case
+
+**Reduced model ( $H_0$ ):** $\ \text{bill length} = \beta_0 + \varepsilon$
+
+**Full model ( $H_A$ ):** $\ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+When the reduced model is intercept-only, then
+
+$F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}} = \dfrac{MSModel_{full}}{MSE_{full}}$
 
 ---
 
@@ -231,7 +247,7 @@ length_lm_full <- lm(bill_length_mm ~ species + body_mass_g,
 anova(length_lm_reduced, length_lm_full)
 ```
 
-$F = 168.76$, p-value $\approx 0$
+$F = 168.76$, p-value $\approx 0$, so there is strong evidence for a relationship between body mass and bill length, after accounting for species.
 
 ---
 
@@ -277,3 +293,9 @@ summary(length_lm_full)
 ]
 
 $F = 168.76 = 12.991^2 = t^2$
+
+---
+
+## Class Activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_20.html](https://sta112-f21.github.io/class_activities/ca_lecture_20.html)

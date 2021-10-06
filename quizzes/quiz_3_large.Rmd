@@ -4,7 +4,8 @@ output:
   pdf_document:
     latex_engine: xelatex
 geometry: top=1in
-fontsize: 12pt
+header-includes:
+- \usepackage[fontsize=22pt]{scrextend}
 ---
 
 **Name:**
@@ -13,7 +14,7 @@ fontsize: 12pt
 
 There is one question. Relax and do your best! Try to answer as much as possible.
 
-The scenario is described on pages 2-3. The question is on page 4. 
+The scenario is described on pages 2-5. The question is on page 6. 
 
 
 \newpage
@@ -31,22 +32,22 @@ set.seed(3)
 sleep = 3 + 40*rgamma(100, 2, 50)
 gpa_sleep = 3.6 - 0.05*sleep + rnorm(100, sd=0.2)
 
-p1 <- data.frame(sleep = sleep) %>%
+data.frame(sleep = sleep) %>%
   ggplot(aes(x = sleep)) +
   geom_histogram(bins = 10) +
   labs(x = "Hours of sleep per night") +
   theme_bw() +
-  theme(text=element_text(size = 16))
+  theme(text=element_text(size = 24))
 
-p2 <- data.frame(sleep = sleep,
+data.frame(sleep = sleep,
                  gpa_sleep = gpa_sleep) %>%
   ggplot(aes(x = sleep, y = gpa_sleep)) +
-  geom_point() +
-  geom_smooth(se=F, method="lm") +
+  geom_point(size=3) +
+  geom_smooth(se=F, method="lm", lwd=2) +
   labs(x = "Hours of sleep per night",
        y = "GPA") +
   theme_bw() +
-  theme(text=element_text(size = 16))
+  theme(text=element_text(size = 24))
 
 location <- rep(c("Dorm", "Food Court", "Library", "Office Hours"),
                 each = 25)
@@ -55,19 +56,16 @@ location <- rep(c("Dorm", "Food Court", "Library", "Office Hours"),
 gpa_location = rnorm(100, sd = 0.2) + rep(c(2.9, 3, 3.2, 3.4),
                                           each = 25)
 
-p3 <- data.frame(x = location, 
+data.frame(x = location, 
            y = gpa_location) %>%
   ggplot(aes(x = x , y = y)) +
-  geom_boxplot() +
+  geom_boxplot(lwd=2) +
   labs(x = "Favorite homework location",
        y = "GPA") +
   theme_bw() +
-  theme(text=element_text(size = 16))
-
-(p1 + p2)/(p3 + plot_spacer())
+  theme(text=element_text(size = 24))
 ```
 
-\newpage
 
 Your collaborator then writes the following report on their analysis:
 
@@ -82,3 +80,7 @@ Based on these plots and the fitted model, we recommend that students who want t
 \newpage
 
 **Question:** There are no errors in your collaborator's plots, and they correctly calculated the estimated slope (-0.088) and intercept (3.79) of the fitted regression line. The reported p-value (0.000013) is also correct. Unfortunately, they made several errors in their interpretation of the figures, estimated regression line, and/or p-value. List these errors below, and explain to your collaborator why each of their errors is wrong.
+
+\newpage
+
+*(Left blank for additional space)*

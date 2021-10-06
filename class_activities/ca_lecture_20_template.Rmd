@@ -1,0 +1,52 @@
+---
+---
+---
+title: "Class Activity, October 6"
+author: "Your Name"
+output: html_document
+---
+
+## Setup
+
+Run the setup chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+
+penguins_no_nas <- penguins %>%
+  drop_na()
+length_lm_reduced <- lm(bill_length_mm ~ body_mass_g, 
+                        data = penguins_no_nas)
+length_lm_full <- lm(bill_length_mm ~ species + body_mass_g, 
+                     data = penguins_no_nas)
+```
+
+## Question 1
+
+```{r}
+
+```
+
+## Question 2
+
+```{r}
+
+```
+
+Write your answer to question 2 here
+
+
+## Question 3
+
+
+```{r}
+
+```
+
+
+## Question 4
+
+Write your answer to question 4 here...
+
