@@ -64,7 +64,7 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Testing hypotheses
+## Nested F-test
 
 
 **Model:** `\(\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon\)`
@@ -238,7 +238,7 @@ summary(length_lm)
 
 ---
 
-## Testing hypotheses
+## Nested F-test
 
 
 **Model:** `\(\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon\)`
@@ -292,6 +292,76 @@ anova(length_lm_reduced, length_lm_full)
 ```
 
 `\(F = 168.76\)`, p-value `\(\approx 0\)`
+
+---
+
+### Testing a single parameter is a special case
+
+.center[
+`\(H_0: \beta_i = 0\)` 
+
+`\(H_A: \beta_i \neq 0\)`
+]
+
+When `\(\text{# parameters tested} = 1\)`, we can use an `\(F\)`-test or a `\(t\)`-test:
+
+* `\(F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}} = \dfrac{(SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}}\)`
+* `\(F\)` comes from an `\(F_{\text{# parameters tested}, \ n-p} = F_{1, \ n-p}\)` distribution
+* `\(t = \dfrac{\widehat{\beta}_i}{SE_{\widehat{\beta}_i}}\)`
+* `\(t\)` comes from a `\(t_{n-p}\)` distribution
+* `\(F = t^2\)`
+* The p-values are the same
+
+---
+
+### Testing a single parameter is a special case
+
+
+```r
+length_lm_full &lt;- lm(bill_length_mm ~ species + body_mass_g,
+                     data = penguins_no_nas)
+summary(length_lm_full)
+```
+
+```
+## 
+## Call:
+## lm(formula = bill_length_mm ~ species + body_mass_g, data = penguins_no_nas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.8291 -1.6728  0.1244  1.5318  9.2904 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      24.908763   1.089730  22.858  &lt; 2e-16 ***
+## speciesChinstrap  9.908762   0.355289  27.889  &lt; 2e-16 ***
+## speciesGentoo     3.539179   0.499814   7.081 8.71e-12 ***
+## body_mass_g       0.003755   0.000289  12.991  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.419 on 329 degrees of freedom
+## Multiple R-squared:  0.806,	Adjusted R-squared:  0.8043 
+## F-statistic: 455.8 on 3 and 329 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+### Testing a single parameter is a special case
+
+
+```r
+length_lm_full &lt;- lm(bill_length_mm ~ species + body_mass_g,
+                     data = penguins_no_nas)
+summary(length_lm_full)
+```
+
+.center[
+&lt;img src="lm_t_stat_annotated.png" width="600"&gt;
+]
+
+`\(F = 168.76 = 12.991^2 = t^2\)`
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

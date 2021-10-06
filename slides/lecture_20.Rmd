@@ -77,7 +77,7 @@ $H_0: \beta_1 = \beta_2 = 0  \hspace{2cm} H_A: \text{at least one of } \beta_1, 
 
 ---
 
-## Testing hypotheses
+## Nested F-test
 
 
 **Model:** $\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
@@ -191,7 +191,7 @@ summary(length_lm)
 
 ---
 
-## Testing hypotheses
+## Nested F-test
 
 
 **Model:** $\ \ \text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
@@ -232,3 +232,48 @@ anova(length_lm_reduced, length_lm_full)
 ```
 
 $F = 168.76$, p-value $\approx 0$
+
+---
+
+### Testing a single parameter is a special case
+
+.center[
+$H_0: \beta_i = 0$ 
+
+$H_A: \beta_i \neq 0$
+]
+
+When $\text{# parameters tested} = 1$, we can use an $F$-test or a $t$-test:
+
+* $F = \dfrac{\frac{1}{\text{# parameters tested}} (SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}} = \dfrac{(SSE_{reduced} - SSE_{full})}{\frac{1}{n - p} SSE_{full}}$
+* $F$ comes from an $F_{\text{# parameters tested}, \ n-p} = F_{1, \ n-p}$ distribution
+* $t = \dfrac{\widehat{\beta}_i}{SE_{\widehat{\beta}_i}}$
+* $t$ comes from a $t_{n-p}$ distribution
+* $F = t^2$
+* The p-values are the same
+
+---
+
+### Testing a single parameter is a special case
+
+```{r}
+length_lm_full <- lm(bill_length_mm ~ species + body_mass_g,
+                     data = penguins_no_nas)
+summary(length_lm_full)
+```
+
+---
+
+### Testing a single parameter is a special case
+
+```{r, eval=F}
+length_lm_full <- lm(bill_length_mm ~ species + body_mass_g,
+                     data = penguins_no_nas)
+summary(length_lm_full)
+```
+
+.center[
+<img src="lm_t_stat_annotated.png" width="600">
+]
+
+$F = 168.76 = 12.991^2 = t^2$
