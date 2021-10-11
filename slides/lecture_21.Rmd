@@ -1,0 +1,31 @@
+---
+author: "Dr. Ciaran Evans"
+title: Project work day
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Project 1 due this Friday
+* Feedback on HW 4 posted on Canvas
+* A good example of a report from HW 4 will be posted on Canvas later today
+* Today: 
+    * comments from HW 4
+    * Project 1 work day
+
+---
+
+## Some comments from HW 4
+
+* Be careful with wording in your reports
+* Make sure you submit both the HTML and Rmd files
+* In this class, p-values are just a way to measure how unusual the observed data is under the null hypothesis. We don't reject/fail to reject
