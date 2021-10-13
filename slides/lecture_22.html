@@ -286,7 +286,7 @@ Where do we start?
 
 ## Looking at relationships: pairs plot
 
-A **pairs plot** let's us visualize pairwise relationships in the data:
+A **pairs plot** lets us visualize pairwise relationships in the data:
 
 &lt;img src="lecture_22_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -336,6 +336,76 @@ What can I try to address these issues?
 
 .pull-right[
 &lt;img src="lecture_22_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## How useful is the model?
+
+**Coefficient of determination** ( `\(R^2\)` ): the proportion of total variability in the response variable explained by the regression model.
+
+`\(R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}\)`
+
+---
+
+### How useful is the model?
+
+
+```r
+lm_dens &lt;- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den, data = fire_clusters)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.4000 -0.6933 -0.0356  0.7986  2.9798 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -2.04451    0.04752 -43.025  &lt; 2e-16 ***
+## log_bld_den -0.52367    0.09710  -5.393 1.03e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.107 on 545 degrees of freedom
+*## Multiple R-squared:  0.05066,	Adjusted R-squared:  0.04892 
+## F-statistic: 29.08 on 1 and 545 DF,  p-value: 1.034e-07
+```
+
+The p-value for the slope might be low, but log(density) only explains 5% of the variability in log(proportion).
+
+---
+
+## Interpretation
+
+`\(\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})\)`
+
+.question[
+Clusters with a higher density of buildings tend to have a lower proportion of buildings burned. Does this match what you expect?
+]
+
+---
+
+## Simpson's paradox
+
+An example with the penguin data:
+
+.pull-left[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.question[
+The relationship between two variables can depend on other variables. Let's add another variable to the model. 
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

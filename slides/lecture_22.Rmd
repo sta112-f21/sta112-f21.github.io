@@ -300,7 +300,7 @@ Where do we start?
 
 ## Looking at relationships: pairs plot
 
-A **pairs plot** let's us visualize pairwise relationships in the data:
+A **pairs plot** lets us visualize pairwise relationships in the data:
 
 ```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=9, fig.height=6}
 library(GGally)
@@ -391,7 +391,11 @@ fire_clusters %>%
   theme_bw() +
   theme(text = element_text(size = 20))
 
-lm_dens <- lm(log(proportion) ~ log(bld_den), data = fire_clusters)
+fire_clusters <- fire_clusters %>%
+  mutate(log_proportion = log(proportion),
+         log_bld_den = log(bld_den))
+
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
 ```
 
 $\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})$
@@ -433,6 +437,25 @@ fire_clusters %>%
 
 ---
 
+## How useful is the model?
+
+**Coefficient of determination** ( $R^2$ ): the proportion of total variability in the response variable explained by the regression model.
+
+$R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}$
+
+---
+
+### How useful is the model?
+
+```{r, highlight.output=c(17)}
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+
+The p-value for the slope might be low, but log(density) only explains 5% of the variability in log(proportion).
+
+---
+
 ## Interpretation
 
 $\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})$
@@ -466,5 +489,35 @@ penguins %>%
 
 
 .pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(palmerpenguins)
 
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = bill_depth_mm, y = bill_length_mm,
+             color = species)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)",
+       color = "Species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+
+```
 ]
+
+.question[
+The relationship between two variables can depend on other variables. Let's add another variable to the model. 
+]
+
+---
+
+## Adding building dispersion
+
+$\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2 \ \text{building dispersion} + \varepsilon$
+
+```{r, highlight.output=c(17)}
+lm_dens_disp <- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+summary(lm_dens_disp)
+```
