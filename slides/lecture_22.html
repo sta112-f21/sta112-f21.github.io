@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Polynomial regression and interactions</title>
+    <title>Polynomial regression and exploring multivariate data</title>
     <meta charset="utf-8" />
     <meta name="author" content="Dr. Ciaran Evans" />
     <script src="libs/header-attrs-2.10/header-attrs.js"></script>
@@ -11,7 +11,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Polynomial regression and interactions
+# Polynomial regression and exploring multivariate data
 ### Dr. Ciaran Evans
 
 ---
@@ -346,6 +346,8 @@ What can I try to address these issues?
 
 `\(R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}\)`
 
+**Note:** For simple linear regression, `\(R^2 = r^2\)` (the squared correlation coefficient)
+
 ---
 
 ### How useful is the model?
@@ -407,6 +409,161 @@ An example with the penguin data:
 .question[
 The relationship between two variables can depend on other variables. Let's add another variable to the model. 
 ]
+
+---
+
+## Adding building dispersion
+
+`\(\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2 \ \text{building dispersion} + \varepsilon\)`
+
+.small[
+
+```r
+lm_dens_disp &lt;- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+summary(lm_dens_disp)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.3077 -0.6645 -0.0095  0.7605  2.6671 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -0.8491     0.4191  -2.026  0.04323 *  
+## log_bld_den  -0.4215     0.1028  -4.100 4.77e-05 ***
+## bld_disp     -2.0574     0.7167  -2.871  0.00425 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.1 on 544 degrees of freedom
+*## Multiple R-squared:  0.06483,	Adjusted R-squared:  0.06139 
+## F-statistic: 18.86 on 2 and 544 DF,  p-value: 1.208e-08
+```
+]
+
+--
+
+`\(R^2\)` has increased slightly (from 0.05 to 0.065). We explain *slightly* more variability by adding building dispersion.
+
+---
+
+## `\(R^2_{adj}\)`
+
+`\(R^2 = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal} = 1 - \dfrac{SSE}{SSTotal}\)`
+
+.question[
+`\(R^2\)` will **never** decrease when we add more predictors to the model.
+]
+
+--
+
+**Adjusted `\(R^2\)` **: `\(R^2_{adj} = 1 - \dfrac{SSE/(n - p)}{SSTotal/(n-1)} = 1 - \dfrac{\widehat{\sigma}^2_{\varepsilon}}{\widehat{\text{Var}}(y)}\)`
+
+---
+
+
+## `\(R^2_{adj}\)`
+
+.small[
+
+```r
+lm_dens_disp &lt;- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+summary(lm_dens_disp)
+```
+
+```
+...
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -0.8491     0.4191  -2.026  0.04323 *  
+## log_bld_den  -0.4215     0.1028  -4.100 4.77e-05 ***
+## bld_disp     -2.0574     0.7167  -2.871  0.00425 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.1 on 544 degrees of freedom
+*## Multiple R-squared:  0.06483,	Adjusted R-squared:  0.06139 
+...
+```
+]
+
+`\(R^2 = 0.065\)`, `\(R^2_{adj} = 0.061\)`
+
+* `\(R^2_{adj} &lt; R^2\)` (always)
+* `\(R^2_{adj}\)` accounts for the number of parameters in the model
+* `\(R^2\)` *never* decreases when predictors are added
+* `\(R^2_{adj}\)` *can decrease* when unhelpful predictors are added to the model
+
+
+---
+
+## `\(R^2_{adj}\)`
+
+.small[
+
+```r
+lm_dens_disp &lt;- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+summary(lm_dens_disp)
+```
+
+```
+...
+## Residual standard error: 1.1 on 544 degrees of freedom
+*## Multiple R-squared:  0.06483,	Adjusted R-squared:  0.06139 
+...
+```
+]
+
+.small[
+
+```r
+lm_dens &lt;- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+
+```
+...
+## Residual standard error: 1.107 on 545 degrees of freedom
+*## Multiple R-squared:  0.05066,	Adjusted R-squared:  0.04892 
+...
+```
+]
+
+Adding building dispersion increases `\(R^2_{adj}\)` very slightly, from 0.049 to 0.061. But the `\(R^2_{adj}\)` is still small.
+
+---
+
+## Interpretation
+
+`\(\widehat{\log(\text{proportion})} = -0.85 - 0.42 \log(\text{building density}) - 2.06 \ \text{building dispersion}\)`
+
+* Holding building dispersion fixed, an increase of one unit in `\(\log(\text{building density})\)` is associated with a decrease of 0.42 units in `\(\log(\text{proportion})\)`, on average
+* Holding building density constant, an increase of one unit in building dispersion is associated with a decrease of 2.06 units in `\(\log(\text{proportion})\)`, on average
+
+.question[
+Does this match what you expect?
+]
+
+---
+
+## Back to the model
+
+`\(\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2 \ \text{building dispersion} + \varepsilon\)`
+
+.question[
+Our model assumes that the relationship between building density and the proportion of buildings burned is the same regardless of dispersion. Is this what we should expect?
+]
+
+--
+
+Next time: interaction
+
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

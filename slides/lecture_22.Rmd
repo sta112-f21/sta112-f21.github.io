@@ -1,6 +1,6 @@
 ---
 author: "Dr. Ciaran Evans"
-title: Polynomial regression and interactions
+title: Polynomial regression and exploring multivariate data
 output:
   xaringan::moon_reader:
     css: "lab-slides.css"
@@ -33,6 +33,28 @@ German carbon dioxide levels between April and November 2001:
 library(Stat2Data)
 library(tidyverse)
 data("CO2Germany")
+library(knitr)
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
 
 CO2Germany %>%
   ggplot(aes(x = Day, y = CO2)) +
@@ -443,6 +465,8 @@ fire_clusters %>%
 
 $R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}$
 
+**Note:** For simple linear regression, $R^2 = r^2$ (the squared correlation coefficient)
+
 ---
 
 ### How useful is the model?
@@ -517,7 +541,97 @@ The relationship between two variables can depend on other variables. Let's add 
 
 $\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2 \ \text{building dispersion} + \varepsilon$
 
-```{r, highlight.output=c(17)}
+.small[
+```{r, highlight.output=c(18)}
 lm_dens_disp <- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
 summary(lm_dens_disp)
 ```
+]
+
+--
+
+$R^2$ has increased slightly (from 0.05 to 0.065). We explain *slightly* more variability by adding building dispersion.
+
+---
+
+## $R^2_{adj}$
+
+$R^2 = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal} = 1 - \dfrac{SSE}{SSTotal}$
+
+.question[
+$R^2$ will **never** decrease when we add more predictors to the model.
+]
+
+--
+
+**Adjusted $R^2$ **: $R^2_{adj} = 1 - \dfrac{SSE/(n - p)}{SSTotal/(n-1)} = 1 - \dfrac{\widehat{\sigma}^2_{\varepsilon}}{\widehat{\text{Var}}(y)}$
+
+---
+
+
+## $R^2_{adj}$
+
+.small[
+```{r, output.lines=10:18, highlight.output=c(10)}
+lm_dens_disp <- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+summary(lm_dens_disp)
+```
+]
+
+$R^2 = 0.065$, $R^2_{adj} = 0.061$
+
+* $R^2_{adj} < R^2$ (always)
+* $R^2_{adj}$ accounts for the number of parameters in the model
+* $R^2$ *never* decreases when predictors are added
+* $R^2_{adj}$ *can decrease* when unhelpful predictors are added to the model
+
+
+---
+
+## $R^2_{adj}$
+
+.small[
+```{r, output.lines=17:18, highlight.output=c(3)}
+lm_dens_disp <- lm(log_proportion ~ log_bld_den + bld_disp, data = fire_clusters)
+summary(lm_dens_disp)
+```
+]
+
+.small[
+```{r, output.lines=16:17, highlight.output=c(3)}
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+]
+
+Adding building dispersion increases $R^2_{adj}$ very slightly, from 0.049 to 0.061. But the $R^2_{adj}$ is still small.
+
+---
+
+## Interpretation
+
+$\widehat{\log(\text{proportion})} = -0.85 - 0.42 \log(\text{building density}) - 2.06 \ \text{building dispersion}$
+
+* Holding building dispersion fixed, an increase of one unit in $\log(\text{building density})$ is associated with a decrease of 0.42 units in $\log(\text{proportion})$, on average
+* Holding building density constant, an increase of one unit in building dispersion is associated with a decrease of 2.06 units in $\log(\text{proportion})$, on average
+
+.question[
+Does this match what you expect?
+]
+
+---
+
+## Back to the model
+
+$\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2 \ \text{building dispersion} + \varepsilon$
+
+.question[
+Our model assumes that the relationship between building density and the proportion of buildings burned is the same regardless of dispersion. Is this what we should expect?
+]
+
+--
+
+Next time: interaction
+
+
+
