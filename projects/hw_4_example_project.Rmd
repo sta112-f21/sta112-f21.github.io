@@ -1,0 +1,166 @@
+---
+title: "HW 4 Example Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+
+bugula_larvae <- bryozoan %>%
+  filter(Species == "bugula" , Stage == "larvae")
+bryozoan_log <- mutate(bugula_larvae, log_mass=log(Mass), log_metabolic=log(Metabolic))
+bugula_larvae_lm_2 <- lm(log_metabolic ~ log_mass , data = bryozoan_log)
+```
+
+## Introduction
+
+Understanding the factors contributing to the fitness of an organism is an ongoing crusade within biology. The ways in which the physiology of an organism can affect its fitness is great so it can be difficult to determine what exactly an individuals fitness is in comparison to others. To account for this, specific processes may be monitored as an indication of fitness. One such example is that of metabolism, or the rate of energy consumption, within an individual. This rate can differ significantly between individuals, potentially depending on other physiological characteristics. The authors of the 2015 Pattersen et al. paper hypothesized that individuals of a larger body size, or mass, will have a greater metabolism than smaller individuals, but will also be more efficient with their energy consumption. The data used to explore this hypothesis was collected from two species of aquatic bryozoa, Bugula neritina and Watersipora subtorquata. These organisms are microscopic invertebrates that attach themselves to rocks in order to filter the passing water for food (1). Multiple physiological characteristics that have the potential to influence an individuals metabolic rate were measured. With this information, we will analyze data solely from B. neritina that were in the larval stage in order to determine the statistical relationship between mass and metabolic rate.
+
+## Methods
+
+The data set consists of 626 rows which represents an individual marine bryozoan and 5 columns which are the variables recorded: species, stage, run, mass, and metabolic rate. The run variable shows which session of the study the individual was recorded in as multiple runs were completed for each species. Mass was measured in micrograms and metabolic rate, or the rate of energy consumption, was measured in mJ per hour. The dataset is not missing values, but the researchers did not collect data for the bugula species in the late post-settlement stage. While no values were removed, we did focus on a subset of the data, the bugula species during the larvae stage. As seen in Figure 1, there are different relationships between species and stages shown with the different slopes across developmental stages. The different intercepts across species shows that there are different relationships for species as well. To ensure our analysis was not effected because of the differences across species and developmental stage we focused on a subset, the bugula species during the larvae stage. 
+
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Mass (micrograms) vs. metabolic rate (mJ per hour) for marine bryozoans in Victoria, Australia."}
+bryozoan%>%
+  ggplot(aes(x=Mass, y=Metabolic , color=Species)) + 
+  geom_point() +
+  facet_wrap(~Stage) +
+  labs(title="Mass and Metabolic Rate" , x="Mass (micrograms)" , y="Metabolic Rate (mJ per hour)") 
+```
+  
+We fit two models, a linear model with mass and metabolic rate, and a linear model with log mass and log metabolic rate. First, we looked at the model for mass and metabolic rate with a linear model written as $\text{metabolic rate} = \beta_0 + \beta_1 \text{mass} + \varepsilon$. This model will be used to answer the first part of the investigation, if larger individuals will have a higher metabolic rate than smaller individuals, but it cannot asses the second part: if proportional to body size, larger individuals are more energy efficient. To asses this part of the hypothesis we used transformations to create another model. The second model is a linear model with log mass and log metabolic rate which takes into account the proportionality.  This linear model will be written as $\log(\text{metabolic rate}) = \beta_0 + \beta_1 \log(\text{mass}) + \varepsilon$. A slope $0 < \beta_1 < 1$ on the log-log scale corresponds to a curved relationship between mass and metabolic rate that gets flatter as mass increases, which means larger organisms have a higher metabolic rate but proportional to size are more energy efficient.
+
+In order to use linear models such as these, model assumptions must be met. The shape and constant variance assumptions can be assessed with a residual plot: the shape assumption is reasonable if there is no pattern to the arrangement of the residuals above and below zero, and the constant variance assumption is reasonable if the spread of the residuals around zero does not fluctuate significantly across the data. In addition, we assume that the distribution of the noise $\varepsilon$ is normal, which can be checked with a quantile-quantile plot. Finally, the assumption of independence requires that the individual data points not effect each other, and the randomness assumption necessitates a random sample or randomized study.
+
+## Results
+
+The software used for all analysis was R, including the specific package tidyverse. The fitted linear model used to describe the data set was $\widehat{\log(\text{metabolic rate})}=−1.856+0.555\log(\text{mass})$, as seen in Figure 2. The estimated slope of this line indicates that for every unit increase in log mass, there is a 0.555 increase in the log metabolic rate on average. The estimated intercept of -1.856 means that if log mass is 0 the estimated value of log metabolic rate is 1.856 mJ per hour. 
+
+This linear model fulfills the assumption of shape as there is no discernible pattern of the residuals falling above or below the line (Figure 3). Additionally, the assumption of shape is upheld as there is little fluctuation in variance as the variables change. The assumption of normality may be violated as the quantile-quantile plot (Figure 4) shows that the right tail of the data still pulls away from the normal line- enough to indicate non-normality in the data set. Independence is upheld as the body size and metabolic rate of an individual organism do not effect that of others. Randomness is met due to the randomized sampling of the observational study. In the studentized residual plot (Figure 5) it is observed that no data points fall beyond 3 standard deviations from 0, so we are not worried about potential outliers within this data set. 
+
+We are 95% confident that as log metabolic rate increases by 1 unit, the average log mass increases between 0.304 and 0.806 units. The researcher's hypothesis corresponds to $0 < \beta_1 < 1$, so we test the hypotheses $H_0: \beta_1 = 1$ vs. $H_A: \beta_1 < 1$. The test statistic is $t = -3.51$ and the p-value is $0.0003$.
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 2: Log mass (log micrograms) vs. log metabolic rate (log mJ per hour) for the bugula species of marine bryozoans during the larvae stage in Victoria, Australia."}
+
+bryozoan_log %>%
+  mutate(yhat = predict(bugula_larvae_lm_2))%>%
+  ggplot(aes(x=log_mass , y=log_metabolic)) +
+  geom_point() + labs (title="Log Mass and Log Metabolic Rate" , x="Log Mass (log micrograms)" , y="Log Metabolic Rate (log mJ per hour)")+ 
+  geom_line(aes(y=yhat), lwd=1.2, color="blue")
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 3: Residual plot for linear regression of log metabolic rate on log mass."}
+bryozoan_log %>%
+  mutate(yhat = predict(bugula_larvae_lm_2),
+         residuals = residuals(bugula_larvae_lm_2)) %>%
+  ggplot(aes(x = yhat, y = residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted log Metabolic Rate (log mJ/hour)",
+       y = "Residual" , title="Residual Plot") +
+  theme_bw()
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 4: Residual QQ plot for linear regression of log metabolic rate on log mass."}
+bryozoan_log %>%
+  mutate(residuals = residuals(bugula_larvae_lm_2)) %>%
+  ggplot(aes(sample = residuals)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles" , title="QQ Plot") +
+  theme_classic()
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 5: Studentized Residual Plot for linear regression of log metabolic rate on log mass."}
+bryozoan_log %>%
+  mutate(studentized_resids = rstudent(bugula_larvae_lm_2),
+         yhat = predict(bugula_larvae_lm_2)) %>%
+  ggplot(aes(x = yhat, y = studentized_resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd=1.2) +
+  geom_abline(slope = 0, intercept = c(-3, -2, 2, 3),
+              color = "orange", lty = 2, lwd=1.2) +
+  labs(x = "Predicted log metabolic rate (log mJ/hour))",
+       y = "Studentized residuals" , title="Studentized Resdiual Plot") +
+  theme_bw()
+```
+
+## Discussion
+
+The fitted regression model created in this analysis supports the hypothesis that B. neritina larvae of a larger body size are more efficient with their energy consumption compared to individuals of a smaller body size. This was determined by applying a log transformation to both mass and metabolic rate, and using linear regression to model the relationship between the log-transformed variables. The slope of this line, indicating the relationship, is used to answer the hypothesis. If metabolism increased at a rate lesser than the rate of increase in body size, we would expect to see a slope of less than one. In fact, the estimated slope of our fitted regression line was 0.555, and the entirety of the 95% confidence interval for the true slope $\beta_1$, [0.304, 0.806] falls below 1. Furthermore, the p-value for testing the hypotheses $H_0: \beta_1 = 1$ vs. $H_A: \beta_1 < 1$ is 0.0003, which provides strong evidence for the researchers' hypothesis that larger organisms are more energy efficient, proportional to their body size. 
+
+While the original hypothesis included a broader range of Bryozoa of different species and developmental stages, this introduced too many variables that could distort an informative analysis of the data. Due to this, more analysis would have to be done to expand this conclusion to other species or developmental stages. It would be of interest to determine whether this relationship holds throughout all stages of development or just during the larval stage.
+
+## Appendix
+
+The distribution of mass in figure 6, is symmetrical and unimodal around 18. The center is best measured with the mean at 16.43 micrograms and the spread is best captured using the standard deviation which is 3.66. There are no unusual features or outliers. The distribution of metabolic rate in figure 7 is skewed right with one mode around 0.25. The center is best measured with the median which is at 0.45 mJ per hour and the spread is seen through the IQR which is 0.53. There is one potential outlier around 2 mJ per hour. There are no unusual features for this distribution.
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 6: Distribution of mass for bugula species of marine bryozoans during the larvae stage in Victoria, Austrialia"}
+bryozoan %>%
+  ggplot(aes(x= Mass))+
+  geom_histogram(bins=20)+ 
+  labs(title = "Distribution of Mass" , x= "Mass (micrograms)" , y = "Count") 
+```
+```{r , include=F}
+bryozoan %>%
+  summarize(mean_mass=mean(Mass) , standard_deviation_Mass=sd(Mass))
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 7: Distribution of metabolic rate for bugula species of marine bryozoans during the larvae stage in Victoria, Austrialia"}
+bryozoan %>%
+  ggplot(aes(x=Metabolic)) + 
+  geom_histogram(bins=20)+ 
+  labs(title= "Distribution of Metabolic Rate" , x= "Metabolic Rate (mJ per hour)" , y="Count")
+```
+```{r, include=F}
+bryozoan%>% 
+  summarize(median_Metabolic_Rate=median(Metabolic) , IQR_Metabolic_Rate=IQR(Metabolic))
+```
+
+
+Additionally, we looked at the relationship between mass and metabolic rate without any transformations for the bugula species of marine bryozoans during the larvae stage in figure 8. Which showed a fitted regression line of $\widehat{\text{metabolic rate}} = 0.33843 + 0.02618 \ \text{mass}$. Figure  9 shows that this model has a reasonable shape with a randomized spread above and below zero and reasonable constant variance with points having a constant width positively and negatively. However, the normality assumption is not normal in figure 10, because the points curve away from the line at both ends. While the normality assumption is violated, we are not too concerned because the data set is large enough with 141 bugula larvae marine bryozoans. We can conclude that an increase in 1 micrograms of mass is associated with a 0.02618 mJ per hour increase in metabolic rate, on average. The estimated regression line and positive slope support the first part of the hypothesis that individuals with a large mass have a higher metabolic rate. 
+
+```{r , include=F}
+bugula_larvae_lm <- lm(Metabolic ~ Mass , data=bugula_larvae)
+lm(Metabolic ~ Mass , data=bugula_larvae)
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 8: Mass and metabolic rate for bugula species of marine bryozoans during the larvae stage in Victoria, Austrialia"}
+bugula_larvae %>%
+  mutate(yhat = predict(bugula_larvae_lm))%>%
+  ggplot(aes(x=Mass , y=Metabolic)) + 
+  geom_point() + labs (title="Mass and Metabolic Rate" , x="Mass (micrograms)" , y="Metabolic Rate (mJ per hour)")+ 
+  geom_line(aes(y=yhat), lwd=1.2, color="blue")
+```
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 9: Residual plot for linear regression of metabolic rate on mass."}
+bugula_larvae %>%
+  mutate(yhat = predict(bugula_larvae_lm) ,
+         residuals = residuals(bugula_larvae_lm)) %>%
+  ggplot(aes(x = yhat, y = residuals)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted Metabolic Rate ",
+       y = "Residual" , title="Residual Plot") +
+  theme_bw()
+```
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 10: QQ plot for linear regression of metabolic rate on mass."}
+bugula_larvae %>%
+  mutate(residuals = residuals(bugula_larvae_lm))%>%
+  ggplot(aes(sample = residuals)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles" , title="QQ Plot") +
+  theme_classic()
+```
+
+## Citations
+
+1. https://mdc.mo.gov/discover-nature/field-guide/bryozoans-moss-animals

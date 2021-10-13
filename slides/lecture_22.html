@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Polynomial regression and interactions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Polynomial regression and interactions
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* Project 1 comments:
+    * It is ok if your conclusion is that there is no relationship (provided you provide sound statistical justification for your conclusion, as usual)
+    * `\(\log(0) = -\infty\)`. Some options:
+        * Add a small number before transforming, e.g. `\(\log(variable + 1)\)` instead of `\(\log(variable)\)`
+        * Try a different transformation
+        * Remove rows where `\(variable = 0\)`. Not necessarily a good idea, needs to be justified.
+    * Only simple linear regression is required. You are welcome to fit a multiple regression model if you like, but it is not required
+
+---
+
+## German carbon dioxide levels
+
+German carbon dioxide levels between April and November 2001:
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+--
+
+.question[
+The relationship looks like it could be quadratic. How can we fit that?
+]
+
+---
+
+## Quadratic regression model
+
+**Model:** `\(\text{CO}_2 = \beta_0 + \beta_1 \text{Day} + \beta_2 \text{Day}^2 + \varepsilon\)`
+
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+**Fitted model:** `\(\widehat{\text{CO}}_2 = 414.975 - 0.476 \ \text{Day} + 0.001 \ \text{Day}^2\)`
+
+---
+
+## Assumptions
+
+We make the usual assumptions:
+
+* Shape (in this case, the shape assumption is that our polynomial is right)
+* Constant variance
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Checking assumptions
+
+.pull-left[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## In R
+
+
+```r
+co2_lm &lt;- lm(CO2 ~ Day + I(Day^2), data = CO2Germany)
+summary(co2_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = CO2 ~ Day + I(Day^2), data = CO2Germany)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -10.2482  -3.0799  -0.2524   2.8430  20.1527 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  4.150e+02  2.856e+00  145.28   &lt;2e-16 ***
+## Day         -4.760e-01  2.874e-02  -16.57   &lt;2e-16 ***
+## I(Day^2)     1.158e-03  6.684e-05   17.32   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.619 on 234 degrees of freedom
+## Multiple R-squared:  0.5734,	Adjusted R-squared:  0.5698 
+## F-statistic: 157.3 on 2 and 234 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+## In R
+
+
+```r
+co2_lm &lt;- lm(CO2 ~ Day + I(Day^2), data = CO2Germany)
+summary(co2_lm)
+```
+
+`I(...)` is used in formulas in R when we want to evaluate the expression arithmetically
+
+---
+
+## Higher-order polynomial?
+
+
+**Model:** `\(\text{CO}_2 = \beta_0 + \beta_1 \text{Day} + \beta_2 \text{Day}^2 + \beta_3 \text{Day}^3 + \varepsilon\)`
+
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+**Fitted model:** `\(\widehat{\text{CO}}_2 = 406.7 - 0.340 \ \text{Day} + 0.00047 \ \text{Day}^2 + 0.0000011 \ \text{Day}^3\)`
+
+A cubic model doesn't look necessary.
+
+---
+
+## In R
+
+
+```r
+co2_lm_cubic &lt;- lm(CO2 ~ Day + I(Day^2) + I(Day^3), data = CO2Germany)
+summary(co2_lm_cubic)
+```
+
+```
+## 
+## Call:
+## lm(formula = CO2 ~ Day + I(Day^2) + I(Day^3), data = CO2Germany)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -10.3483  -2.9931  -0.3974   2.8296  19.8833 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  4.067e+02  8.848e+00  45.963   &lt;2e-16 ***
+## Day         -3.396e-01  1.410e-01  -2.409   0.0168 *  
+## I(Day^2)     4.703e-04  6.989e-04   0.673   0.5017    
+## I(Day^3)     1.078e-06  1.091e-06   0.988   0.3241    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.619 on 233 degrees of freedom
+## Multiple R-squared:  0.5752,	Adjusted R-squared:  0.5697 
+## F-statistic: 105.2 on 3 and 233 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded. Variables include:
+
+* *proportion*: proportion of buildings in the cluster which were burned
+* *bld_den*: density of buildings in the cluster
+* *bld_disp*: dispersion of buildings in the cluster
+* *elev*: elevation of the cluster (meters)
+* *sloped*: slope of the land (degrees)
+* *CONTAG*: contagion index near the cluster
+* *CONNECT*: connectance index near the cluster
+* *PLAND1*: proportion of land near the cluster that is highly flammable
+
+---
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+**Rough plan:** We have a lot of variables to choose from, and no specific model in mind.
+
+* Look at the proportion of buildings burned in each cluster
+* Look at the relationships between *proportion* and the other variables
+* Pick a variable that is interesting and makes sense, and start building a model to predict *proportion*
+
+---
+
+## Proportion of buildings burned
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+.question[
+What do you notice about the distribution? What else would you want to know about this variable?
+]
+
+--
+
+* Highly right-skewed
+* How many clusters have 0 buildings burned?
+
+---
+
+## Proportion of buildings burned
+
+
+```r
+fire_clusters %&gt;% 
+  count()
+```
+
+```
+## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1  2029
+```
+
+```r
+fire_clusters %&gt;%
+  filter(proportion == 0) %&gt;%
+  count()
+```
+
+```
+## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1  1482
+```
+
+.question[
+So many 0s could be an issue -- it messes with our linear model fit
+]
+
+---
+
+## Revising the plan
+
+**Revised plan:** Build two models:
+
+* One model to predict whether any buildings were burned
+* One model to predict the proportion of buildings burned, for those clusters where at least one building burned
+
+---
+
+## Revising the plan
+
+**Revised plan:** Build two models:
+
+* One model to predict whether any buildings were burned (logistic regression -- later this semester)
+* One model to predict the proportion of buildings burned, for those clusters where at least one building burned (multiple linear regression with a subset of the data)
+
+---
+
+## Proportion of buildings burned
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Looking at relationships: pairs plot
+
+.question[
+Where do we start?
+]
+
+---
+
+## Looking at relationships: pairs plot
+
+A **pairs plot** let's us visualize pairwise relationships in the data:
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Simple linear regression model
+
+`\(\text{proportion} = \beta_0 + \beta_1 \text{building density} + \varepsilon\)`
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\text{proportion}} = 0.229 - 0.003 \ \text{building density}\)`
+
+---
+
+## Diagnostics
+
+.pull-left[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.question[
+What can I try to address these issues?
+]
+
+---
+
+## Log transformations
+
+`\(\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \varepsilon\)`
+
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})\)`
+
+---
+
+## Diagnostics
+
+.pull-left[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_22_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

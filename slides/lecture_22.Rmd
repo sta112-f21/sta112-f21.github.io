@@ -1,0 +1,470 @@
+---
+author: "Dr. Ciaran Evans"
+title: Polynomial regression and interactions
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Project 1 comments:
+    * It is ok if your conclusion is that there is no relationship (provided you provide sound statistical justification for your conclusion, as usual)
+    * $\log(0) = -\infty$. Some options:
+        * Add a small number before transforming, e.g. $\log(variable + 1)$ instead of $\log(variable)$
+        * Try a different transformation
+        * Remove rows where $variable = 0$. Not necessarily a good idea, needs to be justified.
+    * Only simple linear regression is required. You are welcome to fit a multiple regression model if you like, but it is not required
+
+---
+
+## German carbon dioxide levels
+
+German carbon dioxide levels between April and November 2001:
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+library(Stat2Data)
+library(tidyverse)
+data("CO2Germany")
+
+CO2Germany %>%
+  ggplot(aes(x = Day, y = CO2)) +
+  geom_point() +
+  labs(x = "Day (since start of the year)",
+       y = "Carbon dioxide (ppm) in atmosphere") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+--
+
+.question[
+The relationship looks like it could be quadratic. How can we fit that?
+]
+
+---
+
+## Quadratic regression model
+
+**Model:** $\text{CO}_2 = \beta_0 + \beta_1 \text{Day} + \beta_2 \text{Day}^2 + \varepsilon$
+
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+quad_lm <- lm(CO2 ~ Day + I(Day^2), data = CO2Germany)
+
+CO2Germany %>%
+  mutate(pred = predict(quad_lm)) %>%
+  ggplot(aes(x = Day, y = CO2)) +
+  geom_point() +
+  geom_line(aes(y = pred), color = "blue", lwd=1.5) +
+  labs(x = "Day (since start of the year)",
+       y = "Carbon dioxide (ppm) in atmosphere") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+**Fitted model:** $\widehat{\text{CO}}_2 = 414.975 - 0.476 \ \text{Day} + 0.001 \ \text{Day}^2$
+
+---
+
+## Assumptions
+
+We make the usual assumptions:
+
+* Shape (in this case, the shape assumption is that our polynomial is right)
+* Constant variance
+* Independence
+* Randomness
+* Zero mean
+* Normality
+
+---
+
+## Checking assumptions
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+CO2Germany %>%
+  mutate(pred = predict(quad_lm),
+         res = resid(quad_lm)) %>%
+  ggplot(aes(x = pred,
+             y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(x = "Predicted carbon dioxide level (ppm)",
+       y = "Residuals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+CO2Germany %>%
+  mutate(res = resid(quad_lm)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## In R
+
+```{r}
+co2_lm <- lm(CO2 ~ Day + I(Day^2), data = CO2Germany)
+summary(co2_lm)
+```
+
+---
+
+## In R
+
+```{r, eval=F}
+co2_lm <- lm(CO2 ~ Day + I(Day^2), data = CO2Germany)
+summary(co2_lm)
+```
+
+`I(...)` is used in formulas in R when we want to evaluate the expression arithmetically
+
+---
+
+## Higher-order polynomial?
+
+
+**Model:** $\text{CO}_2 = \beta_0 + \beta_1 \text{Day} + \beta_2 \text{Day}^2 + \beta_3 \text{Day}^3 + \varepsilon$
+
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=8, fig.height=5}
+cub_lm <- lm(CO2 ~ Day + I(Day^2) + I(Day^3), data = CO2Germany)
+
+CO2Germany %>%
+  mutate(pred = predict(cub_lm),
+         type = "Cubic model") %>%
+  rbind(CO2Germany %>%
+          mutate(pred = predict(quad_lm),
+                 type = "Quadratic model")) %>%
+  ggplot(aes(x = Day, y = CO2)) +
+  geom_point() +
+  geom_line(aes(y = pred, color = type), lwd=1.5) +
+  labs(x = "Day (since start of the year)",
+       y = "Carbon dioxide (ppm) in atmosphere",
+       color = "") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+**Fitted model:** $\widehat{\text{CO}}_2 = 406.7 - 0.340 \ \text{Day} + 0.00047 \ \text{Day}^2 + 0.0000011 \ \text{Day}^3$
+
+A cubic model doesn't look necessary.
+
+---
+
+## In R
+
+```{r}
+co2_lm_cubic <- lm(CO2 ~ Day + I(Day^2) + I(Day^3), data = CO2Germany)
+summary(co2_lm_cubic)
+```
+
+---
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded. Variables include:
+
+* *proportion*: proportion of buildings in the cluster which were burned
+* *bld_den*: density of buildings in the cluster
+* *bld_disp*: dispersion of buildings in the cluster
+* *elev*: elevation of the cluster (meters)
+* *sloped*: slope of the land (degrees)
+* *CONTAG*: contagion index near the cluster
+* *CONNECT*: connectance index near the cluster
+* *PLAND1*: proportion of land near the cluster that is highly flammable
+
+---
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+**Rough plan:** We have a lot of variables to choose from, and no specific model in mind.
+
+* Look at the proportion of buildings burned in each cluster
+* Look at the relationships between *proportion* and the other variables
+* Pick a variable that is interesting and makes sense, and start building a model to predict *proportion*
+
+---
+
+## Proportion of buildings burned
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=4}
+fire_clusters <- read_csv("fire-clusters.csv") %>%
+  mutate(proportion = BB/bld_clust)
+
+fire_clusters %>%
+  ggplot(aes(x = proportion)) +
+  geom_histogram() +
+  labs(x = "Proportion of buildings burned") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+.question[
+What do you notice about the distribution? What else would you want to know about this variable?
+]
+
+--
+
+* Highly right-skewed
+* How many clusters have 0 buildings burned?
+
+---
+
+## Proportion of buildings burned
+
+```{r}
+fire_clusters %>% 
+  count()
+fire_clusters %>%
+  filter(proportion == 0) %>%
+  count()
+```
+
+.question[
+So many 0s could be an issue -- it messes with our linear model fit
+]
+
+---
+
+## Revising the plan
+
+**Revised plan:** Build two models:
+
+* One model to predict whether any buildings were burned
+* One model to predict the proportion of buildings burned, for those clusters where at least one building burned
+
+---
+
+## Revising the plan
+
+**Revised plan:** Build two models:
+
+* One model to predict whether any buildings were burned (logistic regression -- later this semester)
+* One model to predict the proportion of buildings burned, for those clusters where at least one building burned (multiple linear regression with a subset of the data)
+
+---
+
+## Proportion of buildings burned
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+fire_clusters <- fire_clusters %>%
+  filter(proportion > 0)
+
+fire_clusters %>%
+  ggplot(aes(x = proportion)) +
+  geom_histogram() +
+  labs(x = "Proportion of buildings burned, \n for clusters with at least one building burned") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Looking at relationships: pairs plot
+
+.question[
+Where do we start?
+]
+
+---
+
+## Looking at relationships: pairs plot
+
+A **pairs plot** let's us visualize pairwise relationships in the data:
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=9, fig.height=6}
+library(GGally)
+
+fire_clusters %>%
+  select(proportion, bld_den, bld_disp,
+         elev, sloped, CONTAG, CONNECT, PLAND1) %>%
+  ggpairs(lower = list(continuous = "cor"),
+          upper = list(continuous = "points")) +
+  theme_minimal()
+```
+
+---
+
+## Simple linear regression model
+
+$\text{proportion} = \beta_0 + \beta_1 \text{building density} + \varepsilon$
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+fire_clusters %>%
+  ggplot(aes(x = bld_den, y = proportion)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "Building density in cluster",
+       y = "Proportion of buildings burned") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+
+lm_dens <- lm(proportion ~ bld_den, data = fire_clusters)
+```
+
+$\widehat{\text{proportion}} = 0.229 - 0.003 \ \text{building density}$
+
+---
+
+## Diagnostics
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  mutate(pred = predict(lm_dens),
+         res = resid(lm_dens)) %>%
+  ggplot(aes(x = pred,
+             y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(x = "Predicted proportion of buildings burned",
+       y = "Residuals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  mutate(res = resid(lm_dens)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.question[
+What can I try to address these issues?
+]
+
+---
+
+## Log transformations
+
+$\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \varepsilon$
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+fire_clusters %>%
+  ggplot(aes(x = log(bld_den), y = log(proportion))) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "log(Building density in cluster)",
+       y = "log(Proportion of buildings burned)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+
+lm_dens <- lm(log(proportion) ~ log(bld_den), data = fire_clusters)
+```
+
+$\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})$
+
+---
+
+## Diagnostics
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  mutate(pred = predict(lm_dens),
+         res = resid(lm_dens)) %>%
+  ggplot(aes(x = pred,
+             y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(x = "Predicted log proportion",
+       y = "Residuals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  mutate(res = resid(lm_dens)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## Interpretation
+
+$\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})$
+
+.question[
+Clusters with a higher density of buildings tend to have a lower proportion of buildings burned. Does this match what you expect?
+]
+
+---
+
+## Simpson's paradox
+
+An example with the penguin data:
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(palmerpenguins)
+
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+
+```
+]
+
+
+.pull-right[
+
+]
