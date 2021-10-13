@@ -22,6 +22,27 @@ editor_options:
         * Try a different transformation
         * Remove rows where $variable = 0$. Not necessarily a good idea, needs to be justified.
     * Only simple linear regression is required. You are welcome to fit a multiple regression model if you like, but it is not required
+* Today:
+    * Go over Quiz 3
+    * Polynomial regression
+    * Exploring multiple regression with wildfire data
+
+---
+
+## Quiz 3
+
+Errors:
+
+* Interpretation of the p-value
+    * p-value is the probability of "our data or more extreme" if $H_0$ is true; not the probability that $H_0$ is true
+* Interpretation of the intercept/slope
+* Assessment of normality
+    * Assumption is that the residuals are normal, not the predictors
+    * (Also better to check with QQ plot, not histogram)
+* Interpretation of the boxplots
+    * Doesn't make sense to think about shape (e.g., linearity) for an un-ordered categorical predictor
+* Conclusion
+    * Collaborator is implying that there is a causal relationship between sleep, homework location, and GPA
 
 ---
 
@@ -461,6 +482,22 @@ fire_clusters %>%
 
 ## How useful is the model?
 
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+fire_clusters %>%
+  ggplot(aes(x = log(bld_den), y = log(proportion))) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "log(Building density in cluster)",
+       y = "log(Proportion of buildings burned)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## How useful is the model?
+
 **Coefficient of determination** ( $R^2$ ): the proportion of total variability in the response variable explained by the regression model.
 
 $R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}$
@@ -471,10 +508,12 @@ $R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in 
 
 ### How useful is the model?
 
+.small[
 ```{r, highlight.output=c(17)}
 lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
 summary(lm_dens)
 ```
+]
 
 The p-value for the slope might be low, but log(density) only explains 5% of the variability in log(proportion).
 

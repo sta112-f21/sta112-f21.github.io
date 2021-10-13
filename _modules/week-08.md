@@ -8,5 +8,8 @@ October 11
 
 October 13
 
+: Polynomial regression and exploring multivariate data
+  : [Slides](https://sta112-f21.github.io/slides/lecture_22.html)
+
 October 15
 : **Project 1 due**{: .label .label-red }
