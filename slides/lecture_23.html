@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Exploring multivariate data</title>
+    <title>Exploring multivariate data and interactions</title>
     <meta charset="utf-8" />
     <meta name="author" content="Dr. Ciaran Evans" />
     <script src="libs/header-attrs-2.10/header-attrs.js"></script>
@@ -11,7 +11,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Exploring multivariate data
+# Exploring multivariate data and interactions
 ### Dr. Ciaran Evans
 
 ---
@@ -137,6 +137,9 @@ Let's add another variable to the model: distance to the nearest cluster
 &lt;img src="lecture_23_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
+.question[
+Highly skewed predictor can be problematic because of outlying/influential points.
+]
 
 ---
 
@@ -267,16 +270,24 @@ Adding building dispersion increases `\(R^2_{adj}\)` very slightly, from 0.049 t
 
 ## Diagnostics
 
-.pull-left[
 &lt;img src="lecture_23_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Is the potential outlier influential?
+
+**Fitted model with the potential outlier:**
+
+`\(\widehat{\log(\text{proportion})} = -2.35 - 0.57  \log(\text{building density}) + 0.08  \log(\text{cluster distance})\)`
+
+**Fitted model without the potential outlier:**
+
+`\(\widehat{\log(\text{proportion})} = -2.33 - 0.55  \log(\text{building density}) + 0.077  \log(\text{cluster distance})\)`
+
+.question[
+These fitted models are very close, so the potential outlier does not appear very influential.
 ]
-
-.pull-right[
-&lt;img src="lecture_23_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
-]
-
-
-Model assumptions look pretty good!
 
 ---
 
@@ -311,7 +322,7 @@ Our model assumes that the relationship between building density and the proport
 
 `\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon\)`
 
-&lt;img src="lecture_23_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -323,7 +334,7 @@ Our model assumes that the relationship between building density and the proport
 
 `\(\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon\)`
 
-&lt;img src="lecture_23_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -343,7 +354,7 @@ Our model assumes that the relationship between building density and the proport
 
 ## Interaction
 
-`\(\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0031 \ \text{body mass} +\)`
+`\(\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +\)`
 
 `\(\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}\)`
 

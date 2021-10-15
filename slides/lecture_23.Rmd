@@ -1,6 +1,6 @@
 ---
 author: "Dr. Ciaran Evans"
-title: Exploring multivariate data
+title: Exploring multivariate data and interactions
 output:
   xaringan::moon_reader:
     css: "lab-slides.css"
@@ -190,6 +190,9 @@ fire_clusters %>%
 ```
 ]
 
+.question[
+Highly skewed predictor can be problematic because of outlying/influential points.
+]
 
 ---
 
@@ -266,9 +269,11 @@ Adding building dispersion increases $R^2_{adj}$ very slightly, from 0.049 to 0.
 
 ## Diagnostics
 
-.pull-left[
-```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
-fire_clusters %>%
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=10, fig.height=7}
+
+library(patchwork)
+
+p1 <- fire_clusters %>%
   mutate(pred = predict(lm_dens_dist),
          res = resid(lm_dens_dist)) %>%
   ggplot(aes(x = pred,
@@ -280,12 +285,8 @@ fire_clusters %>%
        y = "Residuals") +
   theme_bw() +
   theme(text = element_text(size = 20))
-```
-]
 
-.pull-right[
-```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
-fire_clusters %>%
+p2 <- fire_clusters %>%
   mutate(res = resid(lm_dens_dist)) %>%
   ggplot(aes(sample = res)) +
   geom_qq() +
@@ -294,11 +295,42 @@ fire_clusters %>%
        y = "Observed residual quantiles") +
   theme_bw() +
   theme(text = element_text(size = 20))
+
+p3 <- fire_clusters %>%
+  mutate(pred = predict(lm_dens_dist),
+         res = rstudent(lm_dens_dist)) %>%
+  ggplot(aes(x = pred,
+             y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  geom_abline(intercept = c(-3, -2, 2, 3), slope=0,
+              lty = 2, color="orange", lwd=1.2) +
+  labs(x = "Predicted log proportion",
+       y = "Studentized residuals") +
+  theme_bw() +
+  theme(text = element_text(size = 20)) +
+  scale_y_continuous(limits=c(-4, 3.2))
+
+(p1 + p2)/(p3 + plot_spacer())
 ```
+
+
+---
+
+## Is the potential outlier influential?
+
+**Fitted model with the potential outlier:**
+
+$\widehat{\log(\text{proportion})} = -2.35 - 0.57  \log(\text{building density}) + 0.08  \log(\text{cluster distance})$
+
+**Fitted model without the potential outlier:**
+
+$\widehat{\log(\text{proportion})} = -2.33 - 0.55  \log(\text{building density}) + 0.077  \log(\text{cluster distance})$
+
+.question[
+These fitted models are very close, so the potential outlier does not appear very influential.
 ]
-
-
-Model assumptions look pretty good!
 
 ---
 
@@ -395,7 +427,7 @@ $\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{
 
 ## Interaction
 
-$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0031 \ \text{body mass} +$
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +$
 
 $\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
 
