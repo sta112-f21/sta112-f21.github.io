@@ -1,0 +1,609 @@
+---
+author: "Dr. Ciaran Evans"
+title: Exploring multivariate data
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=F}
+library(tidyverse)
+library(knitr)
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
+
+fire_clusters <- read_csv("fire-clusters.csv") %>%
+  mutate(proportion = BB/bld_clust)
+
+fire_clusters <- fire_clusters %>%
+  filter(proportion > 0)
+
+fire_clusters <- fire_clusters %>%
+  mutate(log_proportion = log(proportion),
+         log_bld_den = log(bld_den),
+         log_clust_dist = log(near_clust))
+
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+```
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded. Variables include:
+
+* *proportion*: proportion of buildings in the cluster which were burned
+* *bld_den*: density of buildings in the cluster
+* *bld_disp*: dispersion of buildings in the cluster
+* *elev*: elevation of the cluster (meters)
+* *sloped*: slope of the land (degrees)
+* *CONTAG*: contagion index near the cluster
+* *CONNECT*: connectance index near the cluster
+* *PLAND1*: proportion of land near the cluster that is highly flammable
+
+---
+
+## Beginning the model
+
+$\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \varepsilon$
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+fire_clusters %>%
+  ggplot(aes(x = log(bld_den), y = log(proportion))) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "log(Building density in cluster)",
+       y = "log(Proportion of buildings burned)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+
+fire_clusters <- fire_clusters %>%
+  mutate(log_proportion = log(proportion),
+         log_bld_den = log(bld_den))
+
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+```
+
+$\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})$
+
+---
+
+## How useful is the model?
+
+```{r, echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+fire_clusters %>%
+  ggplot(aes(x = log(bld_den), y = log(proportion))) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x = "log(Building density in cluster)",
+       y = "log(Proportion of buildings burned)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## How useful is the model?
+
+**Coefficient of determination** ( $R^2$ ): the proportion of total variability in the response variable explained by the regression model.
+
+$R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}$
+
+**Note:** For simple linear regression, $R^2 = r^2$ (the squared correlation coefficient)
+
+---
+
+### How useful is the model?
+
+.small[
+```{r, highlight.output=c(17)}
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+]
+
+The p-value for the slope might be low, but log(density) only explains 5% of the variability in log(proportion).
+
+--
+
+.question[
+There is strong evidence for a relationship between density and proportion, but the relationship itself looks weak.
+]
+
+---
+
+## Interpretation
+
+$\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})$
+
+.question[
+Clusters with a higher density of buildings tend to have a lower proportion of buildings burned. Does this match what you expect? Why might this be the case?
+]
+
+---
+
+## Some possible explanations
+
+* Clusters with higher building density have less vegetation, so there is less flammable material
+* Clusters with higher building density are less isolated, so further away
+
+Let's add another variable to the model: distance to the nearest cluster
+
+---
+
+## Distance to the nearest cluster
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+
+fire_clusters %>%
+  ggplot(aes(x = near_clust)) +
+  geom_histogram() +
+  theme_bw() +
+  labs(x = "Distance to nearest cluster (meters)") +
+  theme(text = element_text(size=20))
+
+```
+]
+
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  ggplot(aes(x = log(near_clust))) +
+  geom_histogram() +
+  theme_bw() +
+  labs(x = "log(Distance to nearest cluster)") +
+  theme(text = element_text(size=20))
+```
+]
+
+
+---
+
+## Adding distance to the nearest cluster
+
+$\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) + \varepsilon$
+
+.small[
+```{r, highlight.output=c(18)}
+lm_dens_dist <- lm(log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+summary(lm_dens_dist)
+```
+]
+
+--
+
+$R^2$ has increased slightly (from 0.05 to 0.066). We explain *slightly* more variability by adding distance to the nearest cluster.
+
+---
+
+## $R^2_{adj}$
+
+$R^2 = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal} = 1 - \dfrac{SSE}{SSTotal}$
+
+.question[
+$R^2$ will **never** decrease when we add more predictors to the model.
+]
+
+--
+
+**Adjusted $R^2$ **: $R^2_{adj} = 1 - \dfrac{SSE/(n - p)}{SSTotal/(n-1)} = 1 - \dfrac{\widehat{\sigma}^2_{\varepsilon}}{\widehat{\text{Var}}(y)}$
+
+---
+
+
+## $R^2_{adj}$
+
+.small[
+```{r, output.lines=10:18, highlight.output=c(10)}
+lm_dens_dist <- lm(log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+summary(lm_dens_dist)
+```
+]
+
+$R^2 = 0.066$, $R^2_{adj} = 0.063$
+
+* $R^2_{adj} < R^2$ (always)
+* $R^2_{adj}$ accounts for the number of parameters in the model
+* $R^2$ *never* decreases when predictors are added
+* $R^2_{adj}$ *can decrease* when unhelpful predictors are added to the model
+
+
+---
+
+## $R^2_{adj}$
+
+.small[
+```{r, output.lines=17:18, highlight.output=c(3)}
+lm_dens_dist <- lm(log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+summary(lm_dens_dist)
+```
+]
+
+.small[
+```{r, output.lines=16:17, highlight.output=c(3)}
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+]
+
+Adding building dispersion increases $R^2_{adj}$ very slightly, from 0.049 to 0.063. But the $R^2_{adj}$ is still small.
+
+---
+
+## Diagnostics
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  mutate(pred = predict(lm_dens_dist),
+         res = resid(lm_dens_dist)) %>%
+  ggplot(aes(x = pred,
+             y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(x = "Predicted log proportion",
+       y = "Residuals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+fire_clusters %>%
+  mutate(res = resid(lm_dens_dist)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+
+Model assumptions look pretty good!
+
+---
+
+## Interpretation
+
+$\widehat{\log(\text{proportion})} = -2.35 - 0.57  \log(\text{building density}) + 0.08  \log(\text{cluster distance})$
+
+* Holding cluster distance fixed, an increase of one unit in $\log(\text{building density})$ is associated with a decrease of 0.57 units in $\log(\text{proportion})$, on average
+--
+
+* Holding building density constant, an increase of one unit in $\log(\text{cluster distance})$ is associated with an increase of 0.08 units in $\log(\text{proportion})$, on average
+
+.question[
+Does this match what you expect?
+]
+
+---
+
+## Back to the model
+
+$\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) + \varepsilon$
+
+.question[
+Our model assumes that the relationship between building density and the proportion of buildings burned is the same regardless of distance to the nearest cluster. Can you imagine a scenario where the relationship between density and proportion depends on distance to the nearest cluster?
+]
+
+---
+
+## Interaction
+
+**Model without interaction:** slope is the same regardless of species
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon$
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+library(palmerpenguins)
+
+penguins_lm_1 <- penguins %>%
+  drop_na() %>%
+  lm(bill_length_mm ~ species + body_mass_g, data = .)
+
+penguins %>%
+  drop_na() %>%
+  mutate(pred = predict(penguins_lm_1)) %>%
+  ggplot(aes(x = body_mass_g, y = bill_length_mm, color = species)) +
+  geom_point() +
+  geom_line(aes(y = pred), lwd=1.5) +
+  theme_bw() +
+  labs(x = "Body mass (g)", y = "Bill length (mm)",
+       color = "Species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Interaction
+
+**Model with interaction:** slope is different for each species
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +$
+
+$\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon$
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = body_mass_g, y = bill_length_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  theme_bw() +
+  labs(x = "Body mass (g)", y = "Bill length (mm)",
+       color = "Species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Interaction
+
+**Model with interaction:** slope is different for each species
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +$
+
+$\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon$
+
+* $\beta_3 =$ slope for Adelie penguins
+* $\beta_3 + \beta_4$ = slope for Chinstrap penguins
+* $\beta_3 + \beta_5$ = slope for Gentoo penguins
+
+---
+
+## Interaction
+
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0031 \ \text{body mass} +$
+
+$\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+For which species is an increase in body mass associated with the greatest increase in bill length?
+
+.abox[
+Adelie
+]
+
+.bbox[
+Chinstrap
+]
+
+.cbox[
+Gentoo
+]
+
+---
+
+## Interaction
+
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +$
+
+$\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+For which species is an increase in body mass associated with the greatest increase in bill length?
+
+.abox[
+Adelie
+]
+
+.bbox[
+Chinstrap
+]
+
+.cbox[
+Gentoo
+]
+
+**Answer:** Chinstrap penguins. The slope for Chinstrap penguins is $0.0032 + 0.0013 = 0.0045$, which is the highest of the three species.
+
+---
+
+## Interaction
+
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +$
+
+$\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+What is the estimated bill length of a Gentoo penguin with body mass 5000g?
+
+.abox[
+43.11 mm
+]
+
+.bbox[
+42.53 mm
+]
+
+.cbox[
+47.53 mm
+]
+
+---
+
+## Interaction
+
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +$
+
+$\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+What is the estimated bill length of a Gentoo penguin with body mass 5000g?
+
+.abox[
+43.11 mm
+]
+
+.bbox[
+42.53 mm
+]
+
+.cbox[
+47.53 mm
+]
+
+**Answer:** $27.11 - 0.58 + (0.0032 + 0.0010)*5000 = 47.53$
+
+
+---
+
+## Interaction
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +$
+
+$\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon$
+
+Your friend hypothesizes that the true slope of the relationship between body mass and bill length is the same for all three species. How do we test this hypothesis using the parameters of the interaction model?
+
+.abox[
+$H_0: \beta_1 = \beta_2 = 0$
+
+$H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+.bbox[
+$H_0: \beta_4 = \beta_5 = 0$
+
+$H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0$
+]
+
+.cbox[
+$H_0: \beta_3 = 0$
+
+$H_A: \beta_3 \neq 0$
+]
+
+---
+
+## Interaction
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +$
+
+$\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon$
+
+Your friend hypothesizes that the true slope of the relationship between body mass and bill length is the same for all three species. How do we test this hypothesis using the parameters of the interaction model?
+
+.abox[
+$H_0: \beta_1 = \beta_2 = 0$
+
+$H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0$
+]
+
+.bbox[
+$H_0: \beta_4 = \beta_5 = 0$
+
+$H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0$
+]
+
+.cbox[
+$H_0: \beta_3 = 0$
+
+$H_A: \beta_3 \neq 0$
+]
+
+**Answer:** $H_0: \beta_4 = \beta_5 = 0 \hspace{1cm} H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0$ 
+
+---
+
+## Interaction for the wildfire data
+
+
+**Model:** $\ \log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) +$
+
+$\hspace{4cm} \beta_3 \log(\text{building density}) \cdot \log(\text{cluster distance}) + \varepsilon$
+
+**Fitted model:** $\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** $\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** $\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+**Answer:** When the cluster is less isolated (smaller distance to the nearest cluster)
+
+---
+
+## In R
+
+```{r}
+lm(log_proportion ~ log_bld_den*log_clust_dist, data = fire_clusters)
+```
+
+For interaction between two variables, replace `+` with `*`
+
+
+$\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$

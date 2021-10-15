@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Exploring multivariate data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Exploring multivariate data
+### Dr. Ciaran Evans
+
+---
+
+
+
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded. Variables include:
+
+* *proportion*: proportion of buildings in the cluster which were burned
+* *bld_den*: density of buildings in the cluster
+* *bld_disp*: dispersion of buildings in the cluster
+* *elev*: elevation of the cluster (meters)
+* *sloped*: slope of the land (degrees)
+* *CONTAG*: contagion index near the cluster
+* *CONNECT*: connectance index near the cluster
+* *PLAND1*: proportion of land near the cluster that is highly flammable
+
+---
+
+## Beginning the model
+
+`\(\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \varepsilon\)`
+
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+`\(\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})\)`
+
+---
+
+## How useful is the model?
+
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## How useful is the model?
+
+**Coefficient of determination** ( `\(R^2\)` ): the proportion of total variability in the response variable explained by the regression model.
+
+`\(R^2 = \dfrac{\text{Variability explained by model}}{\text{Total variability in y}} = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal}\)`
+
+**Note:** For simple linear regression, `\(R^2 = r^2\)` (the squared correlation coefficient)
+
+---
+
+### How useful is the model?
+
+.small[
+
+```r
+lm_dens &lt;- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den, data = fire_clusters)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.4000 -0.6933 -0.0356  0.7986  2.9798 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -2.04451    0.04752 -43.025  &lt; 2e-16 ***
+## log_bld_den -0.52367    0.09710  -5.393 1.03e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.107 on 545 degrees of freedom
+*## Multiple R-squared:  0.05066,	Adjusted R-squared:  0.04892 
+## F-statistic: 29.08 on 1 and 545 DF,  p-value: 1.034e-07
+```
+]
+
+The p-value for the slope might be low, but log(density) only explains 5% of the variability in log(proportion).
+
+--
+
+.question[
+There is strong evidence for a relationship between density and proportion, but the relationship itself looks weak.
+]
+
+---
+
+## Interpretation
+
+`\(\widehat{\log(\text{proportion})} = -2.04 - 0.524 \ \log(\text{building density})\)`
+
+.question[
+Clusters with a higher density of buildings tend to have a lower proportion of buildings burned. Does this match what you expect? Why might this be the case?
+]
+
+---
+
+## Some possible explanations
+
+* Clusters with higher building density have less vegetation, so there is less flammable material
+* Clusters with higher building density are less isolated, so further away
+
+Let's add another variable to the model: distance to the nearest cluster
+
+---
+
+## Distance to the nearest cluster
+
+.pull-left[
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+## Adding distance to the nearest cluster
+
+`\(\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) + \varepsilon\)`
+
+.small[
+
+```r
+lm_dens_dist &lt;- lm(log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+summary(lm_dens_dist)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.2412 -0.6784 -0.0419  0.7838  2.9570 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -2.35393    0.11393 -20.662  &lt; 2e-16 ***
+## log_bld_den    -0.57481    0.09792  -5.870 7.57e-09 ***
+## log_clust_dist  0.08201    0.02749   2.984  0.00297 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.099 on 544 degrees of freedom
+*## Multiple R-squared:  0.06595,	Adjusted R-squared:  0.06252 
+## F-statistic:  19.2 on 2 and 544 DF,  p-value: 8.725e-09
+```
+]
+
+--
+
+`\(R^2\)` has increased slightly (from 0.05 to 0.066). We explain *slightly* more variability by adding distance to the nearest cluster.
+
+---
+
+## `\(R^2_{adj}\)`
+
+`\(R^2 = \dfrac{\sum \limits_{i=1}^n (\widehat{y}_i - \overline{y})^2}{\sum \limits_{i=1}^n (y_i - \overline{y})^2} = \dfrac{SSModel}{SSTotal} = 1 - \dfrac{SSE}{SSTotal}\)`
+
+.question[
+`\(R^2\)` will **never** decrease when we add more predictors to the model.
+]
+
+--
+
+**Adjusted `\(R^2\)` **: `\(R^2_{adj} = 1 - \dfrac{SSE/(n - p)}{SSTotal/(n-1)} = 1 - \dfrac{\widehat{\sigma}^2_{\varepsilon}}{\widehat{\text{Var}}(y)}\)`
+
+---
+
+
+## `\(R^2_{adj}\)`
+
+.small[
+
+```r
+lm_dens_dist &lt;- lm(log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+summary(lm_dens_dist)
+```
+
+```
+...
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -2.35393    0.11393 -20.662  &lt; 2e-16 ***
+## log_bld_den    -0.57481    0.09792  -5.870 7.57e-09 ***
+## log_clust_dist  0.08201    0.02749   2.984  0.00297 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.099 on 544 degrees of freedom
+*## Multiple R-squared:  0.06595,	Adjusted R-squared:  0.06252 
+...
+```
+]
+
+`\(R^2 = 0.066\)`, `\(R^2_{adj} = 0.063\)`
+
+* `\(R^2_{adj} &lt; R^2\)` (always)
+* `\(R^2_{adj}\)` accounts for the number of parameters in the model
+* `\(R^2\)` *never* decreases when predictors are added
+* `\(R^2_{adj}\)` *can decrease* when unhelpful predictors are added to the model
+
+
+---
+
+## `\(R^2_{adj}\)`
+
+.small[
+
+```r
+lm_dens_dist &lt;- lm(log_proportion ~ log_bld_den + log_clust_dist, data = fire_clusters)
+summary(lm_dens_dist)
+```
+
+```
+...
+## Residual standard error: 1.099 on 544 degrees of freedom
+*## Multiple R-squared:  0.06595,	Adjusted R-squared:  0.06252 
+...
+```
+]
+
+.small[
+
+```r
+lm_dens &lt;- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+summary(lm_dens)
+```
+
+```
+...
+## Residual standard error: 1.107 on 545 degrees of freedom
+*## Multiple R-squared:  0.05066,	Adjusted R-squared:  0.04892 
+...
+```
+]
+
+Adding building dispersion increases `\(R^2_{adj}\)` very slightly, from 0.049 to 0.063. But the `\(R^2_{adj}\)` is still small.
+
+---
+
+## Diagnostics
+
+.pull-left[
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+Model assumptions look pretty good!
+
+---
+
+## Interpretation
+
+`\(\widehat{\log(\text{proportion})} = -2.35 - 0.57  \log(\text{building density}) + 0.08  \log(\text{cluster distance})\)`
+
+* Holding cluster distance fixed, an increase of one unit in `\(\log(\text{building density})\)` is associated with a decrease of 0.57 units in `\(\log(\text{proportion})\)`, on average
+--
+
+* Holding building density constant, an increase of one unit in `\(\log(\text{cluster distance})\)` is associated with an increase of 0.08 units in `\(\log(\text{proportion})\)`, on average
+
+.question[
+Does this match what you expect?
+]
+
+---
+
+## Back to the model
+
+`\(\log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) + \varepsilon\)`
+
+.question[
+Our model assumes that the relationship between building density and the proportion of buildings burned is the same regardless of distance to the nearest cluster. Can you imagine a scenario where the relationship between density and proportion depends on distance to the nearest cluster?
+]
+
+---
+
+## Interaction
+
+**Model without interaction:** slope is the same regardless of species
+
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} + \varepsilon\)`
+
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Interaction
+
+**Model with interaction:** slope is different for each species
+
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +\)`
+
+`\(\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon\)`
+
+&lt;img src="lecture_23_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Interaction
+
+**Model with interaction:** slope is different for each species
+
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +\)`
+
+`\(\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon\)`
+
+* `\(\beta_3 =\)` slope for Adelie penguins
+* `\(\beta_3 + \beta_4\)` = slope for Chinstrap penguins
+* `\(\beta_3 + \beta_5\)` = slope for Gentoo penguins
+
+---
+
+## Interaction
+
+`\(\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0031 \ \text{body mass} +\)`
+
+`\(\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}\)`
+
+For which species is an increase in body mass associated with the greatest increase in bill length?
+
+.abox[
+Adelie
+]
+
+.bbox[
+Chinstrap
+]
+
+.cbox[
+Gentoo
+]
+
+---
+
+## Interaction
+
+`\(\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +\)`
+
+`\(\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}\)`
+
+For which species is an increase in body mass associated with the greatest increase in bill length?
+
+.abox[
+Adelie
+]
+
+.bbox[
+Chinstrap
+]
+
+.cbox[
+Gentoo
+]
+
+**Answer:** Chinstrap penguins. The slope for Chinstrap penguins is `\(0.0032 + 0.0013 = 0.0045\)`, which is the highest of the three species.
+
+---
+
+## Interaction
+
+`\(\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +\)`
+
+`\(\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}\)`
+
+What is the estimated bill length of a Gentoo penguin with body mass 5000g?
+
+.abox[
+43.11 mm
+]
+
+.bbox[
+42.53 mm
+]
+
+.cbox[
+47.53 mm
+]
+
+---
+
+## Interaction
+
+`\(\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +\)`
+
+`\(\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}\)`
+
+What is the estimated bill length of a Gentoo penguin with body mass 5000g?
+
+.abox[
+43.11 mm
+]
+
+.bbox[
+42.53 mm
+]
+
+.cbox[
+47.53 mm
+]
+
+**Answer:** `\(27.11 - 0.58 + (0.0032 + 0.0010)*5000 = 47.53\)`
+
+
+---
+
+## Interaction
+
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +\)`
+
+`\(\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon\)`
+
+Your friend hypothesizes that the true slope of the relationship between body mass and bill length is the same for all three species. How do we test this hypothesis using the parameters of the interaction model?
+
+.abox[
+`\(H_0: \beta_1 = \beta_2 = 0\)`
+
+`\(H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0\)`
+]
+
+.bbox[
+`\(H_0: \beta_4 = \beta_5 = 0\)`
+
+`\(H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0\)`
+]
+
+.cbox[
+`\(H_0: \beta_3 = 0\)`
+
+`\(H_A: \beta_3 \neq 0\)`
+]
+
+---
+
+## Interaction
+
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +\)`
+
+`\(\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon\)`
+
+Your friend hypothesizes that the true slope of the relationship between body mass and bill length is the same for all three species. How do we test this hypothesis using the parameters of the interaction model?
+
+.abox[
+`\(H_0: \beta_1 = \beta_2 = 0\)`
+
+`\(H_A: \text{ at least one of } \beta_1, \beta_2 \neq 0\)`
+]
+
+.bbox[
+`\(H_0: \beta_4 = \beta_5 = 0\)`
+
+`\(H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0\)`
+]
+
+.cbox[
+`\(H_0: \beta_3 = 0\)`
+
+`\(H_A: \beta_3 \neq 0\)`
+]
+
+**Answer:** `\(H_0: \beta_4 = \beta_5 = 0 \hspace{1cm} H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0\)` 
+
+---
+
+## Interaction for the wildfire data
+
+
+**Model:** `\(\ \log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{4cm} \beta_3 \log(\text{building density}) \cdot \log(\text{cluster distance}) + \varepsilon\)`
+
+**Fitted model:** `\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** `\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** `\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+**Answer:** When the cluster is less isolated (smaller distance to the nearest cluster)
+
+---
+
+## In R
+
+
+```r
+lm(log_proportion ~ log_bld_den*log_clust_dist, data = fire_clusters)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den * log_clust_dist, data = fire_clusters)
+## 
+## Coefficients:
+##                (Intercept)                 log_bld_den  
+##                   -2.38350                    -0.93161  
+##             log_clust_dist  log_bld_den:log_clust_dist  
+##                    0.08613                     0.09376
+```
+
+For interaction between two variables, replace `+` with `*`
+
+
+`\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
