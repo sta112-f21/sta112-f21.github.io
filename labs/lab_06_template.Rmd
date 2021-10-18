@@ -95,6 +95,9 @@ Type your answer here...
 
 ## Exercise 13
 
+```{r}
+
+```
 
 Type your answer here...
 
@@ -108,9 +111,22 @@ Type your answer here...
 
 ## Exercise 15
 
+
+Type your answer here...
+
+
+## Exercise 16
+
 ```{r}
 
 ```
 
 Type your answer here...
 
+## Exercise 17
+
+```{r}
+
+```
+
+Type your answer here...
