@@ -28,6 +28,101 @@
     </style>
 
 
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -57,7 +152,8 @@
 <div id="setup" class="section level1">
 <h1>Setup</h1>
 <p><strong>Template file:</strong> <a href="https://sta112-f21.github.io/labs/lab_06_template.Rmd">lab_06_template.Rmd</a></p>
-<p><strong>Data:</strong> When a group works together to accomplish a task, a variety of factors may be related to their success. How do diversity and hormone levels impact group performance? The study of group dynamics in the social sciences has often examined these group characteristics, but it is also of interest to explore how they interact. In the paper <a href="https://journals.sagepub.com/doi/pdf/10.1177/0956797617744282">“Hormone-Diversity Fit: Collective Testosterone Moderates the Effect of Diversity on Group Performance”</a> (Akinola <em>et al.</em> 2018, <em>Psychological Science</em>), the authors hypothesize that increased group diversity is positively associated with performance when group testosterone levels are low, but increased diversity is negatively associated with performance when testosterone levels are high. Their reasoning is that low-testosterone groups are better at cooperating than high-testosterone groups, so diverse perspectives are beneficial for low-testosterone groups but not for high-testosterone groups.</p>
+<p><strong>Data</strong></p>
+<p>When a group works together to accomplish a task, a variety of factors may be related to their success. How do diversity and hormone levels impact group performance? The study of group dynamics in the social sciences has often examined these group characteristics, but it is also of interest to explore how they interact. In the paper <a href="https://journals.sagepub.com/doi/pdf/10.1177/0956797617744282">“Hormone-Diversity Fit: Collective Testosterone Moderates the Effect of Diversity on Group Performance”</a> (Akinola <em>et al.</em> 2018, <em>Psychological Science</em>), the authors hypothesize that increased group diversity is positively associated with performance when group testosterone levels are low, but increased diversity is negatively associated with performance when testosterone levels are high. Their reasoning is that low-testosterone groups are better at cooperating than high-testosterone groups, so diverse perspectives are beneficial for low-testosterone groups but not for high-testosterone groups.</p>
 <p>To investigate their hypothesis, the researchers collected data on 74 groups of MBA students at Columbia University. Each group had 3–6 members, and was tasked with completing a week-long project on maximizing financial performance of a fictional blood-testing laboratory. The data here represents a subset of the data made available by the researchers. Each row in the data represents one group, with the following information:</p>
 <ul>
 <li><em>performance</em>: the final performance of the group in the project</li>
@@ -66,8 +162,55 @@
 <li><em>diversity</em>: a measure of group diversity that summarizes information on the gender, ethnicity, and country of origin for the group members. Takes on values between 0 and 1 (in this data, the values range from 0.25 to 0.65). Higher diversity scores mean the group is more diverse.</li>
 <li><em>testosterone</em>: the average testosterone levels (in pg/mL) for the group members</li>
 </ul>
-<p>Here we will use a slightly simplified version of the model fit by the researchers (their final model uses multi-level modeling, which is beyond the scope of this course). We will work with the following multiple regression model:</p>
-<p><span class="math inline">\(\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \beta_5 \text{diversity} \cdot \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 1)\)</span></p>
+<p>The researchers want to look at the relationship between performance, diversity, and testosterone. Because group size and the number of female group members are potential confounding variables, the researchers will also include <em>size</em> and <em>females</em> as predictors in their model.</p>
+</div>
+<div id="questions" class="section level1">
+<h1>Questions</h1>
+<ol style="list-style-type: decimal">
+<li>One possible model for the relationship between performance and the group characteristics is the additive model</li>
+</ol>
+<p><span class="math inline">\(\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 1)\)</span></p>
+<p>Fit the regression model in Equation 1. Write down the equation of the fitted model and report the adjusted coefficient of determination (<span class="math inline">\(R^2_{adj}\)</span>).</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>What is the <em>un</em>adjusted coefficient of determination, <span class="math inline">\(R^2\)</span>, for your fitted model in Exercise 1 (what R calls “multiple <span class="math inline">\(R^2\)</span>”)? Explain why <span class="math inline">\(R^2_{adj} &lt; R^2\)</span>.</p></li>
+<li><p>Explain why the model in Equation 1 does not allow the researchers to test the hypothesis that the relationship between group diversity and performance depends on group testosterone levels.</p></li>
+<li><p>To test the hypothesis that the relationship between group diversity and performance depends on group testosterone levels, the researchers add an interaction term:</p></li>
+</ol>
+<p><span class="math inline">\(\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \beta_5 \text{diversity} \cdot \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 2)\)</span></p>
+<p>Fit the regression model in Equation 2 using the code below, and write down the equation of the fitted model. Compare <span class="math inline">\(R^2_{adj}\)</span> with your <span class="math inline">\(R^2_{adj}\)</span> value from Exercise 1. How much additional variability in team performance do you explain by adding the interaction term?</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>performance_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance <span class="sc">~</span> size <span class="sc">+</span> females <span class="sc">+</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                       diversity<span class="sc">*</span>testosterone, </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> team_data)</span></code></pre></div>
+<div class="question">
+<p><em>What’s going on here?</em></p>
+<p>The <code>lm</code> function in R works with formulas, like <code>performance ~ size + females + diversity*testosterone</code>. The <code>+</code> sign means to add another predictor to the model. The <code>*</code> means to add both individual predictors and their interaction.</p>
+</div>
+<ol start="5" style="list-style-type: decimal">
+<li><p>Group testosterone varies from about 50 pg/mL for some groups, to about 200 pg/mL for others. Using the equation of the fitted model from Exercise 4, what is the estimated slope for the relationship between diversity and performance when group testosterone is 70 pg/mL (and <em>size</em> and <em>females</em> are held fixed)? What about when group testosterone is 160 pg/mL?</p></li>
+<li><p>Which type of group do we predict will perform better – a diverse group with low testosterone, or a homogeneous group with high testosterone? We will make predictions for two new groups: Group A and Group B. Group A has 6 members, two of whom are female, a diversity score of 0.6, and a testosterone level of 70 pg/mL. Group B has 6 members, two of whom are female, a diversity score of 0.3, and a testosterone level of 160 pg/mL. As in simple linear regression, we can create prediction intervals for new groups with these characteristics. Run the code below to create 95% prediction intervals for these two groups:</p></li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(performance_lm, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">females =</span> <span class="dv">2</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">diversity =</span> <span class="fl">0.6</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">testosterone =</span> <span class="dv">70</span>), </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval=</span><span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(performance_lm, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">females =</span> <span class="dv">2</span>, </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">diversity =</span> <span class="fl">0.3</span>, </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">testosterone =</span> <span class="dv">160</span>), </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval=</span><span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<ol start="7" style="list-style-type: decimal">
+<li><p>Does the relationship between group diversity and performance depend on group testosterone? We can state this question in terms of hypotheses about a parameter in our model in Equation 2. Write down the null and alternative hypotheses.</p></li>
+<li><p>One method for testing the hypotheses in Exercise 7 is with a nested F-test. Write down the full and reduced models for the nested F-test.</p></li>
+<li><p>To carry out the nested F-test, we fit both the full and reduced models and compare them. If <code>full_lm</code> and <code>reduced_lm</code> are the fitted models, then <code>anova(reduced_lm, full_lm)</code> calculates the F-statistic, degrees of freedom, and the p-value. Carry out the nested F-test for your hypotheses in Exercise 7 and report the p-value. What do you conclude about the hypothesis that the relationship between group diversity and performance depends on testosterone?</p></li>
+<li><p>As you can see in the R output for Exercise 9, for this data the F-statistic comes from an <span class="math inline">\(F_{1, 68}\)</span> distribution. Explain where the numbers 1 and 68 come from.</p></li>
+<li><p>Calculate a confidence interval for the interaction parameter, <span class="math inline">\(\beta_5\)</span>, in the model in Equation 2.</p></li>
+<li><p>We haven’t yet checked the diagnostics for our multiple regression model. Create a residual plot and a QQ plot for the fitted model from Exercise 4. Do the shape, constant variance, and normality assumptions appear reasonable?</p></li>
+<li><p>Think about the data-generating process for the data. Do the independence and randomness assumptions seem reasonable?</p></li>
+<li><p>Create a studentized residual plot for your fitted model from Exercise 4. Are there any potential outliers?</p></li>
+<li><p>Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Equation 7, and the confidence interval as in Equation 11. Do your conclusions about the research question change after removing outliers?</p></li>
+</ol>
 </div>
 
 
