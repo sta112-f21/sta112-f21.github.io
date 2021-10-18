@@ -45,11 +45,17 @@ The researchers want to look at the relationship between performance, diversity,
 
 $\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 1)$
 
-Fit the regression model in Equation 1. Write down the equation of the fitted model and report the adjusted coefficient of determination ($R^2_{adj}$).
+Fit the regression model in Equation 1 using the code below. Write down the equation of the fitted model and report the adjusted coefficient of determination ($R^2_{adj}$).
+
+```r
+performance_lm_additive <- lm(performance ~ size + females + 
+                       diversity + testosterone, 
+                     data = team_data)
+```
 
 2. What is the *un*adjusted coefficient of determination, $R^2$, for your fitted model in Exercise 1 (what R calls "multiple $R^2$")? Explain why $R^2_{adj} < R^2$.
 
-3. Explain why the model in Equation 1 does not allow the researchers to test the hypothesis that the relationship between group diversity and performance depends on group testosterone levels.
+3. Explain why the model in Equation 1 does not allow the researchers to test the hypothesis that the relationship between group diversity and performance is different for different testosterone levels.
 
 4. To test the hypothesis that the relationship between group diversity and performance depends on group testosterone levels, the researchers add an interaction term:
 
@@ -71,7 +77,7 @@ The `lm` function in R works with formulas, like `performance ~ size + females +
 
 5. Group testosterone varies from about 50 pg/mL for some groups, to about 200 pg/mL for others. Using the equation of the fitted model from Exercise 4, what is the estimated slope for the relationship between diversity and performance when group testosterone is 70 pg/mL (and *size* and *females* are held fixed)? What about when group testosterone is 160 pg/mL?
 
-6. Which type of group do we predict will perform better -- a diverse group with low testosterone, or a homogeneous group with high testosterone? We will make predictions for two new groups: Group A and Group B. Group A has 6 members, two of whom are female, a diversity score of 0.6, and a testosterone level of 70 pg/mL. Group B has 6 members, two of whom are female, a diversity score of 0.3, and a testosterone level of 160 pg/mL. As in simple linear regression, we can create prediction intervals for new groups with these characteristics. Run the code below to create 95% prediction intervals for these two groups:
+6. Which type of group do we predict will perform better -- a diverse group with low testosterone, or a homogeneous group with high testosterone? We will make predictions for two new groups: Group A and Group B. Group A has 6 members, two of whom are female, a diversity score of 0.6, and a testosterone level of 70 pg/mL. Group B has 6 members, two of whom are female, a diversity score of 0.3, and a testosterone level of 160 pg/mL. As in simple linear regression, we can create prediction intervals for new groups with these characteristics. Use the code below to create 95% prediction intervals for these two groups:
 
 ```r
 predict(performance_lm, 
@@ -87,7 +93,7 @@ predict(performance_lm,
         interval="prediction", level = 0.95)
 ```
 
-7. Does the relationship between group diversity and performance depend on group testosterone? We can state this question in terms of hypotheses about a parameter in our model in Equation 2. Write down the null and alternative hypotheses.
+7. Is the relationship between group diversity and performance different for different levels of group testosterone? We can state this question in terms of hypotheses about a parameter in our model in Equation 2. Write down the null and alternative hypotheses.
 
 8. One method for testing the hypotheses in Exercise 7 is with a nested F-test. Write down the full and reduced models for the nested F-test.
 
@@ -95,7 +101,7 @@ predict(performance_lm,
 
 10. As you can see in the R output for Exercise 9, for this data the F-statistic comes from an $F_{1, 68}$ distribution. Explain where the numbers 1 and 68 come from.
 
-11. Calculate a confidence interval for the interaction parameter, $\beta_5$, in the model in Equation 2.
+11. Calculate and interpret a confidence interval for the interaction parameter, $\beta_5$, in the model in Equation 2.
 
 12. We haven't yet checked the diagnostics for our multiple regression model. Create a residual plot and a QQ plot for the fitted model from Exercise 4. Do the shape, constant variance, and normality assumptions appear reasonable?
 
@@ -103,4 +109,4 @@ predict(performance_lm,
 
 14. Create a studentized residual plot for your fitted  model from Exercise 4. Are there any potential outliers?
 
-15. Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Equation 7, and the confidence interval as in Equation 11. Do your conclusions about the research question change after removing outliers?
+15. Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Exercise 7, and the confidence interval as in Exercise 11. Do your conclusions about the research question change after removing outliers?

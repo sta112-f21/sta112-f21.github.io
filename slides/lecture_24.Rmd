@@ -1,0 +1,240 @@
+---
+author: "Dr. Ciaran Evans"
+title: Lab 6 Interactions and nested F-tests
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=F}
+library(tidyverse)
+library(knitr)
+library(palmerpenguins)
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
+
+fire_clusters <- read_csv("fire-clusters.csv") %>%
+  mutate(proportion = BB/bld_clust)
+
+fire_clusters <- fire_clusters %>%
+  filter(proportion > 0)
+
+fire_clusters <- fire_clusters %>%
+  mutate(log_proportion = log(proportion),
+         log_bld_den = log(bld_den),
+         log_clust_dist = log(near_clust))
+
+lm_dens <- lm(log_proportion ~ log_bld_den, data = fire_clusters)
+```
+
+## Agenda
+
+* Mid-semester grades
+    * Don't have lowest grade dropped
+    * Don't include Project 1
+* Major/minor advising and future stats courses
+* Recap interactions
+* Lab 6
+
+---
+
+## Future stats courses
+
+Thinking about continuing with statistics? Nice! Here are some courses you could take:
+
+* STA 247 (Design and sampling)
+* STA 279 (Categorical data) 
+    * Requires MST 111 (Calc 1)
+* STA 310 (Probability)
+    * Requires MST 112 (Calc 2)
+* STA 362 (Multivariate statistics)
+    * Requires MST 121 (Linear algebra)
+* STA 363 (Statistical learning)
+    * Requires MST 121 (Linear algebra)
+
+---
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded. Variables include:
+
+* *proportion*: proportion of buildings in the cluster which were burned
+* *bld_den*: density of buildings in the cluster
+* *bld_disp*: dispersion of buildings in the cluster
+* *elev*: elevation of the cluster (meters)
+* *sloped*: slope of the land (degrees)
+* *CONTAG*: contagion index near the cluster
+* *CONNECT*: connectance index near the cluster
+* *PLAND1*: proportion of land near the cluster that is highly flammable
+
+---
+
+## Recap: Interaction
+
+**Model with interaction:** slope is different for each species
+
+$\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +$
+
+$\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon$
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = body_mass_g, y = bill_length_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  theme_bw() +
+  labs(x = "Body mass (g)", y = "Bill length (mm)",
+       color = "Species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Interaction for the wildfire data
+
+
+**Model:** $\ \log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) +$
+
+$\hspace{4cm} \beta_3 \log(\text{building density}) \cdot \log(\text{cluster distance}) + \varepsilon$
+
+**Fitted model:** $\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** $\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** $\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+**Answer:** When the cluster is less isolated (smaller distance to the nearest cluster)
+
+---
+
+## In R
+
+```{r}
+lm(log_proportion ~ log_bld_den*log_clust_dist, data = fire_clusters)
+```
+
+For interaction between two variables, replace `+` with `*`
+
+
+$\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +$
+
+$\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})$
+
+---
+
+## In R
+
+.small[
+```{r, highlight.output=c(19)}
+fire_lm <- lm(log_proportion ~ log_bld_den*log_clust_dist, 
+              data = fire_clusters)
+summary(fire_lm)
+```
+]
+
+$R^2_{adj}$ has increased from about 6.3% to about 6.6%, so the interaction term explains very little additional variability.
+
+---
+
+### Lab 6: Diversity, Testosterone, and Group Performance
+
+**Question:** Does the relationship between group diversity and group performance at a task depend on the levels of testosterone in the group?
+
+**Data:** 74 groups of MBA students completing a week-long project on maximizing financial performance for a blood-testing lab. Each row in the data is a group, with the variables
+
+* *performance*: the final performance of the group in the project
+* *size*: the number of group members (between 3 and 6)
+* *females*: the number of female group members
+* *diversity*: a measure of group diversity that summarizes information on the gender, ethnicity, and country of origin for the group members
+* *testosterone*: the average testosterone levels (in pg/mL) for the group members
+
+--
+
+.question[
+What regression model could we use to explore whether the relationship between diversity and performance is different for different levels of testosterone? Should we include *size* and *females* in the model?
+]
+
+---
+
+### Lab 6: Diversity, Testosterone, and Group Performance
+
+We will use a model like 
+
+$\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone}$
+
+$\hspace{4cm} + \beta_5 \text{diversity} \cdot \text{testosterone} + \varepsilon$
+
+**Lab 6:** Practice with
+
+* Fitting, interpreting, and assessing multiple regression models
+* Including interaction terms
+* Nested F-tests

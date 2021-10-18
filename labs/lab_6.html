@@ -170,46 +170,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>One possible model for the relationship between performance and the group characteristics is the additive model</li>
 </ol>
 <p><span class="math inline">\(\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 1)\)</span></p>
-<p>Fit the regression model in Equation 1. Write down the equation of the fitted model and report the adjusted coefficient of determination (<span class="math inline">\(R^2_{adj}\)</span>).</p>
+<p>Fit the regression model in Equation 1 using the code below. Write down the equation of the fitted model and report the adjusted coefficient of determination (<span class="math inline">\(R^2_{adj}\)</span>).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>performance_lm_additive <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance <span class="sc">~</span> size <span class="sc">+</span> females <span class="sc">+</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                       diversity <span class="sc">+</span> testosterone, </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> team_data)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li><p>What is the <em>un</em>adjusted coefficient of determination, <span class="math inline">\(R^2\)</span>, for your fitted model in Exercise 1 (what R calls “multiple <span class="math inline">\(R^2\)</span>”)? Explain why <span class="math inline">\(R^2_{adj} &lt; R^2\)</span>.</p></li>
-<li><p>Explain why the model in Equation 1 does not allow the researchers to test the hypothesis that the relationship between group diversity and performance depends on group testosterone levels.</p></li>
+<li><p>Explain why the model in Equation 1 does not allow the researchers to test the hypothesis that the relationship between group diversity and performance is different for different testosterone levels.</p></li>
 <li><p>To test the hypothesis that the relationship between group diversity and performance depends on group testosterone levels, the researchers add an interaction term:</p></li>
 </ol>
 <p><span class="math inline">\(\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \beta_5 \text{diversity} \cdot \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 2)\)</span></p>
 <p>Fit the regression model in Equation 2 using the code below, and write down the equation of the fitted model. Compare <span class="math inline">\(R^2_{adj}\)</span> with your <span class="math inline">\(R^2_{adj}\)</span> value from Exercise 1. How much additional variability in team performance do you explain by adding the interaction term?</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>performance_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance <span class="sc">~</span> size <span class="sc">+</span> females <span class="sc">+</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                       diversity<span class="sc">*</span>testosterone, </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> team_data)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>performance_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance <span class="sc">~</span> size <span class="sc">+</span> females <span class="sc">+</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       diversity<span class="sc">*</span>testosterone, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> team_data)</span></code></pre></div>
 <div class="question">
 <p><em>What’s going on here?</em></p>
 <p>The <code>lm</code> function in R works with formulas, like <code>performance ~ size + females + diversity*testosterone</code>. The <code>+</code> sign means to add another predictor to the model. The <code>*</code> means to add both individual predictors and their interaction.</p>
 </div>
 <ol start="5" style="list-style-type: decimal">
 <li><p>Group testosterone varies from about 50 pg/mL for some groups, to about 200 pg/mL for others. Using the equation of the fitted model from Exercise 4, what is the estimated slope for the relationship between diversity and performance when group testosterone is 70 pg/mL (and <em>size</em> and <em>females</em> are held fixed)? What about when group testosterone is 160 pg/mL?</p></li>
-<li><p>Which type of group do we predict will perform better – a diverse group with low testosterone, or a homogeneous group with high testosterone? We will make predictions for two new groups: Group A and Group B. Group A has 6 members, two of whom are female, a diversity score of 0.6, and a testosterone level of 70 pg/mL. Group B has 6 members, two of whom are female, a diversity score of 0.3, and a testosterone level of 160 pg/mL. As in simple linear regression, we can create prediction intervals for new groups with these characteristics. Run the code below to create 95% prediction intervals for these two groups:</p></li>
+<li><p>Which type of group do we predict will perform better – a diverse group with low testosterone, or a homogeneous group with high testosterone? We will make predictions for two new groups: Group A and Group B. Group A has 6 members, two of whom are female, a diversity score of 0.6, and a testosterone level of 70 pg/mL. Group B has 6 members, two of whom are female, a diversity score of 0.3, and a testosterone level of 160 pg/mL. As in simple linear regression, we can create prediction intervals for new groups with these characteristics. Use the code below to create 95% prediction intervals for these two groups:</p></li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(performance_lm, </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">females =</span> <span class="dv">2</span>, </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">diversity =</span> <span class="fl">0.6</span>, </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">testosterone =</span> <span class="dv">70</span>), </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval=</span><span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(performance_lm, </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">females =</span> <span class="dv">2</span>, </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">diversity =</span> <span class="fl">0.3</span>, </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">testosterone =</span> <span class="dv">160</span>), </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval=</span><span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(performance_lm, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">females =</span> <span class="dv">2</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">diversity =</span> <span class="fl">0.6</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">testosterone =</span> <span class="dv">70</span>), </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval=</span><span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(performance_lm, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">females =</span> <span class="dv">2</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">diversity =</span> <span class="fl">0.3</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">testosterone =</span> <span class="dv">160</span>), </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval=</span><span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
-<li><p>Does the relationship between group diversity and performance depend on group testosterone? We can state this question in terms of hypotheses about a parameter in our model in Equation 2. Write down the null and alternative hypotheses.</p></li>
+<li><p>Is the relationship between group diversity and performance different for different levels of group testosterone? We can state this question in terms of hypotheses about a parameter in our model in Equation 2. Write down the null and alternative hypotheses.</p></li>
 <li><p>One method for testing the hypotheses in Exercise 7 is with a nested F-test. Write down the full and reduced models for the nested F-test.</p></li>
 <li><p>To carry out the nested F-test, we fit both the full and reduced models and compare them. If <code>full_lm</code> and <code>reduced_lm</code> are the fitted models, then <code>anova(reduced_lm, full_lm)</code> calculates the F-statistic, degrees of freedom, and the p-value. Carry out the nested F-test for your hypotheses in Exercise 7 and report the p-value. What do you conclude about the hypothesis that the relationship between group diversity and performance depends on testosterone?</p></li>
 <li><p>As you can see in the R output for Exercise 9, for this data the F-statistic comes from an <span class="math inline">\(F_{1, 68}\)</span> distribution. Explain where the numbers 1 and 68 come from.</p></li>
-<li><p>Calculate a confidence interval for the interaction parameter, <span class="math inline">\(\beta_5\)</span>, in the model in Equation 2.</p></li>
+<li><p>Calculate and interpret a confidence interval for the interaction parameter, <span class="math inline">\(\beta_5\)</span>, in the model in Equation 2.</p></li>
 <li><p>We haven’t yet checked the diagnostics for our multiple regression model. Create a residual plot and a QQ plot for the fitted model from Exercise 4. Do the shape, constant variance, and normality assumptions appear reasonable?</p></li>
 <li><p>Think about the data-generating process for the data. Do the independence and randomness assumptions seem reasonable?</p></li>
 <li><p>Create a studentized residual plot for your fitted model from Exercise 4. Are there any potential outliers?</p></li>
-<li><p>Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Equation 7, and the confidence interval as in Equation 11. Do your conclusions about the research question change after removing outliers?</p></li>
+<li><p>Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Exercise 7, and the confidence interval as in Exercise 11. Do your conclusions about the research question change after removing outliers?</p></li>
 </ol>
 </div>
 

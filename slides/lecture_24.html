@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab 6 Interactions and nested F-tests</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab 6 Interactions and nested F-tests
+### Dr. Ciaran Evans
+
+---
+
+
+
+
+## Agenda
+
+* Mid-semester grades
+    * Don't have lowest grade dropped
+    * Don't include Project 1
+* Major/minor advising and future stats courses
+* Recap interactions
+* Lab 6
+
+---
+
+## Future stats courses
+
+Thinking about continuing with statistics? Nice! Here are some courses you could take:
+
+* STA 247 (Design and sampling)
+* STA 279 (Categorical data) 
+    * Requires MST 111 (Calc 1)
+* STA 310 (Probability)
+    * Requires MST 112 (Calc 2)
+* STA 362 (Multivariate statistics)
+    * Requires MST 121 (Linear algebra)
+* STA 363 (Statistical learning)
+    * Requires MST 121 (Linear algebra)
+
+---
+
+### Exploring multivariate data: wildfire damage
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded. Variables include:
+
+* *proportion*: proportion of buildings in the cluster which were burned
+* *bld_den*: density of buildings in the cluster
+* *bld_disp*: dispersion of buildings in the cluster
+* *elev*: elevation of the cluster (meters)
+* *sloped*: slope of the land (degrees)
+* *CONTAG*: contagion index near the cluster
+* *CONNECT*: connectance index near the cluster
+* *PLAND1*: proportion of land near the cluster that is highly flammable
+
+---
+
+## Recap: Interaction
+
+**Model with interaction:** slope is different for each species
+
+`\(\text{bill length} = \beta_0 + \beta_1 \text{IsChinstrap} + \beta_2 \text{IsGentoo} + \beta_3 \text{body mass} +\)`
+
+`\(\hspace{2cm} \beta_4 \text{IsChinstrap} \cdot \text{body mass} + \beta_5 \text{IsGentoo} \cdot \text{body mass} + \varepsilon\)`
+
+&lt;img src="lecture_24_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Interaction for the wildfire data
+
+
+**Model:** `\(\ \log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{4cm} \beta_3 \log(\text{building density}) \cdot \log(\text{cluster distance}) + \varepsilon\)`
+
+**Fitted model:** `\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** `\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+---
+
+## Interaction for the wildfire data
+
+**Fitted model:** `\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+An increase in log(building density) is associated with a greater decrease in log(proportion of buildings burned) when:
+
+.abox[
+The cluster is more isolated (greater distance to the nearest cluster)
+]
+
+.cbox[
+The cluster is less isolated (smaller distance to the nearest cluster)
+]
+
+**Answer:** When the cluster is less isolated (smaller distance to the nearest cluster)
+
+---
+
+## In R
+
+
+```r
+lm(log_proportion ~ log_bld_den*log_clust_dist, data = fire_clusters)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den * log_clust_dist, data = fire_clusters)
+## 
+## Coefficients:
+##                (Intercept)                 log_bld_den  
+##                   -2.38350                    -0.93161  
+##             log_clust_dist  log_bld_den:log_clust_dist  
+##                    0.08613                     0.09376
+```
+
+For interaction between two variables, replace `+` with `*`
+
+
+`\(\ \widehat{\log(\text{proportion})} = -2.38 - 0.93 \log(\text{building density}) + 0.086  \log(\text{cluster distance}) +\)`
+
+`\(\hspace{2cm} 0.094 \log(\text{building density}) \cdot \log(\text{cluster distance})\)`
+
+---
+
+## In R
+
+.small[
+
+```r
+fire_lm &lt;- lm(log_proportion ~ log_bld_den*log_clust_dist, 
+              data = fire_clusters)
+summary(fire_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = log_proportion ~ log_bld_den * log_clust_dist, data = fire_clusters)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.1350 -0.6653 -0.0124  0.8007  2.7795 
+## 
+## Coefficients:
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                -2.38350    0.11511 -20.707  &lt; 2e-16 ***
+## log_bld_den                -0.93161    0.23473  -3.969 8.19e-05 ***
+## log_clust_dist              0.08613    0.02755   3.126  0.00186 ** 
+## log_bld_den:log_clust_dist  0.09376    0.05608   1.672  0.09511 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.097 on 543 degrees of freedom
+*## Multiple R-squared:  0.07073,	Adjusted R-squared:  0.0656 
+## F-statistic: 13.78 on 3 and 543 DF,  p-value: 1.135e-08
+```
+]
+
+`\(R^2_{adj}\)` has increased from about 6.3% to about 6.6%, so the interaction term explains very little additional variability.
+
+---
+
+### Lab 6: Diversity, Testosterone, and Group Performance
+
+**Question:** Does the relationship between group diversity and group performance at a task depend on the levels of testosterone in the group?
+
+**Data:** 74 groups of MBA students completing a week-long project on maximizing financial performance for a blood-testing lab. Each row in the data is a group, with the variables
+
+* *performance*: the final performance of the group in the project
+* *size*: the number of group members (between 3 and 6)
+* *females*: the number of female group members
+* *diversity*: a measure of group diversity that summarizes information on the gender, ethnicity, and country of origin for the group members
+* *testosterone*: the average testosterone levels (in pg/mL) for the group members
+
+--
+
+.question[
+What regression model could we use to explore whether the relationship between diversity and performance is different for different levels of testosterone? Should we include *size* and *females* in the model?
+]
+
+---
+
+### Lab 6: Diversity, Testosterone, and Group Performance
+
+We will use a model like 
+
+`\(\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone}\)`
+
+`\(\hspace{4cm} + \beta_5 \text{diversity} \cdot \text{testosterone} + \varepsilon\)`
+
+**Lab 6:** Practice with
+
+* Fitting, interpreting, and assessing multiple regression models
+* Including interaction terms
+* Nested F-tests
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
