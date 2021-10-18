@@ -1,0 +1,116 @@
+---
+---
+---
+title: "Lab 6"
+author: "Your Name"
+date: "10/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+team_data <- read_csv("https://sta112-f21.github.io/labs/team_data.csv")
+```
+
+## Exercise 1
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 2
+
+Type your answer here...
+
+## Exercise 3
+
+
+Type your answer here...
+
+## Exercise 4
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 5
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 6
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 7
+
+
+Type your answer here...
+
+## Exercise 8
+
+
+Type your answer here...
+
+## Exercise 9
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 10
+
+
+Type your answer here...
+
+## Exercise 11
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 12
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 13
+
+
+Type your answer here...
+
+## Exercise 14
+
+```{r}
+
+```
+
+Type your answer here...
+
+## Exercise 15
+
+```{r}
+
+```
+
+Type your answer here...
+

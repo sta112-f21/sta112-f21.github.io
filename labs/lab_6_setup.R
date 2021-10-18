@@ -52,3 +52,6 @@ team_data <- team_data %>%
   rename(performance = final.performance,
          size = team.size,
          testosterone = mean_testosterone)
+
+
+write_csv(team_data, "team_data.csv")

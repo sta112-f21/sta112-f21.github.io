@@ -24,6 +24,12 @@ library(tidyverse)
 
 **Template file:** [lab_06_template.Rmd](https://sta112-f21.github.io/labs/lab_06_template.Rmd)
 
+The data for this assignment comes from a paper on group performance by Akinola *et al.* (discussed below), and is stored in a CSV file. CSV files can be read into R with the `read_csv` function, which is part of the `readr` package in the tidyverse. The following code imports the data and saves it as a data frame called `team_data`:
+
+```r
+team_data <- read_csv("https://sta112-f21.github.io/labs/team_data.csv")
+```
+
 
 **Data**
 
@@ -97,16 +103,24 @@ predict(performance_lm,
 
 8. One method for testing the hypotheses in Exercise 7 is with a nested F-test. Write down the full and reduced models for the nested F-test.
 
-9. To carry out the nested F-test, we fit both the full and reduced models and compare them. If `full_lm` and `reduced_lm` are the fitted models, then `anova(reduced_lm, full_lm)` calculates the F-statistic, degrees of freedom, and the p-value. Carry out the nested F-test for your hypotheses in Exercise 7 and report the p-value. What do you conclude about the hypothesis that the relationship between group diversity and performance depends on testosterone?
+9. To carry out the nested F-test, we fit both the full and reduced models and compare them. If `full_lm` and `reduced_lm` are the fitted models, then `anova(reduced_lm, full_lm)` calculates the F-statistic, degrees of freedom, and the p-value. Carry out the nested F-test for your hypotheses in Exercise 7 and report the F-statistic and p-value. What do you conclude about the hypothesis that the relationship between group diversity and performance depends on testosterone?
 
 10. As you can see in the R output for Exercise 9, for this data the F-statistic comes from an $F_{1, 68}$ distribution. Explain where the numbers 1 and 68 come from.
 
-11. Calculate and interpret a confidence interval for the interaction parameter, $\beta_5$, in the model in Equation 2.
+11. Since we're only testing a single parameter, we can perform a t-test instead of a nested F-test. Our test statistic is $t = \dfrac{\widehat{\beta}_5}{SE_{\widehat{\beta}_5}}$, and it follows a $t_{n-p}$ distribution if $H_0$ is true (where $p$ is the number of parameters in the full model). Using the regression output from `summary(performance_lm)`, report the t-statistic and p-value, and note that the p-value is the same as in Exercise 9.
 
-12. We haven't yet checked the diagnostics for our multiple regression model. Create a residual plot and a QQ plot for the fitted model from Exercise 4. Do the shape, constant variance, and normality assumptions appear reasonable?
+```{marginfigure}
+A nested F-test for the hypotheses $H_0: \beta_i = 0$ vs. $H_A: \beta_i \neq 0$ will produce the same p-value as a t-test for the same hypotheses. However, t-tests for single parameters are more flexible -- we could also use a t-test for hypotheses like $H_0: \beta_i = 1$ vs. $H_A: \beta_i$ < $1$, but we could not use a nested F-test.
+```
 
-13. Think about the data-generating process for the data. Do the independence and randomness assumptions seem reasonable?
+12. What is the relationship between the t-statistic in Exercise 11, and the F-statistic in Exercise 9?
 
-14. Create a studentized residual plot for your fitted  model from Exercise 4. Are there any potential outliers?
+13. Calculate and interpret a confidence interval for the interaction parameter, $\beta_5$, in the model in Equation 2.
 
-15. Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Exercise 7, and the confidence interval as in Exercise 11. Do your conclusions about the research question change after removing outliers?
+14. We haven't yet checked the diagnostics for our multiple regression model. Create a residual plot and a QQ plot for the fitted model from Exercise 4. Do the shape, constant variance, and normality assumptions appear reasonable?
+
+15. Think about the data-generating process for the data. Do the independence and randomness assumptions seem reasonable?
+
+16. Create a studentized residual plot for your fitted  model from Exercise 4. Are there any potential outliers?
+
+17. Since there are a few potential outliers, try removing these outliers and re-fit both the models in Equation 2 and Equation 1. Re-calculate the p-value as in Exercise 7, and the confidence interval as in Exercise 13. Do your conclusions about the research question change after removing outliers?
