@@ -1,0 +1,39 @@
+---
+title: "Lab 6, October 18"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+**Due:** Monday, October 25 at 12pm (noon) on Canvas
+
+**Learning goals:** By the end of this lab, you will be able to
+
+* Fit and interpret multiple regression models with interaction terms
+* Perform hypothesis tests, including nested F-tests, on parameters in a multiple regression model
+
+# Setup
+
+**Template file:** [lab_06_template.Rmd](https://sta112-f21.github.io/labs/lab_06_template.Rmd)
+
+**Data:** When a group works together to accomplish a task, a variety of factors may be related to their success. How do diversity and hormone levels impact group performance? The study of group dynamics in the social sciences has often examined these group characteristics, but it is also of interest to explore how they interact. In the paper ["Hormone-Diversity Fit: Collective Testosterone Moderates the Effect of Diversity on Group Performance"](https://journals.sagepub.com/doi/pdf/10.1177/0956797617744282) (Akinola *et al.* 2018, *Psychological Science*), the authors hypothesize that increased group diversity is positively associated with performance when group testosterone levels are low, but increased diversity is negatively associated with performance when testosterone levels are high. Their reasoning is that low-testosterone groups are better at cooperating than high-testosterone groups, so diverse perspectives are beneficial for low-testosterone groups but not for high-testosterone groups.
+
+To investigate their hypothesis, the researchers collected data on 74 groups of MBA students at Columbia University. Each group had 3--6 members, and was tasked with completing a week-long project on maximizing financial performance of a fictional blood-testing laboratory. The data here represents a subset of the data made available by the researchers. Each row in the data represents one group, with the following information:
+
+* *performance*: the final performance of the group in the project
+* *size*: the number of group members (between 3 and 6)
+* *females*: the number of female group members
+* *diversity*: a measure of group diversity that summarizes information on the gender, ethnicity, and country of origin for the group members. Takes on values between 0 and 1 (in this data, the values range from 0.25 to 0.65). Higher diversity scores mean the group is more diverse.
+* *testosterone*: the average testosterone levels (in pg/mL) for the group members
+
+Here we will use a slightly simplified version of the model fit by the researchers (their final model uses multi-level modeling, which is beyond the scope of this course). We will work with the following multiple regression model:
+
+$\text{performance} = \beta_0 + \beta_1 \text{size} + \beta_2 \text{females} + \beta_3 \text{diversity} + \beta_4 \text{testosterone} + \beta_5 \text{diversity} \cdot \text{testosterone} + \varepsilon \hspace{1cm} (\text{Equation } 1)$
