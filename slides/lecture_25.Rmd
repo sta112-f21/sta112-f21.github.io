@@ -1,0 +1,275 @@
+---
+author: "Dr. Ciaran Evans"
+title: Multicollinearity
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=F}
+library(tidyverse)
+library(knitr)
+library(car)
+library(Stat2Data)
+data("CountyHealth")
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
+```
+
+## Agenda
+
+* Quiz 4 next Wednesday
+    * Covers up through interactions
+* MST 121 *or* MST 205 ok for STA 362/363
+* Event: interested in getting involved in research?
+    * Math faculty give short presentations on their research
+    * Manchester 018, Thursday October 21st at 6pm
+* Today: multicollinearity (correlated predictors)
+
+---
+
+## CountyHealth data
+
+Can we predict the number of doctors in a county?
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+cty_health <- CountyHealth %>%
+  mutate(sqrt_mds = sqrt(MDs))
+
+cty_health %>%
+  ggplot(aes(x = Hospitals, y = sqrt_mds)) +
+  geom_point(size = 2) +
+  labs(x = "Number of hospitals", y = "sqrt(Number of doctors)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Using the number of hospitals
+
+```{r, output.lines=10:18}
+md_lm <- lm(sqrt_mds ~ Hospitals, data = cty_health)
+summary(md_lm)
+```
+
+$R^2 = 0.852$, $R^2_{adj} = 0.849$
+
+---
+
+## Using the number of hospital beds
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+cty_health %>%
+  ggplot(aes(x = Beds, y = sqrt_mds)) +
+  geom_point(size = 2) +
+  labs(x = "Number of hospital beds", y = "sqrt(Number of doctors)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Using the number of hospital beds
+
+```{r, output.lines=10:18}
+md_lm <- lm(sqrt_mds ~ Beds, data = cty_health)
+summary(md_lm)
+```
+
+$R^2 = 0.901$, $R^2_{adj} = 0.899$
+
+---
+
+## Using both variables
+
+```{r, output.lines=10:19}
+md_lm <- lm(sqrt_mds ~ Hospitals + Beds, data = cty_health)
+summary(md_lm)
+```
+
+$R^2_{adj} = 0.919$
+
+--
+
+.question[
+Adding Hospitals to the model only increased $R^2_{adj}$ from $0.899$ to $0.919$. But we know Hospitals is strongly associated with sqrt(Doctors). Why the small change?
+]
+
+---
+
+### Multicollinearity (correlated predictors)
+
+.question[
+**Multicollinearity:** one or more predictors is strongly correlated with some combination of the other predictors.
+]
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+cty_health %>%
+  ggplot(aes(x = Beds, y = Hospitals)) +
+  geom_point(size = 2) +
+  labs(x = "Number of hospital beds", y = "Number of hospitals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+$r = 0.91$
+
+---
+
+### Measuring multicollinearity
+
+**Motivation:** high multicollinearity means at least one predictor can be estimated well by a combination of other predictors
+
+**Variance inflation factor:** Let $X_i$ be a predictor in the model, and $R^2_i$ the coefficient of determination for a model predicting $X_i$ with the other predictors. The **variance inflation factor** for $X_i$ is
+
+$VIF_i = \dfrac{1}{1 - R^2_i}$
+
+More multicollinearity means a higher VIF.
+
+**Rule of thumb:** worried when VIF $> 5$
+
+---
+
+## Example
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+cty_health %>%
+  ggplot(aes(x = Beds, y = Hospitals)) +
+  geom_point(size = 2) +
+  labs(x = "Number of hospital beds", y = "Number of hospitals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+## Example
+
+```{r, output.lines=10:18}
+hospital_lm <- lm(Hospitals ~ Beds, data = cty_health)
+summary(hospital_lm)
+```
+
+$R^2 = 0.827$
+
+VIF for Hospitals $= \dfrac{1}{1 - 0.827} = 5.78$
+
+---
+
+## In R
+
+```{r}
+library(car)
+md_lm <- lm(sqrt_mds ~ Hospitals + Beds, data = cty_health)
+vif(md_lm)
+```
+
+---
+
+## Why is multicollinearity a problem?
+
+* Inflates variability of estimated coefficients
+* Interpretation of individual terms is difficult
+
+.center[
+$\widehat{\sqrt{Doctors}} = 3.58 + 2.58 \ \text{Hospitals} \ + 0.012 \ \text{Beds}$
+]
+
+**Usual interpretation:** Holding Beds fixed, an increase of 1 in the number of hospitals is associated with an increase of 2.58 units in $\sqrt{Doctors}$.
+
+**Problem:** When Beds and Hospitals are highly correlated, doesn't make sense to fix one and change the other.
+
+---
+
+## Why is multicollinearity a problem?
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+cty_health %>%
+  ggplot(aes(x = Beds, y = Hospitals)) +
+  geom_point(size = 2) +
+  labs(x = "Number of hospital beds", y = "Number of hospitals") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+.question[
+Can't really think about fixing the number of beds and changing the number of hospitals.
+]
+
+---
+
+## Class activity
+
+---
+
+## Class activity results
+
+* $\widehat{\text{Hgt97}} = 42.75 + 1.09 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+
+---
+
+## Class activity results
+
+* $\widehat{\text{Hgt97}} = 42.75 + 1.09 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* $\widehat{\text{Hgt97}} = 41.49 - 0.88 \ \text{Diam96} + 1.11 \ \text{Hgt96} \hspace{2cm} R^2_{adj} =$
+
+---
+
+## Class activity results
+
+* $\widehat{\text{Hgt97}} = 42.75 + 1.09 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* $\widehat{\text{Hgt97}} = 41.49 - 0.88 \ \text{Diam96} + 1.11 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+
+---
+
+## Class activity results
+
+* $\widehat{\text{Hgt97}} = 42.75 + 1.09 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* $\widehat{\text{Hgt97}} = 41.49 - 0.88 \ \text{Diam96} + 1.11 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* VIF for Diam96 (and Hgt96) $=$
+
+---
+
+## Class activity results
+
+* $\widehat{\text{Hgt97}} = 42.75 + 1.09 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* $\widehat{\text{Hgt97}} = 41.49 - 0.88 \ \text{Diam96} + 1.11 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* VIF for Diam96 (and Hgt96) $= 5.06$
+* **Issue with interpretation:** 
+
+---
+
+## Class activity results
+
+* $\widehat{\text{Hgt97}} = 42.75 + 1.09 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* $\widehat{\text{Hgt97}} = 41.49 - 0.88 \ \text{Diam96} + 1.11 \ \text{Hgt96} \hspace{2cm} R^2_{adj} = 0.934$
+* VIF for Diam96 (and Hgt96) $= 5.06$
+* **Issue with interpretation:** doesn't really make sense to fix Hgt96 and change Diam96

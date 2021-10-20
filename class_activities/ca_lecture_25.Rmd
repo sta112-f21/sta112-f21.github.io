@@ -1,0 +1,58 @@
+---
+title: "Class Activity, October 20"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("Pines")
+```
+
+## Setup
+
+In this activity, we will revisit the `Pines` data from Lab 4. Recall that the `Pines` data was gathered in an experiment conducted at Kenyon College. The biology department planted 1000 pine trees in 1990, and measured their size in 1990, 1996, and 1997. In this lab we will look at their size in 1997 as measured by their diameter (Diam97) and their height (Hgt97). The data are contained in the Pines dataset in the Stat2Data package.
+
+Because not all trees survived until 1997, there is some missing data, which we will remove before proceeding. Run the following code to load the data, and create a new dataframe without the missing data. Use `pines_new` for the activity:
+
+```r
+library(tidyverse)
+library(Stat2Data)
+data("Pines")
+pines_new <- Pines %>%
+  drop_na()
+```
+
+**Activity template:**
+
+## Questions
+
+1. Fit the simple linear regression model $\text{Hgt97} = \beta_0 + \beta_1 \text{Diam96} + \varepsilon$. Report the coefficient of determination ( $R^2$ ) and adjusted coefficient of determination ( $R^2_{adj}$ ) for the fitted model. 
+
+2. What if we used the tree's height in 1996, instead its diameter, to predict height in 1997? Fit the simple linear regression model $\text{Hgt97} = \beta_0 + \beta_1 \text{Hgt96} + \varepsilon$. Report the coefficient of determination ( $R^2$ ) and adjusted coefficient of determination ( $R^2_{adj}$ ) for the fitted model. 
+
+3. The models in Exercises 1 and 2 explain a lot of the variability in 1997 height! What if we combine them? Fit the multiple regression model $\text{Hgt97} = \beta_0 + \beta_1 \text{Diam96} + \beta_2 \text{Hgt96} + \varepsilon$. How does your $R^2_{adj}$ compare to the two simple linear regression models?
+
+4. Plot height in 1996 against diameter in 1996. What do you notice?
+
+5. For the model you fit in Exercise 3, $\widehat{\beta}_1 = -0.88$. The usual interpretation of this coefficient in multiple regression is that if Hgt96 is held fixed, then a 1cm increase in Diam96 is associated with a 0.88cm decrease in Hgt97. Based on your plot for exercise 4, explain why that interpretation is problematic.
+
+6. Install the `car` package in R, with 
+```r
+install.packages("car")
+```
+Then run
+```r
+library(car)
+```
+
+7. Use the `vif(...)` function to calculate variance inflation factors for your fitted model in exercise 4. If you called your fitted model `pines_lm`, then you would run
+```r
+vif(pines_lm)
+```
