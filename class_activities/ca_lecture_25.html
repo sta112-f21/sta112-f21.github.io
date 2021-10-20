@@ -145,14 +145,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="setup" class="section level2">
 <h2>Setup</h2>
-<p>In this activity, we will revisit the <code>Pines</code> data from Lab 4. Recall that the <code>Pines</code> data was gathered in an experiment conducted at Kenyon College. The biology department planted 1000 pine trees in 1990, and measured their size in 1990, 1996, and 1997. In this lab we will look at their size in 1997 as measured by their diameter (Diam97) and their height (Hgt97). The data are contained in the Pines dataset in the Stat2Data package.</p>
+<p>In this activity, we will revisit the <code>Pines</code> data from Lab 4. Recall that the <code>Pines</code> data was gathered in an experiment conducted at Kenyon College. The biology department planted 1000 pine trees in 1990, and measured their size in 1990, 1996, and 1997. How well do measurements this year predict measurements next year? In this activity, we will use tree diameter in 1996 (Diam96) and tree height in 1996 (Hgt96) to predict tree height in 1997 (Hgt97). The data are contained in the <code>Pines</code> dataset in the Stat2Data package.</p>
 <p>Because not all trees survived until 1997, there is some missing data, which we will remove before proceeding. Run the following code to load the data, and create a new dataframe without the missing data. Use <code>pines_new</code> for the activity:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Stat2Data)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;Pines&quot;</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pines_new <span class="ot">&lt;-</span> Pines <span class="sc">%&gt;%</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code></pre></div>
-<p><strong>Activity template:</strong></p>
+<p><strong>Activity template:</strong> <a href="https://sta112-f21.github.io/class_activities/ca_lecture_25_template.Rmd">activity template</a></p>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Then run</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
-<li>Use the <code>vif(...)</code> function to calculate variance inflation factors for your fitted model in exercise 4. If you called your fitted model <code>pines_lm</code>, then you would run</li>
+<li>Use the <code>vif(...)</code> function to calculate variance inflation factors for your fitted model in exercise 3. If you called your fitted model <code>pines_lm</code>, then you would run</li>
 </ol>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(pines_lm)</span></code></pre></div>
 </div>

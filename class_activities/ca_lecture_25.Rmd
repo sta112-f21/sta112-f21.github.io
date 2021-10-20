@@ -17,7 +17,7 @@ data("Pines")
 
 ## Setup
 
-In this activity, we will revisit the `Pines` data from Lab 4. Recall that the `Pines` data was gathered in an experiment conducted at Kenyon College. The biology department planted 1000 pine trees in 1990, and measured their size in 1990, 1996, and 1997. In this lab we will look at their size in 1997 as measured by their diameter (Diam97) and their height (Hgt97). The data are contained in the Pines dataset in the Stat2Data package.
+In this activity, we will revisit the `Pines` data from Lab 4. Recall that the `Pines` data was gathered in an experiment conducted at Kenyon College. The biology department planted 1000 pine trees in 1990, and measured their size in 1990, 1996, and 1997. How well do measurements this year predict measurements next year? In this activity, we will use tree diameter in 1996 (Diam96) and tree height in 1996 (Hgt96) to predict tree height in 1997 (Hgt97). The data are contained in the `Pines` dataset in the Stat2Data package.
 
 Because not all trees survived until 1997, there is some missing data, which we will remove before proceeding. Run the following code to load the data, and create a new dataframe without the missing data. Use `pines_new` for the activity:
 
@@ -29,7 +29,7 @@ pines_new <- Pines %>%
   drop_na()
 ```
 
-**Activity template:**
+**Activity template:** [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_25_template.Rmd)
 
 ## Questions
 
@@ -52,7 +52,7 @@ Then run
 library(car)
 ```
 
-7. Use the `vif(...)` function to calculate variance inflation factors for your fitted model in exercise 4. If you called your fitted model `pines_lm`, then you would run
+7. Use the `vif(...)` function to calculate variance inflation factors for your fitted model in exercise 3. If you called your fitted model `pines_lm`, then you would run
 ```r
 vif(pines_lm)
 ```

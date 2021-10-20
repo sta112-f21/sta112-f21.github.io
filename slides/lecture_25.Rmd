@@ -74,7 +74,7 @@ cty_health %>%
 
 ## Using the number of hospitals
 
-```{r, output.lines=10:18}
+```{r, output.lines=10:18, highlight.output=c(9)}
 md_lm <- lm(sqrt_mds ~ Hospitals, data = cty_health)
 summary(md_lm)
 ```
@@ -99,7 +99,7 @@ cty_health %>%
 
 ## Using the number of hospital beds
 
-```{r, output.lines=10:18}
+```{r, output.lines=10:18, highlight.output=c(9)}
 md_lm <- lm(sqrt_mds ~ Beds, data = cty_health)
 summary(md_lm)
 ```
@@ -110,7 +110,7 @@ $R^2 = 0.901$, $R^2_{adj} = 0.899$
 
 ## Using both variables
 
-```{r, output.lines=10:19}
+```{r, output.lines=10:19, highlight.output=c(10)}
 md_lm <- lm(sqrt_mds ~ Hospitals + Beds, data = cty_health)
 summary(md_lm)
 ```
@@ -227,6 +227,8 @@ Can't really think about fixing the number of beds and changing the number of ho
 ---
 
 ## Class activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_25.html](https://sta112-f21.github.io/class_activities/ca_lecture_25.html)
 
 ---
 
