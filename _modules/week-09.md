@@ -10,5 +10,6 @@ October 20
 : Multicollinearity and variance inflation factors
   : [Slides](https://sta112-f21.github.io/slides/lecture_25.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_25.html)
 
+: Textbook 3.5
 
 October 22
