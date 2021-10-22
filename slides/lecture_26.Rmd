@@ -17,8 +17,7 @@ editor_options:
 library(tidyverse)
 library(knitr)
 library(car)
-library(Stat2Data)
-data("CountyHealth")
+library(palmerpenguins)
 
 hook_output <- knit_hooks$get("output")
 knit_hooks$set(output = function(x, options) {
@@ -52,6 +51,8 @@ fire_clusters <- fire_clusters %>%
          log_bld_den = log(bld_den),
          log_clust_dist = log(near_clust),
          log_near_bld = log(near_bld))
+
+team_data <- read_csv("https://sta112-f21.github.io/labs/team_data.csv")
 ```
 
 ## Agenda
@@ -59,8 +60,174 @@ fire_clusters <- fire_clusters %>%
 * Reminder: Quiz 4 next Wednesday
     * Covers up through interactions
 * Today: 
+    * interactions and Lab 6
     * continuing multicollinearity
-    * time to work on Lab 6
+
+---
+
+### Interactions with the penguins data
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+penguins %>%
+  drop_na() %>%
+  ggplot(aes(x = body_mass_g, y = bill_length_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=F) +
+  theme_bw() +
+  labs(x = "Body mass (g)", y = "Bill length (mm)",
+       color = "Species") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +$
+
+$\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+---
+
+### Interactions with the penguins data
+
+$\widehat{\text{bill length}} = 27.11 + 5.06 \ \text{IsChinstrap} - 0.58 \ \text{IsGentoo} + 0.0032 \ \text{body mass} +$
+
+$\hspace{2cm} 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+.question[
+What is the estimated slope for the relationship between body mass and bill length, for Gentoo penguins?
+]
+
+--
+
+**Answer:** Terms involving body mass:
+
+$0.0032 \ \text{body mass} + 0.0013 \ \text{IsChinstrap} \cdot \text{body mass} + 0.0010 \ \text{IsGentoo} \cdot \text{body mass}$
+
+$\hspace{1cm} = (0.0032 + 0.0013 \ \text{IsChinstrap} + 0.0010 \ \text{IsGentoo}) \ \text{body mass}$
+
+So when Species = Gentoo, the estimated slope is $0.0032 + 0.001 = 0.0042$
+
+---
+
+### Interactions with the team performance data
+
+$\widehat{\text{performance}} = \widehat{\beta}_0 + \widehat{\beta}_1 \text{size} + \widehat{\beta}_2 \text{females} + \widehat{\beta}_3 \text{diversity} + \widehat{\beta}_4 \text{testosterone}$
+
+$\hspace{4cm} + \widehat{\beta}_5 \text{diversity} \cdot \text{testosterone}$
+
+--
+
+Terms involving diversity:
+
+$\widehat{\beta}_3 \text{diversity} + \widehat{\beta}_5 \text{diversity} \cdot \text{testosterone}$
+
+$\hspace{1cm} = (\widehat{\beta}_3 + \widehat{\beta}_5 \ \text{testosterone}) \  \text{diversity}$
+
+--
+
+**Interpretation:** Holding size, number of female group members, and group testosterone fixed, an increase of one unit in diversity is associated with a change of $\widehat{\beta}_3 + \widehat{\beta}_5 \ \text{testosterone}$ in group performance, on average
+
+* This depends on the particular value of testosterone, but not the size or number of female group members (there is no interaction term in our model between diversity and size, or diversity and females)
+* For question 5 on the lab, you just need to plug in the estimated values and the specific level of testosterone
+
+---
+
+## Interactions and VIFs
+
+Model without interaction:
+
+```{r}
+performance_lm_additive <- lm(performance ~ size + females + 
+                          diversity + testosterone, 
+                      data = team_data)
+vif(performance_lm_additive)
+```
+
+Lows VIFs, not concerned about multicollinearity.
+
+---
+
+## Interactions and VIFs
+
+Model with interaction:
+
+```{r}
+performance_lm <- lm(performance ~ size + females + 
+                          diversity*testosterone, 
+                      data = team_data)
+vif(performance_lm)
+```
+
+Really high VIFs! 
+
+.question[
+Should we be worried about multicollinearity with interaction terms? Think about the purpose of interaction terms, and the reasons multicollinearity can be a problem.
+]
+
+---
+
+## Interactions and multicollinearity
+
+.question[
+Should we be worried about multicollinearity with interaction terms?
+]
+
+**Answer:** Generally, no. 
+
+Problems with multicollinearity:
+* Increased variability of coefficient estimates
+* Difficulty interpreting fitted model
+
+---
+
+## Interactions and multicollinearity
+
+.question[
+Should we be worried about multicollinearity with interaction terms?
+]
+
+**Answer:** Generally, no. 
+
+Problems with multicollinearity:
+* Increased variability of coefficient estimates
+    * More important to accurately describe the data, if an interaction term is needed
+* Difficulty interpreting fitted model
+    * Interactions change the interpretation of the model anyway
+
+---
+
+## Wildfire data
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+.footnote[
+Alexandre PM, Stewart SI, Keuler NS, Clayton MK, Mockrin MH, Bar-Massada A, Syphard AD, Radeloff VC (2016). Factors related to building loss due to wildfires in the conterminous United States. Ecological Applications, 26: 2323-2338. [https://doi.org/10.1002/eap.1376](https://doi.org/10.1002/eap.1376)
+]
+
+**Data:** Area inside US wildfires from 2000 to 2010 divided into clusters of buildings. For each cluster, variables on building arrangement, vegetation, and topography are recorded.
+
+.question[
+What do we want out of the model?
+]
+
+---
+
+## Wildfire data
+
+**Question:** What factors are associated with building loss in US wildfires?
+
+**Model goals:** We want a model that
+
+* Explains a good amount of variability in the proportion of buildings burned (reasonable $R^2_{adj}$ value)
+* Satisfies regression assumptions
+* Is interpretable 
+
+--
+
+Our research question *doesn't* involve assessing a particular variable.
+
+* In contrast, in Lab 6 the focus is on the interaction between diversity and testosterone, so much of the model is determined by the research question.
+
 
 ---
 
@@ -73,7 +240,11 @@ fire_clusters <- fire_clusters %>%
 --
 
 * $R^2_{adj} = 0.063$
+
+--
 * We tried an interaction, but $R^2_{adj}$ hardly changed. We'll leave out the interaction for now (we can always revisit interactions later)
+
+--
 * A possible explanations for the negative coefficient on $\log(\text{building density})$:
     * Clusters with lower density have more vegetation, which may be more flammable
     
@@ -132,17 +303,86 @@ $r = -0.80$
 
 ## Assessing multicollinearity
 
-```{r}
+```{r, output.lines=19:20, highlight.output=c(3)}
 fire_lm <- lm(log_proportion ~ log_bld_den + log_clust_dist + 
                 near_bld,
               data = fire_clusters)
+summary(fire_lm)
+```
+
+```{r}
 vif(fire_lm)
 ```
 
-None of the VIFs are $> 5$, but it is still hard to interpret the fitted model.
+* $R^2_{adj}$ has increased from 6.3% to 8%
+* None of the VIFs are $> 5$, but it is still hard to interpret the fitted model
+* Based on model goals, we'll drop distance to the nearest building from the model
 
 ---
 
 ## Trying a different variable
 
-Having both building density and distance to the nearest building in the model was hard to interpret. Can we use a different variable that better measures 
+* Want to measure amount of vegetation in the cluster
+* Don't have a variable for that, but *do* have vegetation *near* cluster
+* *PLAND3* = proportion of land near cluster which is non-flammable
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=5}
+fire_clusters %>%
+  ggplot(aes(x = log_bld_den, y = PLAND3)) +
+  geom_point(size = 1.5) +
+  labs(x = "log(building density)", 
+       y = "Proportion of non-flammable land") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+.pull-right[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=5}
+fire_clusters %>%
+  ggplot(aes(x = log_clust_dist, y = PLAND3)) +
+  geom_point(size = 1.5) +
+  labs(x = "log(distance to nearest cluster)", 
+       y = "Proportion of non-flammable land") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+]
+
+---
+
+## Trying a different variable
+
+```{r}
+fire_lm <- lm(log_proportion ~ log_bld_den + log_clust_dist + 
+                PLAND3,
+              data = fire_clusters)
+vif(fire_lm)
+```
+
+Based on plots and VIFs, not worried about multicollinearity for this model.
+
+---
+
+## Trying a different variable
+
+```{r, output.lines=10:20, highlight.output=c(7, 12)}
+fire_lm <- lm(log_proportion ~ log_bld_den + log_clust_dist + 
+                PLAND3,
+              data = fire_clusters)
+summary(fire_lm)
+```
+
+* Negative coefficient on *PLAND3* (-0.001) makes intuitive sense
+* $R^2_{adj}$ = 8.9%
+
+---
+
+## Summary: handling multicollinearity
+
+* If the multicollinearity is due to an interaction, that's ok
+* If not:
+    * Option 1: Remove one of the variables from the model
+    * Option 2: Ignore multicollinearity. Doesn't matter as much if goal is prediction rather than interpretation
+    * Option 3: Use or create a new variable
