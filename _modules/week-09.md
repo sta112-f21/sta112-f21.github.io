@@ -13,3 +13,7 @@ October 20
 : Textbook 3.5
 
 October 22
+: More multicollinearity
+  : [Slides](https://sta112-f21.github.io/slides/lecture_26.html)
+  
+: Textbook 3.5
