@@ -1,0 +1,148 @@
+---
+author: "Dr. Ciaran Evans"
+title: Multicollinearity
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=F}
+library(tidyverse)
+library(knitr)
+library(car)
+library(Stat2Data)
+data("CountyHealth")
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
+
+fire_clusters <- read_csv("fire-clusters.csv") %>%
+  mutate(proportion = BB/bld_clust)
+
+fire_clusters <- fire_clusters %>%
+  filter(proportion > 0)
+
+fire_clusters <- fire_clusters %>%
+  mutate(log_proportion = log(proportion),
+         log_bld_den = log(bld_den),
+         log_clust_dist = log(near_clust),
+         log_near_bld = log(near_bld))
+```
+
+## Agenda
+
+* Reminder: Quiz 4 next Wednesday
+    * Covers up through interactions
+* Today: 
+    * continuing multicollinearity
+    * time to work on Lab 6
+
+---
+
+## Wildfire data
+
+**Current model:** $\ \log(\text{proportion}) = \beta_0 + \beta_1 \log(\text{building density}) + \beta_2  \log(\text{cluster distance}) + \varepsilon$
+
+**Current fitted model:** $\widehat{\log(\text{proportion})} = -2.35 - 0.57  \log(\text{building density}) + 0.08  \log(\text{cluster distance})$
+
+--
+
+* $R^2_{adj} = 0.063$
+* We tried an interaction, but $R^2_{adj}$ hardly changed. We'll leave out the interaction for now (we can always revisit interactions later)
+* A possible explanations for the negative coefficient on $\log(\text{building density})$:
+    * Clusters with lower density have more vegetation, which may be more flammable
+    
+--
+    
+.question[
+Can we explore this explanation?
+]
+
+---
+
+### Adding another variable: average distance to the nearest building
+
+*near_bld* = average distance to the nearest building
+
+**Motivation:**
+
+* If surrounding vegetation is a problem, we expect that for a fixed density, distance to the nearest building is positively associated with the proportion of burned buildings
+
+---
+
+## Adding average distance to the nearest building
+
+**Fitted model:** 
+
+$\widehat{\log(\text{proportion})} = -1.66 - 1.00  \log(\text{building density})$
+
+$\hspace{5cm} + 0.06  \log(\text{cluster distance}) - \ 0.01 \text{near_bld}$
+
+* For a fixed building density and distance to the nearest cluster, average distance to the nearest building appears to be negatively associated with proportion of buildings burned
+* Possible explanation: in the cluster, fire mostly spreads due to buildings
+
+--
+
+.question[
+What does it mean to fix building density and change distance to the nearest building?
+]
+
+---
+
+## Potential multicollinearity
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+fire_clusters %>%
+  ggplot(aes(x = log_bld_den, y = near_bld)) +
+  geom_point(size = 1.5) +
+  labs(x = "log(building density)", 
+       y = "Average distance to nearest building") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+$r = -0.80$
+
+---
+
+## Assessing multicollinearity
+
+```{r}
+fire_lm <- lm(log_proportion ~ log_bld_den + log_clust_dist + 
+                near_bld,
+              data = fire_clusters)
+vif(fire_lm)
+```
+
+None of the VIFs are $> 5$, but it is still hard to interpret the fitted model.
+
+---
+
+## Trying a different variable
+
+Having both building density and distance to the nearest building in the model was hard to interpret. Can we use a different variable that better measures 

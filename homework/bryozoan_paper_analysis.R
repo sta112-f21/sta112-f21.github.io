@@ -261,23 +261,72 @@ anova(ble_lm, ble_lm_full)
 
 
 
-ble_lm <- lm(log_metabolic ~ Stage*Species + Species*log_mass, 
-             data = bryozoan_larvae_early)
+# Mixed effects models
 
-ble_lm <- lm(log_metabolic ~ Stage*Species*log_mass, 
-             data = bryozoan_larvae_early)
-
-
-
-ble_lme_small <- lmer(log_metabolic ~ (1|Run) + Stage*Species,
-                      data = bryozoan_larvae_early)
 
 ble_lme <- lmer(log_metabolic ~ (1|Run) + Stage*Species + 
                   log_mass, data = bryozoan_larvae_early)
 
+
+# checking assumptions
+
+data.frame(sample = coef(ble_lme)$Run[,1]) %>% 
+  ggplot(aes(sample = sample)) + 
+  geom_qq() + 
+  geom_qq_line()
+
+
+# do we need any random slopes?
+# Note that in this case, we have a pretty simple design
+
 ble_lme_2 <- lmer(log_metabolic ~ Stage*Species + 
                   log_mass + (log_mass|Run), data = bryozoan_larvae_early)
 
-anova(ble_lme_small, ble_lme)
 
 anova(ble_lme, ble_lme_2)
+
+
+# Now what if we wanted to include the late-stage 
+# bugula in our model too? 
+# One way to do that could be to include a random effect 
+# term for each individual
+
+# first we need to make a term for the individual id
+
+bryozoan_id <- bryozoan %>%
+  filter(Stage != "larvae") %>%
+  arrange(Species, Run, Mass, Stage) %>%
+  mutate(id = cumsum(c(1, diff(Mass) != 0)) + 
+           nrow(bryozoan %>% filter(Stage == "larvae"))) %>%
+  rbind(bryozoan %>%
+          filter(Stage == "larvae") %>%
+          mutate(id = 1:n())) %>%
+  arrange(Species, Run, Stage)
+
+max(bryozoan_id$id)
+max(table(bryozoan_id$id))
+
+
+bryozoan_lme <- lmer(log_metabolic ~ (1|Run/id) + 
+                       Stage*Species + log_mass, 
+                     data = bryozoan_id)
+
+bryozoan_lme_full <- lmer(log_metabolic ~ (1|Run/id) + 
+                       Stage*Species + Stage*log_mass, 
+                     data = bryozoan_id)
+
+anova(bryozoan_lme, bryozoan_lme_full)
+
+
+
+bryozoan %>%
+  mutate(Stage = fct_relevel(Stage, "larvae", "early", "late")) %>%
+  ggplot(aes(x = log_mass, 
+             y = log_metabolic,
+             color = Stage)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  facet_wrap(~Species) +
+  theme_bw() +
+  labs(x = "log(Mass)",
+       y = "log(Metabolic rate)")
