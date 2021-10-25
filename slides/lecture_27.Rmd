@@ -1,0 +1,182 @@
+---
+author: "Dr. Ciaran Evans"
+title: Best subsets selection
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+---
+
+## Class Activity, Part I
+
+* Spend about 5-10 minutes working on Part I of the class activity
+* As always, welcome to work with others
+* Try to fit a model to get $R^2_{adj}$ as high as possible
+
+---
+
+## Best subsets selection
+
+**Motivation:** Finding a "best" model (e.g., to maximize $R^2_{adj}$ ) is hard!
+
+**Best subsets selection:** automatic model selection technique that
+
+* Considers all possible models (all possible subsets of predictors)
+* Calculates performance measure (e.g., $R^2_{adj}$ ) for each model
+* Returns the model with the best performance measure (e.g., highest $R^2_{adj}$ )
+
+---
+
+## Optimality criteria
+
+**What defines the "best" model?** Some options:
+
+* Maximum $R^2_{adj}$
+* Minimum Mallows' $C_p$
+* Minimum AIC
+* Minimum BIC
+* many others...
+
+---
+
+## $R^2_{adj}$
+
+$R^2_{adj} = 1 - \dfrac{SSE/(n - p)}{SSTotal/(n - 1)}$
+
+* $n$ = number of observations
+* $p$ = number of parameters
+* Model selection to *maximize* $R^2_{adj}$
+* **Motivation:** Want SSE low, but penalize the number of predictors
+
+---
+
+## Mallows' $C_p$
+
+Fit a model on a subset of $m$ predictors from a larger set of $k$ predictors, using sample of size $n$. Then
+
+$C_p = \dfrac{SSE_m}{MSE_k} + 2(m + 1) - n$
+
+* $SSE_m$ = sum of squared residuals for the model with $m$ predictors
+* $MSE_k$ = mean squared error for full model with all $k$ predictors
+* Model selection to *minimize* $C_p$
+* **Motivation:** 
+    * Want SSE low, but penalize the number of predictors
+    * $MSE_k$ allows us to consider the other predictors we *could* have included in our model, but didn't
+
+---
+
+## Class Activity, Part II
+
+* Spend about 15-20 minutes working on Part II of the class activity
+* As always, welcome to work with others
+* Experiment with best subsets selection, using $R^2_{adj}$ and Mallows' $C_p$
+
+---
+
+## Concept check
+
+**True or False?:** Best subsets selection will automatically choose predictors to satisfy model assumptions (like shape, constant variance, normality).
+
+.abox[
+True!
+]
+
+.cbox[
+False!
+]
+
+--
+
+**Answer:** False
+
+---
+
+## Concept check
+
+**True or False?:** Best subsets selection with transformed variables will give the same results as with untransformed variables.
+
+.abox[
+True!
+]
+
+.cbox[
+False!
+]
+
+--
+
+
+**Answer:** False (sometimes the results are the same, sometimes they are different)
+
+---
+
+## Concept check
+
+**True or False?:** The model which maximizes $R^2_{adj}$ can be different to the model which minimizes Mallows' $C_p$.
+
+.abox[
+True!
+]
+
+.cbox[
+False!
+]
+
+--
+
+**Answer:** True
+
+---
+
+## Concept check
+
+**True or False?:** The model which maximizes $R^2_{adj}$ uses all possible predictors.
+
+.abox[
+True!
+]
+
+.cbox[
+False!
+]
+
+--
+
+**Answer:** False (sometimes the best model uses all possible predictors, but often it just uses a subset)
+
+---
+
+## Concept check
+
+**True or False?:** Best subsets selection is the best way to choose a model when we have a specific research question about one of the variables. (For example, if we want to know whether the relationship between diversity and group performance depends on testosterone.)
+
+.abox[
+True!
+]
+
+.cbox[
+False!
+]
+
+--
+
+**Answer:** False (in many cases, our model is determined by our research question)
+
+---
+
+## Summary: lessons on variable selection
+
+* Best subset selection is not useful when we want to answer a research question about a *specific* variable
+* Best subset selection is not a substitute for checking assumptions and experimenting with variable transformations
+* Model selection with transformed variables can give different results to model selection with untransformed variables
+* Different optimality criteria (e.g., $R^2_{adj}$ vs. Mallows' $C_p$) can give different models
