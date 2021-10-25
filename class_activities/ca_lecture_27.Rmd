@@ -91,6 +91,13 @@ optimal_model_size <- which.max(summary(models)$adjr2)
 summary(models)$which[optimal_model_size,]
 ```
 
+```{r, include=F}
+fire_clusters <- read_csv("https://sta112-f21.github.io/class_activities/fire_clusters_data.csv")
+
+clusters_untransformed <- fire_clusters %>%
+  select(-c(log_proportion, log_clust_dist, log_bld_den))
+```
+
 
 :::{.question}
 *What's going on here?*
@@ -102,9 +109,65 @@ The `regsubsets` function is included in the `leaps` package, and is used to per
 
 5. Using the results from Exercise 4, which predictors are included in the fitted model which maximizes $R^2_{adj}$, using just the raw data (no transformations on the predictor or response)?
 
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q5_solution')">Solution</BUTTON>
+
+<DIV ID="q5_solution" STYLE="display:none">
+elev, sloped, near_bld, sw, tpi, bld_disp, PLAND3, CONNECT1, CONNECT3
+</DIV>
+
 6. Fit the multiple regression model with `proportion` as the response, and the predictors you identified in Exercise 5.
 
+<BUTTON ONCLICK="ShowAndHide('q6_solution')">Solution</BUTTON>
+
+<DIV ID="q6_solution" STYLE="display:none">
+```{r}
+best_model_adjr2 <- lm(proportion ~ elev + sloped + near_bld + 
+                         sw + tpi + bld_disp + 
+                         PLAND3 + CONNECT1 + CONNECT3,
+                       data = clusters_untransformed)
+```
+</DIV>
+
 7. Check the shape, constant variance, and normality assumptions for the fitted model in Exercise 6. Do these assumptions look reasonable?
+
+<BUTTON ONCLICK="ShowAndHide('q7_solution')">Solution</BUTTON>
+
+<DIV ID="q7_solution" STYLE="display:none">
+```{r}
+clusters_untransformed %>%
+  mutate(pred = predict(best_model_adjr2),
+         resids = residuals(best_model_adjr2)) %>%
+  ggplot(aes(x = pred, y = resids)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted proportion", 
+       y = "Residuals") +
+  theme_bw()
+
+clusters_untransformed %>%
+  mutate(resids = residuals(best_model_adjr2)) %>%
+  ggplot(aes(sample = resids)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw()
+```
+
+The constant variance and normality assumptions do not appear to be reasonable here.
+</DIV>
 
 8. To address violations of the assumptions, in class we have transformed several variables in the wildfire data. Let's now apply best subsets selection to the data with these transformed variables. Our response is `log_proportion` instead of `proportion`. Run the following code:
 
@@ -121,7 +184,19 @@ summary(models)$which[optimal_model_size,]
 
 9. Using Exercise 8, which predictors are included in the fitted model which maximizes $R^2_{adj}$, using the transformed data?
 
+<BUTTON ONCLICK="ShowAndHide('q9_solution')">Solution</BUTTON>
+
+<DIV ID="q9_solution" STYLE="display:none">
+elev, near_bld, sw, tpi, bld_disp, PLAND3, CONNECT1, CONNECT3, log_bld_den, log_clust_dist
+</DIV>
+
 10. Compare your answers to Exercise 5 and Exercise 9. Are they the same?
+
+<BUTTON ONCLICK="ShowAndHide('q10_solution')">Solution</BUTTON>
+
+<DIV ID="q10_solution" STYLE="display:none">
+No, some of the predictors selected are different, and the number of predictors selected is different too.
+</DIV>
 
 11. So far we have used $R^2_{adj}$ to choose our "best" model. But other optimality criteria are possible. In this question, we will try a different criterion: Mallows' $C_p$. Run the following code:
 
@@ -134,3 +209,11 @@ summary(models)$which[optimal_model_size,]
 ```
 
 12. From Exercise 11, which predictors are included in the fitted model which minimizes Mallows' $C_p$? Are the results different from those in Exercise 9?
+
+<BUTTON ONCLICK="ShowAndHide('q12_solution')">Solution</BUTTON>
+
+<DIV ID="q12_solution" STYLE="display:none">
+elev, near_bld, tpi, bld_disp, PLAND3, log_bld_den, log_clust_dist
+
+Yes, the results are different when we use $R^2_{adj}$ vs. Mallows' $C_p$
+</DIV>
