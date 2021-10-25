@@ -123,7 +123,9 @@ t_star = qt(0.025, 68, lower.tail = F)
 
 The confidence interval is given by
 
-$\widehat{\beta}_5 \pm t^* SE_{\widehat{\beta}_5}$ For a 95% confidence interval, our critical value is $t^* = 1.995$ (from a $t_{68}$ distribution). For a one-unit increase in testosterone, we are 95% confident that the true slope between diversity and group performance (holding size, number of female group members, and testosterone fixed) is between -0.21 and -0.08.
+$\widehat{\beta}_5 \pm t^* SE_{\widehat{\beta}_5}$ 
+
+For a 95% confidence interval, our critical value is $t^* = 1.995$ (from a $t_{68}$ distribution). We are 95% confident that a one-unit increase in testosterone is associated with a change in the true slope between diversity and group performance (holding size, number of female group members, and testosterone fixed) of between -0.21 and -0.08.
 
 ## Exercise 14
 
