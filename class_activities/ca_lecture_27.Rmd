@@ -1,0 +1,136 @@
+---
+title: "Class Activity, October 25"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Instructions
+
+In this class activity, you will experiment with model selection techniques (trying to choose which predictors to include in the model). You will work with the wildfire data we have seen in class. 
+
+**Data:** What factors are associated with building loss in US wildfires? To investigate this question, [researchers](https://esajournals.onlinelibrary.wiley.com/doi/10.1002/eap.1376) gathered data on clusters of buildings in US wildfires between 2000 and 2010. Each row in the data represents one cluster, which is a group of buildings and the land around those buildings. For this activity, we will use a subset of the data with the following variables:
+
+* *proportion:* the proportion of buildings burned
+* *elev*: elevation of the cluster
+* *sloped*: how sloped land in the cluster is
+* *near_bld*: average distance to the nearest building, for buildings in the cluster
+* *bld_den*: number of buildings / area of cluster
+* *clust_dist*: distance to the nearest cluster
+* *rdens*: density of roads in the cluster
+* *sw*: how southwest-facing the land is
+* *tpi*: topographic position index (basically, how different the cluster is from the surrounding area in elevation)
+* *bld_disp*: how disperse the buildings in the cluster are
+* *PLAND1*: proportion of highly flammable land near the cluster
+* *PLAND3*: proportion of non-flammable land near the cluster
+* *CONNECT1*: how connected highly flammable land is near the cluster
+* *CONNECT3*: how connected non-flammable land is near the cluster
+
+In addition, we have several log-transformed versions of these variables: `log_proportion`, `log_clust_dist`, and `log_bld_den`.
+
+**Download the data**: You can download the data by running the following code:
+
+```r
+fire_clusters <- read_csv("https://sta112-f21.github.io/class_activities/fire_clusters_data.csv")
+```
+
+**Activity template:** [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_27_template.Rmd)
+
+# Part I
+
+## Questions
+
+In class examples with the wildfire data, we've seen that the amount of variability explained by our regression model (as measured by $R^2_{adj}$ ) depends on the predictors we include in the model. Using the wildfire data, experiment with fitting different multiple regression models, with different sets of predictor variables. 
+
+* For this section, your response will be `log_proportion`. So your code to fit each model will be `lm(log_proportion ~ ..., data = fire_clusters)`, where you fill in the `...` with different sets of predictors.
+* For this section, your goal is to maximize $R^2_{adj}$. 
+* You can use as many or as few predictors as you need. Try adding and removing different variables to increase $R^2_{adj}$.
+
+1. Which predictors were included in your fitted model with the highest $R^2_{adj}$? You don't need to report the full equation, just list the different predictors.
+
+2. You tried several different models, but you haven't tried all possible models. Do you feel confident that you have identified the combination of predictors with the highest possible $R^2_{adj}$ for this data?
+
+
+# Part II
+
+In Part I, you tried fitting different regression models with the goal of maximizing $R^2_{adj}$. But trying lots of different combinations by hand is difficult and time-consuming. Instead, we can use automatic model selection tools.
+
+In this section, you will use **best subsets selection**, which automatically considers all possible combinations of predictors. Different criteria can be used to define the best model with best subsets selection:
+
+* One option is to choose the model which maximizes $R^2_{adj}$
+* Another option is to choose the model which minimizes Mallows' $C_p$
+
+We will start by trying best subsets selection without any transformed variables. We will then try it with the variable transformations we have been using on the wildfire data in class.
+
+3. To perform best subsets selection, we need to install the `leaps` package. Run the following code in the console:
+
+```r
+install.packages("leaps")
+```
+
+4. Run the following code to perform best subsets selection to maximize $R^2_{adj}$. To begin, let's see what happens if we perform selection without any transformations:
+
+```r
+library(leaps)
+
+clusters_untransformed <- fire_clusters %>%
+  select(-c(log_proportion, log_clust_dist, log_bld_den))
+
+models <- regsubsets(proportion ~ ., data = clusters_untransformed,
+                     nvmax = 13)
+
+optimal_model_size <- which.max(summary(models)$adjr2)
+summary(models)$which[optimal_model_size,]
+```
+
+
+:::{.question}
+*What's going on here?*
+
+The `regsubsets` function is included in the `leaps` package, and is used to perform best subsets selection. The first argument is a formula: (`proportion ~ .`), which means that `proportion` is the response variable, and all other columns in the data are potential predictors. the `nvmax` variable lets you specify the maximum number of predictors to consider. Here we just set `nvmax` to be the total number of predictors in the data, but for very large data you may want to set `nvmax` to be smaller.
+
+`which.max(summary(models)$adjr2)` finds the optimal number of predictors in the model to maximize $R^2_{adj}$. Then `summary(models)$which[optimal_model_size,]` returns a list of all the potential predictors; `TRUE` means that the variable is included in the optimal model, and `FALSE` means it is not included.
+:::
+
+5. Using the results from Exercise 4, which predictors are included in the fitted model which maximizes $R^2_{adj}$, using just the raw data (no transformations on the predictor or response)?
+
+6. Fit the multiple regression model with `proportion` as the response, and the predictors you identified in Exercise 5.
+
+7. Check the shape, constant variance, and normality assumptions for the fitted model in Exercise 6. Do these assumptions look reasonable?
+
+8. To address violations of the assumptions, in class we have transformed several variables in the wildfire data. Let's now apply best subsets selection to the data with these transformed variables. Our response is `log_proportion` instead of `proportion`. Run the following code:
+
+```r
+clusters_transformed <- fire_clusters %>%
+  select(-c(proportion, clust_dist, bld_den))
+
+models <- regsubsets(log_proportion ~ ., data = clusters_transformed,
+                     nvmax = 13)
+
+optimal_model_size <- which.max(summary(models)$adjr2)
+summary(models)$which[optimal_model_size,]
+```
+
+9. Using Exercise 8, which predictors are included in the fitted model which maximizes $R^2_{adj}$, using the transformed data?
+
+10. Compare your answers to Exercise 5 and Exercise 9. Are they the same?
+
+11. So far we have used $R^2_{adj}$ to choose our "best" model. But other optimality criteria are possible. In this question, we will try a different criterion: Mallows' $C_p$. Run the following code:
+
+```r
+models <- regsubsets(log_proportion ~ ., data = clusters_transformed,
+                     nvmax = 13)
+
+optimal_model_size <- which.min(summary(models)$cp)
+summary(models)$which[optimal_model_size,]
+```
+
+12. From Exercise 11, which predictors are included in the fitted model which minimizes Mallows' $C_p$? Are the results different from those in Exercise 9?

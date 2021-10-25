@@ -1,0 +1,82 @@
+---
+---
+---
+title: "Class Activity, October 25"
+author: "Your Name"
+output: html_document
+---
+
+## Setup
+
+Run the setup chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+fire_clusters <- read_csv("https://sta112-f21.github.io/class_activities/fire_clusters_data.csv")
+```
+
+## Question 1
+
+```{r}
+
+```
+
+Write your answer here...
+
+## Question 2
+
+
+Write your answer here...
+
+
+## Question 4
+
+```{r}
+
+```
+
+## Question 5
+
+
+Write your answer here...
+
+## Question 6
+
+```{r}
+
+```
+
+## Question 7
+
+```{r}
+
+```
+
+Write your answer here...
+
+
+## Question 8
+
+```{r}
+
+```
+
+## Question 9
+
+Write your answer here...
+
+## Question 10
+
+Write your answer here...
+
+
+## Question 11
+
+```{r}
+
+```
+
+## Question 12
+
+Write your answer here...

@@ -1,0 +1,105 @@
+---
+title: "Lab 5 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("Diamonds")
+```
+
+## Exercise 1
+
+```{r}
+diamond_lm <- lm(PricePerCt ~ Clarity, data = Diamonds)
+diamond_lm
+```
+
+$\widehat{\text{Price per carat}} = 6630.5 - 1270.0 \ \text{IsSI1} - 1627.7 \ \text{IsSI2} - 3714.5 \ \text{IsSI3} - 60.8 \ \text{IsVS1} - 463.7 \ \text{IsVS2} + 413.1 \ \text{IsVVS1} - 603.1 \ \text{IsVVS2}$
+
+## Exercise 2
+
+```{r}
+summary(diamond_lm)
+```
+
+The test statistic is $F = 1.88$, and the p-value is 0.072. There is some evidence of a relationship between clarity and price per carat.
+
+## Exercise 3
+
+```{r}
+diamonds_null <- Diamonds %>%
+  mutate(PricePerCt_null = mean(PricePerCt) + residuals(diamond_lm))
+```
+
+## Exercise 4
+
+```{r, include = F}
+set.seed(2)
+```
+
+```{r}
+bootstrap_sample <- diamonds_null %>%
+  slice_sample(prop = 1, replace = TRUE)
+```
+
+
+## Exercise 5
+
+```{r}
+bootstrap_lm <- lm(PricePerCt_null ~ Clarity, data = bootstrap_sample)
+summary(bootstrap_lm)
+```
+
+The test statistic is $F = 1.34$, which is a bit lower than the test statistic we got on the original data.
+
+Note: your answers will vary here! Each time you take a bootstrap sample, you will get a different result.
+
+## Exercise 6
+
+```{r}
+bootstrap_sample <- diamonds_null %>%
+  slice_sample(prop = 1, replace = TRUE)
+bootstrap_lm <- lm(PricePerCt_null ~ Clarity, data = bootstrap_sample)
+summary(bootstrap_lm)
+```
+
+For this bootstrap sample, the test statistic was $F = 0.43$, smaller than the previous bootstrap sample.
+
+## Exercise 7
+
+```{r}
+bootstrap_f_stats <- c()
+
+for(i in 1:5000){
+  bootstrap_sample <- diamonds_null %>%
+    slice_sample(prop = 1, replace = TRUE)
+  bootstrap_lm <- lm(PricePerCt_null ~ Clarity, 
+                     data = bootstrap_sample)
+  bootstrap_f_stats[i] <- anova(bootstrap_lm)$`F value`[1]
+}
+```
+
+## Exercise 8
+
+```{r}
+hist(bootstrap_f_stats)
+```
+
+Most bootstrap F statistics were less than 1.88, but some were larger. $F = 1.88$ is in the right tail of the distribution, but not too far in the tail. 
+
+## Exercise 9
+
+```{r}
+bootstrap_p_value <- mean(bootstrap_f_stats > 1.88)
+bootstrap_p_value
+```
+
+## Exercise 10
+
+Our bootstrap p-value is pretty close to the parametric one!
+
+Note: your bootstrap p-value will probably be slightly different to mine, just by chance. Remember each bootstrap sample is a random sample of the observed data.
+
