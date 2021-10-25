@@ -15,6 +15,11 @@ editor_options:
 
 ## Agenda
 
+* Math and stats department town hall today 
+    * 4 - 5 pm, Manchester 016
+    * information about department and classes
+* Today: best subsets selection
+
 ---
 
 ## Class Activity, Part I
