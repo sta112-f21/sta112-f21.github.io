@@ -11,7 +11,7 @@ October 25
 : **Lab 6 due**{: .label .label-red }
   
 : **HW 5 released**{: .label .label-yellow }
-  : [HW 5](#)
+  : [HW 5](https://sta112-f21.github.io/homework/homework_5.html)
 
 
 October 27
