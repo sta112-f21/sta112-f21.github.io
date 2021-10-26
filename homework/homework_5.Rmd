@@ -1,0 +1,152 @@
+---
+title: "Homework 5"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Monday, November 1, 12:00pm on Canvas
+
+# Setup
+
+This assignment consists of two parts. In Part I, you will work again with the bryozoan data that we saw in earlier assignments. In Part II, you will work with data on the performance of Major League Baseball (MLB) teams in the 2016 regular season.
+
+### Template
+
+A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_05_template.Rmd](https://sta112-f21.github.io/homework/hw_05_template.Rmd)
+
+### Data
+
+**Bryozoan data:** Recall the `bryozoan` data from HW 3 and HW 4. Researchers have collected data on two species of marine bryozoan (*Bugula neritina* and *Watersipora subtorquata*), and are trying to assess whether larger organisms are more energy efficient, proportional to body size. The `bryozoan` data contains the following columns:
+
+* *Species:* 	Species of the organism measured, either bugula (Bugula neritina) or watersipora (Watersipora subtorquata)
+* *Stage:* Developmental stage of the organism (larvae = larval stage, early = early post-settlement stage, late = late post-settlement stage)
+* *Run:* Which run of the study the individual was recorded in. Several runs were done for each species
+* *Mass:* Mass of the individual (in micrograms)
+* *Metabolic:* Recorded metabolic rate (rate of energy consumption) of the individual (in mJ per hour)
+
+**MLB data:** The `MLBStandings2016` dataset, included in the `Stat2Data` package, summarizes the performance of each team in the 2016 regular season. Each row in the data represents one team, and the variables include a variety of performance measures like winning percentage, batting average, and number of strikes. A full description of the data and the different columns can be viewed by running `?MLBStandings2016` after loading the data.
+
+### Downloading the data
+
+**Bryozoan data:** The following code imports the bryozoan data and saves it as a data frame called `bryozoan`:
+
+```r
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+```
+
+**MLB data:** Run the following code to load the `Stat2Data` package and the `MLBStandings2016` data:
+
+```r
+library(Stat2Data)
+data("MLBStandings2016")
+```
+
+# Part I: Revisiting the bryozoan data
+
+The researchers are interested in the relationship between log mass and log metabolic rate for different species of marine bryozoan. Due to measurement issues, they decide to focus on only the larval and early stages for the *Bugula neritina* and *Watersipora subtorquata*.
+
+:::{.question}
+#### Question 1: the data
+
+Create a new dataset, called `bryozoan_larvae_early`, which contains the larval and early stage data for the two species, but not the late stage data. As in Homework 3, create two new columns in this data, for the log mass and log metabolic rate. Use this data for the rest of Part I.
+:::
+
+Using the larval and early stages, the researchers decide to fit a regression model. They consider several possible models:
+
+$(1)\hspace{1cm} \log(\text{metabolic rate}) = \beta_0 + \beta_1 \log(\text{mass}) + \varepsilon$
+
+$(2) \hspace{1cm} \log(\text{metabolic rate}) = \beta_0 + \beta_1 \text{IsWatersipora} +  \beta_2 \log(\text{mass}) + \varepsilon$
+
+$(3) \hspace{1cm} \log(\text{metabolic rate}) = \beta_0 + \beta_1 \text{IsWatersipora} + \beta_2 \text{IsLarval} +  \beta_3 \log(\text{mass}) + \varepsilon$
+
+$(4) \hspace{1cm} \log(\text{metabolic rate}) = \beta_0 + \beta_1 \text{IsWatersipora} + \beta_2 \text{IsLarval} +$
+$\hspace{7cm} \beta_3 \text{IsWatersipora} \cdot \text{IsLarval} +  \beta_4 \log(\text{mass}) + \varepsilon$
+
+To explore these different models, they create the following plot:
+
+```{r, echo=F, message=F, warning=F, fig.width=6, fig.height=4}
+library(tidyverse)
+
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+
+bryozoan <- bryozoan %>%
+  mutate(log_mass = log(Mass),
+         log_metabolic = log(Metabolic))
+
+bryozoan_larvae_early <- bryozoan %>%
+  filter(Stage != "late")
+
+
+bryozoan_larvae_early %>%
+  mutate(Stage = fct_relevel(Stage, "larvae", "early")) %>%
+  ggplot(aes(x = log_mass, 
+             y = log_metabolic,
+             color = Stage)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  facet_wrap(~Species) +
+  theme_bw() +
+  labs(x = "log(Mass)",
+       y = "log(Metabolic rate)")
+```
+
+:::{.question}
+#### Question 2: the model
+Which of the four models (1) - (4) listed above appears most suitable for this data? Explain your reasoning. In your explanation, make sure to justify why you think the interaction term $\text{IsWatersipora} \cdot \text{IsLarval}$ is or is not needed.
+:::
+
+:::{.question}
+#### Question 3: fit and assess the model
+Fit your chosen model from Question 2, and report the equation of the fitted model. Also assess the shape, constant variance, and normality assumptions.
+:::
+
+:::{.question}
+#### Question 4: use the model
+Recall that the researchers are interested in the hypothesis that larger organisms are more energy efficient, proportional to body size. Test this hypothesis, using your fitted model for Question 3. Make sure to include the following:
+
+* Hypotheses $H_0$ and $H_A$ about one or more parameters from your model in Question 2
+* The test statistic and p-value for the hypothesis test
+* Your conclusion: is there evidence that larger organisms are more energy efficient, proportional to body size?
+:::
+
+:::{.question}
+#### Question 5: differences in slope?
+So far, we have assumed that the slope for the relationship between log mass and log metabolic rate is the same across different species and stages. Is this the case? Use a nested F-test to test whether there are any differences in slope between species and stages. Make sure to include the following:
+
+* Your full and reduced models for the nested test
+* The test statistic and p-value for the hypothesis test
+* Your conclusion: is there evidence that the slope is different between species and stages?
+:::
+
+# Part II: MLB standings
+
+In this part of the assignment, you will work with the `MLBStandings2016` data. Our goal is to predict winning percentage from characteristics of the team's performances. The `WinPct` variable in the `MLBStandings2016` data will therefore be our response variable.
+
+:::{.question}
+#### Question 6: the data
+Winning percentage is just a combination of the number of wins and losses, so we don't want to include the `Wins` and `Losses` variables in our models. We also don't want to include the `Team` column, because team name is just used for identification in the data.
+
+Create a new dataframe, called `mlb_new`, which is the `MLBStandings2016` data without the `Wins`, `Losses`, and `Team` columns. Use the `mlb_new` data for the rest of Part II.
+:::
+
+:::{.question}
+#### Question 7: behavior of $R^2_{adj}$
+We want to predict winning percentage from variables like batting average and strikeouts. Remember that $R^2_{adj}$ can actually decrease when unhelpful predictors are added to the model.
+
+Using the `mlb_new` data, find an example where adding one or more predictors to an existing model can cause $R^2_{adj}$ to decrease.
+:::
+
+:::{.question}
+#### Question 8: best subsets selection
+Which variables are associated with winning percentage? Run best subsets selection to build a model to predict winning percentage with the `mlb_new` dataset. Report the model that maximizes $R^2_{adj}$, and the model which minimizes Mallows' $C_p$.
+
+(Don't worry if you're not familiar with baseball. Background knowledge can be helpful for choosing a model, but in this question you should use best subsets methods in R, rather than specific baseball knowledge.)
+:::
+
+:::{.question}
+#### Question 9: multicollinearity
+Fit the model from Question 8 which minimized Mallows' $C_p$, and calculate variance inflation factors for each predictor in the fitted model. Does there appear to be multicollinearity in the data? If so, how does this impact your ability to interpret the fitted model?
+:::
