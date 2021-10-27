@@ -1,0 +1,40 @@
+---
+title: "Class Activity, October 27"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+In this activity, you will consider two different scenarios. These scenarios use regression for different goals, and your process of choosing a model will be different.
+
+## Scenario 1: Bird genetic diversity
+
+Biologists hypothesize that birds which live over a small area are less genetically diverse than birds which live over a large area, because a larger habitat allows species to be adapted to a wider range of environments, and because larger habitats help prevent interbreeding.
+
+To investigate this hypothesis, they collected data on 387 different bird species. Each row in the data is a species, and for each species the researchers recorded the following variables:
+
+* *genetic diversity*: a measure of genetic diversity. (Formally, they measured heterozygosity, the probability that for a randomly selected gene, the individual's alleles are different)
+* *breeding range*: size of the spatial range over which this bird breeds, in units of 10,000 square km
+* *mass*: average body mass (g)
+* *latitude*: mid-point latitude of the species breeding range
+* *migratory status*: whether the species migrates
+
+The researchers want to model the relationship between breeding range and genetic diversity, and they want to know if this relationship depends on whether the species is migratory (i.e., whether the slope and/or intercept is different). Furthermore, they suspect that body size and latitude may also be related to genetic diversity and breeding range.
+
+1. Write down a model which allows the researchers to address their research question.
+2. Using the model in Exercise 1, write down hypotheses which allow the researchers to test whether there is any relationship between breeding range and genetic diversity, after accounting for migratory status, body size, and latitude.
+3. Using the model in Exercise 1, write down hypotheses which allow the researchers to test whether the relationship between breeding range is different for migratory and non-migratory species, after accounting for body size and latitude.
+
+
+## Scenario 2: Housing prices
+
+Suppose you put your house up for sale. How much should you ask for it? How much should you expect to sell it for? The sale price of a house depends on many factors, in addition to the fluctuations of the housing market. But which factors are most useful for predicting sale price?
+
+We have data on 2930 homes sold in Ames, Iowa between 2006 and 2010. In addition to the sales price, dozens of variables describing the house are available; a few examples are the slope of the land, the style and size of the house, the age of the house, the number of rooms, and whether it has a garage. 
+
+Using this data, we would like to investigate which features are *most* useful for predicting sale price. Our goal is to find a relatively small number of predictors which explain a good amount of variability in the sale price, and which give us a reasonably interpretable model.
+
+4. Summarize how you would investigate which variables are most useful for predicting sale price.
