@@ -15,6 +15,8 @@ October 25
 
 
 October 27
+: Choosing a model
+  : [Slides](https://sta112-f21.github.io/slides/lecture_28.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_28.html)
 
 : **Quiz 4**{: .label .label-red}
 

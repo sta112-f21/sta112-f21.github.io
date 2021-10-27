@@ -1,0 +1,109 @@
+---
+title: "Quiz 4"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: top=1in
+header-includes:
+- \usepackage[fontsize=22pt]{scrextend}
+---
+
+**Name:**
+
+**Instructions:** You have 15 minutes to complete this quiz. You may use any notes or resources, including your laptop and the internet (R documentation, StackOverflow, Wikipedia, etc.). You may not communicate with anyone else during the quiz.
+
+There are four short questions. Relax and do your best! Try to answer as much as possible.
+
+The data is described on page 2.  The scenario is described on pages 3-4. The questions are on pages 5-6.
+
+\newpage
+
+## Data
+
+How does stress impact animals' oxygen consumption? To investigate this question, biologists exposed crabs to either 7.5 minutes of loud ship noise, or 7.5 minutes of normal ocean noise, and recorded their oxygen consumption. The data contain the following variables.
+
+* `Mass`: crab mass (g)
+* `Oxygen`: rate of oxygen consumption (micromoles per hour)
+* `Noise`: type of noise (either `ocean` or `ship`)
+
+\newpage
+
+## Scenario
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+set.seed(3)
+
+x = rnorm(100, mean=50, sd=15)
+sim_data <- data.frame(Noise = rep(c("ocean", "ship"), each = 50),
+                       Mass = x,
+                       Oxygen = c(50 + 2*x[1:50] + rnorm(50, sd=15),
+                                  300 - 2*x[51:100] + rnorm(50, sd=15)))
+
+```
+
+The researchers are interested in the relationship between mass and oxygen consumption, and the impact of noise on this relationship. They make the following scatterplot:
+
+```{r, echo=F, fig.align='center', fig.width=6, fig.height=4}
+sim_data %>%
+  ggplot(aes(x = Mass, y = Oxygen, color = Noise)) +
+  geom_point(size=2) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+\newpage
+
+They consider three different models for this relationship ($\text{IsShip}$ is an indicator variable which is 1 for ship noise, and 0 for ocean noise):
+
+$(1) \hspace{1cm} \text{oxygen} = \beta_0 + \beta_1 \text{mass} + \varepsilon$
+
+\vspace{0.5cm}
+
+$(2) \hspace{1cm} \text{oxygen} = \beta_0 + \beta_1 \text{IsShip} + \beta_2 \text{mass} + \varepsilon$
+
+\vspace{0.5cm}
+
+$(3) \hspace{1cm} \text{oxygen} = \beta_0 + \beta_1 \text{IsShip} + \beta_2 \text{mass} +$
+
+$\hspace{6cm} \beta_3 \text{IsShip} \cdot \text{mass} +  \varepsilon$
+
+\vspace{0.5cm}
+
+The estimated equations for these models are
+
+\vspace{0.5cm}
+
+$(1) \hspace{1cm} \widehat{\text{oxygen}} = 161.29 + 0.23 \ \text{mass}$
+
+\vspace{0.5cm}
+
+$(2) \hspace{1cm} \widehat{\text{oxygen}} = 143.72 + 53.68 \ \text{IsShip} +$
+
+$\hspace{6cm}  0.05 \ \text{mass}$
+
+\vspace{0.5cm}
+
+$(3) \hspace{1cm} \widehat{\text{oxygen}} = 52.06 + 257.38 \ \text{IsShip} +$
+
+$\hspace{6cm} 1.92 \ \text{mass} - 4.05 \ \text{IsShip} \cdot \text{mass}$
+
+\newpage
+
+## Questions
+
+**Question 1:** Based on the scatterplot, which of these three models do you think is most appropriate? Explain your reasoning.
+
+\vspace{7cm}
+
+**Question 2:** Using the estimated equation for the model you chose in question 1, what is the predicted rate of oxygen consumption for a 40g crab exposed to ocean noise? What about for a 40g crab exposed to ship noise?
+
+\newpage
+
+**Question 3:** The researchers want to test whether a unit increase in mass is associated with the same change in oxygen consumption for crabs exposed to each type of noise. Write down a null and alternative hypothesis for this test, in terms of one or more parameters from the model.
+
+\vspace{5cm}
+
+**Question 4:** The researchers plan to use a nested F-test for the hypothesis test in question 3. Write down the full and reduced models that they will compare with the nested F-test.

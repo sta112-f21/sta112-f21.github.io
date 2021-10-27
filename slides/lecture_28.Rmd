@@ -1,0 +1,78 @@
+---
+author: "Dr. Ciaran Evans"
+title: Choosing models
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Class activity and discussion
+* Quiz 4
+
+---
+
+## Class activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_28.html](https://sta112-f21.github.io/class_activities/ca_lecture_28.html)
+
+* Work in groups on the class activity for 15--20 minutes
+* Then we'll discuss as a group
+
+---
+
+## Exercise 1
+
+Here's one potential model:
+
+$\text{genetic diversity} = \beta_0 + \beta_1 \text{mass} + \beta_2 \text{latitude} + \beta_3 \text{IsMigratory} +$
+
+$\hspace{4cm} \beta_4 \text{breeding range} + \beta_5 \text{breeding range} \cdot \text{IsMigratory} + \varepsilon$
+
+**Motivation:** We are told that mass and latitude may be confounding variables, so we want to account for them in our model.
+
+.question[
+Confounding variable: a variable that is associated with both the predictor and response.
+]
+
+---
+
+## Exercise 2
+
+$\text{genetic diversity} = \beta_0 + \beta_1 \text{mass} + \beta_2 \text{latitude} + \beta_3 \text{IsMigratory} +$
+
+$\hspace{4cm} \beta_4 \text{breeding range} + \beta_5 \text{breeding range} \cdot \text{IsMigratory} + \varepsilon$
+
+$H_0: \beta_4 = \beta_5 = 0$
+
+$H_A: \text{ at least one of } \beta_4, \beta_5 \neq 0$
+
+---
+
+## Exercise 3
+
+$\text{genetic diversity} = \beta_0 + \beta_1 \text{mass} + \beta_2 \text{latitude} + \beta_3 \text{IsMigratory} +$
+
+$\hspace{4cm} \beta_4 \text{breeding range} + \beta_5 \text{breeding range} \cdot \text{IsMigratory} + \varepsilon$
+
+$H_0: \beta_5 = 0$
+
+$H_A: \beta_5 \neq 0$
+
+---
+
+## Exercise 4
+
+* **Step 1:** Try a few simple models and explore variable transformations
+* **Step 2:** Perform best subsets selection, either maximizing $R^2_{adj}$ or minimizing Mallows' $C_p$
+* **Step 3:** Check assumptions for the "best" model; revisit steps 1 and 2 if needed
+* **Step 4:** since we want an interpretable model, investigate multicollinearity. Revisit steps 1 and 2 if needed
+
