@@ -1,0 +1,109 @@
+---
+title: "Extra Credit 2"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+*This extra credit assignment can replace a lab or homework of your choice*
+
+**Due:** by Monday, November 29 at 12:00pm (noon) on Canvas
+
+**Learning goals:** If you complete this extra credit assignment, you will be able to fit and use a basic mixed-effects model.
+
+## Instructions
+
+On HW 5, you fit a multiple regression model to look at the relationship between log mass, species, stage, and log metabolic rate for the larval and early-stage bryozoan data. Including species and stage in the model is important because there are systematic differences between species and stages, and we want to measure and account for these differences.
+
+There is also another potential source of variability in the data, and that is experimental run. Each observation comes from one of 21 different runs, and there may be variability between these different runs (this is often called *technical variability*). How should we account for variability between different runs? One option is to add Run as a predictor to our model, and estimate additional parameters for the different Runs. However, there are some downsides to this approach.
+
+A common way to account for this kind of variability is by adding one or more *random effects*. These are different from the way we have treated variables in 112, which have been *fixed effects*. A model which combines both random effects and fixed effects is called a *mixed-effects model*.
+
+For this extra credit assignment, you will learn the basics of mixed-effects models, and fit a simple mixed-effects model to the bryozoan data. (If you're interested in learning more, take 279 next semester!)
+
+## Data
+
+Use the `bryozoan` data from HW 5. *As in HW 5, create log transformations for the mass and metabolic rate, and use only the larval and early-stage bugula and watersipora*.
+
+## Information on mixed-effects models
+
+Read Chapter 8 of *Beyond Multiple Linear Regression: Applied Generalized Linear Models and Multilevel Models in R*, by Paul Roback and Julie Legler. A free online version can be found here: [https://bookdown.org/roback/bookdown-BeyondMLR/](https://bookdown.org/roback/bookdown-BeyondMLR/)
+
+To fit mixed-effects models, you will need to install the `lme4` package in R. For hypothesis tests, you will need the `lmerTest` and `RLRsim` packages. A good discussion of hypothesis testing with mixed-effects models can be found here: [https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html)
+
+## Questions
+
+:::{.question}
+#### Question 1
+
+Create a plot showing the distribution of log metabolic rate, broken down by Run, Species, and Stage. Does there seem to be much variation between runs?
+:::
+
+:::{.question}
+#### Question 2
+
+Describe, in your own words, the difference between fixed and random effects. Explain why Species and Stage should be treated as fixed effects, but Run should be treated as a random effect.
+:::
+
+Let's start by looking at the variability in log metabolic rate between different runs. Before we consider any other predictors, we will fit a simple random intercepts model:
+
+$(1) \hspace{1cm} \log(\text{metabolic rate})_{ij} = \beta_0 + u_i + \varepsilon_{ij}$,
+
+where $\log(\text{metabolic rate})_{ij}$ is the log metabolic rate for observation $j$ in Run $i$, $u_i \sim N(0, \sigma_u^2)$ is the random effect for Run $i$, and $\varepsilon_{ij} \sim N(0, \sigma_{\varepsilon}^2)$ is our noise term. 
+
+:::{.question}
+#### Question 3
+
+Use the `lmer` function from the `lme4` package to fit the random intercepts model in (1). Report you fitted model, giving $\widehat{\beta}_0$, $\widehat{\sigma}_\varepsilon^2$, and $\widehat{\sigma}_u^2$. Interpret your parameter estimates.
+:::
+
+:::{.question}
+#### Question 4
+
+Using your fitted model from Question 3, report the intraclass correlation coefficient, and interpret it in context.
+:::
+
+We can also formally test whether there are differences in metabolic rate between the different runs. In the context of the model in (1), this means we are testing whether the variance $\sigma_u^2$ of the random effect is 0. Our hypotheses are
+
+$H_0: \sigma_u^2 = 0$
+
+$H_A: \sigma_u^2 > 0$
+
+We can think of this hypothesis test as another kind of nested test; this time, we're comparing the (full) model in (1) to a (reduced) model without the random effect term: $\log(\text{metabolic rate})_{ij} = \beta_0 + \varepsilon_{ij}$.
+
+:::{.question}
+#### Question 5
+
+Fit the reduced model, then use the `exactLRT` function in the `RLRsim` package to test the hypotheses. Report the p-value and interpret the results in context.
+:::
+
+:::{.question}
+#### Question 6
+
+Why did we use the `exactLRT` function instead of the usual `anova` function to compare these two models? Do some background reading in the resources provided in the Information above. You don't have to completely understand the motivation for the `exactLRT` function, but you should understand the general idea.
+:::
+
+Of course, we're really interested in the relationship between log mass and log metabolic rate, after accounting for Run, Species, and Stage. Modifying a model from HW 5, a simple model which includes the random effect is
+
+
+$(2) \hspace{1cm} \log(\text{metabolic rate})_{ij} = \beta_0 + u_i + \beta_1 \text{Watersipora}_{ij} + \beta_2 \text{Early}_{ij} +$
+
+$\hspace{7cm} \beta_3 \text{Watersipora}_{ij} \cdot \text{Early}_{ij} + \beta_4 \log(\text{mass})_{ij} + \varepsilon_{ij}$
+
+This is an example of a *mixed-effects* model, because we have both random effects and fixed effects. We should also consider other models (for example, adding random slopes for each Run), but for simplicity we will focus on model (2).
+
+:::{.question}
+#### Question 7
+
+Make sure the `lmerTest` package is loaded in R (with `library(lmerTest)`), then fit the model in (2) using the `lmer` function. Report the estimated model (i.e., all the parameter estimates, including $\widehat{\sigma}_u^2$ and $\widehat{\sigma}_\varepsilon^2$).
+:::
+
+:::{.question}
+#### Question 8
+
+Using the fitted model, test the hypotheses $H_0: \beta_4 = 1$ vs. $H_A: \beta_4 < 1$. Use the output from `summary` to carry out the t-test, as you normally would. Report the p-value and interpret the results in context.
+
+*Note: This t-test relies on approximate degrees of freedom (`lmerTest` uses Satterthwaite's approximation). In general, other methods for hypothesis testing, like parametric bootstrapping, may be preferable.*
+:::

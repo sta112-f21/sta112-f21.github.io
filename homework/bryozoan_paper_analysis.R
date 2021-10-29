@@ -78,19 +78,25 @@ bryozoan %>%
 
 # distributions of mass and metabolic rate
 # (before fixing the error)
-bryozoan %>%
+p1 <- bryozoan %>%
   mutate(Stage = fct_relevel(Stage, "larvae", "early", "late")) %>%
   ggplot(aes(x = Species, y = Mass, color = Stage)) +
   geom_boxplot(lwd=0.7) +
   theme_bw() +
   labs(y = "Mass (micrograms)")
 
-bryozoan %>%
+p2 <- bryozoan %>%
   mutate(Stage = fct_relevel(Stage, "larvae", "early", "late")) %>%
   ggplot(aes(x = Species, y = Metabolic, color = Stage)) +
   geom_boxplot(lwd=0.7) +
   theme_bw() +
   labs(y = "Metabolic rate (mJ/hour)")
+
+library(patchwork)
+
+pdf(file = "bryozoan_eda_1.pdf", width=10, height=4)
+p1 + p2
+dev.off()
 
 
 # fixing errors
@@ -103,18 +109,21 @@ bryozoan$Mass[bryozoan$Mass < 1] <- bugula_early_mass
 
 
 # relationship between mass and metabolic rate
-
+pdf(file = "bryozoan_eda_2.pdf", width=9, height=4)
 bryozoan %>%
   mutate(Stage = fct_relevel(Stage, "larvae", "early", "late")) %>%
   ggplot(aes(x = Mass, y = Metabolic, color = Stage)) +
   geom_point() +
   geom_smooth(se=F, method="lm") +
   facet_wrap(~Species) +
-  theme_bw()
+  theme_bw() +
+  labs(x = "Mass (micrograms)",
+       y = "Metabolic rate (mJ/hour)")
+dev.off()
 
 
 # differences by run
-
+pdf(file = "bryozoan_eda_3.pdf", width=10, height=3)
 bryozoan %>%
   mutate(Stage = fct_relevel(Stage, "larvae", "early", "late")) %>%
   ggplot(aes(x = as.factor(Run), y = Metabolic, 
@@ -123,7 +132,7 @@ bryozoan %>%
   facet_wrap(~Stage) +
   theme_bw() +
   labs(x = "Run", y = "Metabolic rate (mJ/hour)")
-
+dev.off()
 
 # filtering
 
@@ -133,7 +142,7 @@ bugula_early <- bryozoan %>%
 
 be_lm <- lm(Metabolic ~ Mass, data = bugula_early)
 
-bugula_early %>%
+p1 <- bugula_early %>%
   mutate(residuals = residuals(be_lm),
          predicted = predict(be_lm)) %>%
   ggplot(aes(x = predicted, y = residuals)) +
@@ -141,9 +150,10 @@ bugula_early %>%
   geom_abline(slope = 0, intercept = 0, 
               color="blue", lwd=1.2) +
   labs(x = "Predicted metabolic rate (mJ/hour)",
-       y = "Residuals")
+       y = "Residuals") +
+  theme_bw()
 
-bugula_early %>%
+p2 <- bugula_early %>%
   mutate(residuals = residuals(be_lm)) %>%
   ggplot(aes(sample = residuals)) +
   geom_qq() +
@@ -151,6 +161,10 @@ bugula_early %>%
   labs(x = "Theoretical normal quantiles",
        y = "Observed residual quantiles") +
   theme_bw()
+
+pdf(file = "bryozoan_diagnostics_1.pdf", width=9, height=4)
+p1 + p2
+dev.off()
 
 
 summary(be_lm)
@@ -162,6 +176,51 @@ summary(be_lm)
 
 
 # log transformations
+
+# motivation
+library(latex2exp)
+
+p1 <- data.frame(x = 1:100, y = 1:100) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = TeX("Efficiency is the same ($\\beta = 1$)")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p2 <- data.frame(x = 1:100, y = (1:100)^2) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = TeX("Larger individuals are less efficient ($\\beta > 1$)")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+p3 <- data.frame(x = 1:100, y = (1:100)^0.25) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Mass", 
+       y = "Metabolism",
+       title = TeX("Larger individuals are more efficient ($0 < \\beta < 1$)")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+pdf(file="transformation_motivation.pdf", width = 12, height=4)
+p1 + p2 + p3
+dev.off()
+
+# fitting transformed model
 
 bugula_early <- bugula_early %>%
   mutate(log_mass = log(Mass),
@@ -193,6 +252,7 @@ bryozoan <- bryozoan %>%
 bryozoan_larvae_early <- bryozoan %>%
   filter(Stage != "late")
 
+pdf(file = "bryozoan_eda_4.pdf", width=9, height=4)
 bryozoan_larvae_early %>%
   mutate(Stage = fct_relevel(Stage, "larvae", "early")) %>%
   ggplot(aes(x = log_mass, 
@@ -204,6 +264,7 @@ bryozoan_larvae_early %>%
   theme_bw() +
   labs(x = "log(Mass)",
        y = "log(Metabolic rate)")
+dev.off()
 
 bryozoan_larvae_early <- bryozoan_larvae_early %>%
   mutate(Stage = fct_relevel(Stage, "larvae", "early"))

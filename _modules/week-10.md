@@ -21,3 +21,8 @@ October 27
 : **Quiz 4**{: .label .label-red}
 
 October 29
+: HW 5 work day
+  : [Slides](https://sta112-f21.github.io/slides/lecture_29.html)
+  
+: **Extra Credit 2 released**
+  : [EC 2](https://sta112-f21.github.io/extra_credit/ec2/)

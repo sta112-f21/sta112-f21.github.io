@@ -96,6 +96,8 @@ bryozoan_larvae_early %>%
 :::{.question}
 #### Question 2: the model
 Which of the four models (1) - (4) listed above appears most suitable for this data? Explain your reasoning. In your explanation, make sure to justify why you think the interaction term $\text{IsWatersipora} \cdot \text{IsLarval}$ is or is not needed.
+
+*Hint: to figure out which model is appropriate, try sketching each model (you don't need to turn any sketches in). Think about how the parameters in each model allow the lines to vary between Species and Stages. Note that an interaction between two categorical variables gives you more flexibility in intercepts (i.e., vertical shifts to the lines).*
 :::
 
 :::{.question}
@@ -110,6 +112,10 @@ Recall that the researchers are interested in the hypothesis that larger organis
 * Hypotheses $H_0$ and $H_A$ about one or more parameters from your model in Question 2
 * The test statistic and p-value for the hypothesis test
 * Your conclusion: is there evidence that larger organisms are more energy efficient, proportional to body size?
+
+*Hint 1: Your hypotheses will be like in HW 4, and cannot be tested with a nested F-test.*
+
+*Hint 2: Remember that for a t-test of a single parameter, your degrees of freedom are $n - p$, where $n$ is the number of observations and $p$ is the number of parameters in the model.*
 :::
 
 :::{.question}
@@ -119,6 +125,10 @@ So far, we have assumed that the slope for the relationship between log mass and
 * Your full and reduced models for the nested test
 * The test statistic and p-value for the hypothesis test
 * Your conclusion: is there evidence that the slope is different between species and stages?
+
+*Hint 1: You need to come up with a NEW model to be your full model (none of (1) - (4) are your full model)*
+
+*Hint 2: Interactions are not just restricted to 2 terms. E.g. in R, you can do something like* `response ~ predictor1*predictor2*predictor3` *to fit an interaction with 3 terms*
 :::
 
 # Part II: MLB standings

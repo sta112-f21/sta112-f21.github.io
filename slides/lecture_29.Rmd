@@ -1,0 +1,54 @@
+---
+author: "Dr. Ciaran Evans"
+title: HW 5 work day
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Project 2 will be released on Monday
+* Reminder: Extra Credit 1 due next week
+    * Can replace a lab
+* Extra Credit 2 released today
+    * Can replace a lab OR homework
+* Today:
+    * Warm-up
+    * HW 5 work day
+    
+---
+
+## Warm-up
+
+.center[
+<img src="slope_hypothesis_testing.png" width="700">
+]
+
+[https://xkcd.com/2533/](https://xkcd.com/2533/)
+
+By "slope hypothesis testing", they mean that they are fitting the model
+
+$\text{exam grade} = \beta_0 + \beta_1 \text{scream loudness} + \varepsilon$
+
+and testing $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 \neq 0$.
+
+.question[
+What are they doing wrong? Which regression assumption is violated?
+]
+
+---
+
+## HW 5 work day
+
+* I have added hints to questions 2, 4, and 5 on HW 5
+* Spend the rest of class working on HW 5, either individually or in groups
+* I am available to answer any questions
+* You don't have to stay if you're done early, but you're also welcome to try one of the extra credit activities
