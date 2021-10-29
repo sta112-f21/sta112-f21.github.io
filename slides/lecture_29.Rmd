@@ -1,6 +1,6 @@
 ---
 author: "Dr. Ciaran Evans"
-title: HW 5 work day
+title: HW work day
 output:
   xaringan::moon_reader:
     css: "lab-slides.css"
