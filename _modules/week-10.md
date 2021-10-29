@@ -25,4 +25,4 @@ October 29
   : [Slides](https://sta112-f21.github.io/slides/lecture_29.html)
   
 : **Extra Credit 2 released**
-  : [EC 2](https://sta112-f21.github.io/extra_credit/ec2/)
+  : [EC 2](https://sta112-f21.github.io/extra_credit/ec2.html)
