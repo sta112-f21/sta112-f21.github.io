@@ -1,4 +1,7 @@
 library(tidyverse)
+library(lme4)
+library(lmerTest)
+library(RLRsim)
 
 metab <- read_csv("bryozoan_raw.csv")
 metab_b <- metab[,1:4]
@@ -324,18 +327,83 @@ anova(ble_lm, ble_lm_full)
 
 # Mixed effects models
 
+# simple random intercept model
+
+ble_lme_simple <- lmer(log_metabolic ~ (1|Run), 
+                       data = bryozoan_larvae_early)
+
+ble_lm_null <- lm(log_metabolic ~ 1, 
+                       data = bryozoan_larvae_early)
+
+exactRLRT(ble_lme_simple)
+
+anova(ble_lme_simple, ble_lm_null)
+
+# more complicated model
 
 ble_lme <- lmer(log_metabolic ~ (1|Run) + Stage*Species + 
                   log_mass, data = bryozoan_larvae_early)
 
+exactRLRT(ble_lme)
+
+(0.43 - 0.12)/(0.43)
+
 
 # checking assumptions
 
-data.frame(sample = coef(ble_lme)$Run[,1]) %>% 
+p1 <- bryozoan_larvae_early %>%
+  mutate(pred = predict(ble_lme),
+         resid = residuals(ble_lme)) %>%
+  ggplot(aes(x = pred, y = resid,
+             color = Species)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted log(metabolic rate)",
+       y = "Residuals") +
+  theme_bw()
+
+p2 <- bryozoan_larvae_early %>%
+  mutate(resid = residuals(ble_lme)) %>%
+  ggplot(aes(sample = resid)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw()
+
+p3 <- data.frame(sample = coef(ble_lme)$Run[,1]) %>% 
   ggplot(aes(sample = sample)) + 
   geom_qq() + 
-  geom_qq_line()
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Estimated random effect quantiles") +
+  theme_bw()
 
+pdf(file="mixed_model_diagnostics.pdf", width=12, height=3)
+p1 + p2 + p3
+dev.off()
+
+summary(ble_lme)
+
+# t confidence interval
+0.67612 - qt(0.025, df=560.37, lower.tail = F)*0.07411
+0.67612 + qt(0.025, df=560.37, lower.tail = F)*0.07411
+
+
+# parametric bootstrap CI
+boot_fun <- function(fitted_mod){
+  return(coef(fitted_mod)$Run$log_mass[1])
+}
+
+param_boot <- bootMer(ble_lme, boot_fun, nsim = 10000,
+                      seed = 3, type = "parametric")
+
+# (simple percentile interval)
+quantile(param_boot$t, 0.025)
+quantile(param_boot$t, 0.975)
+
+(0.67612 - 1)/0.07411
 
 # do we need any random slopes?
 # Note that in this case, we have a pretty simple design
@@ -345,7 +413,6 @@ ble_lme_2 <- lmer(log_metabolic ~ Stage*Species +
 
 
 anova(ble_lme, ble_lme_2)
-
 
 # Now what if we wanted to include the late-stage 
 # bugula in our model too? 
@@ -373,7 +440,7 @@ bryozoan_lme <- lmer(log_metabolic ~ (1|Run/id) +
                      data = bryozoan_id)
 
 bryozoan_lme_full <- lmer(log_metabolic ~ (1|Run/id) + 
-                       Stage*Species + Stage*log_mass, 
+                       Stage*Species*log_mass, 
                      data = bryozoan_id)
 
 anova(bryozoan_lme, bryozoan_lme_full)

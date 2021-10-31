@@ -1,0 +1,227 @@
+---
+author: "Dr. Ciaran Evans"
+title: Introduction to logistic regression
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+---
+
+## Linear regression
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
+library(tidyverse)
+library(Stat2Data)
+data("MedGPA")
+
+MedGPA %>%
+  ggplot(aes(x = GPA, y = MCAT)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  labs(x = "College GPA",
+       y = "MCAT score") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+$\text{MCAT} = \beta_0 + \beta_1 \text{GPA} + \varepsilon$
+
+* $\beta_0 + \beta_1 \text{GPA} =$ average MCAT score for given GPA
+
+.question[
+MCAT score is a quantitative response. What if our response isn't quantitative?
+]
+
+---
+
+## Binary response
+
+$\text{Accepted} = 1$ if accepted, $0$ otherwise
+
+**Initial idea:** $P(\text{Accepted} = 1) = \beta_0 + \beta_1 \text{GPA}$ = "average" acceptance given GPA
+
+* $P(\text{Accepted} = 1) =$ probability of acceptance
+
+--
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
+MedGPA %>%
+  ggplot(aes(x = GPA, y = Acceptance)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  labs(x = "College GPA",
+       y = "P(Accepted = 1)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+--
+
+.question[
+What's wrong with this fit?
+]
+
+---
+
+## Binary response
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
+MedGPA %>%
+  ggplot(aes(x = GPA, y = Acceptance)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  labs(x = "College GPA",
+       y = "P(Accepted = 1)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+**Problem:** 
+* probabilities (e.g., $P(Accepted = 1)$ ) are constrained to be between 0 and 1
+* Lines are never constrained (unless the slope is 0)
+
+---
+
+## Binary response
+
+**Better idea:** <ins>curved</ins> fit!
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
+med_glm <- glm(Acceptance ~ GPA, data = MedGPA,
+               family = binomial())
+
+MedGPA %>%
+  mutate(pred = predict(med_glm, type="response")) %>%
+  ggplot(aes(x = GPA, y = Acceptance)) +
+  geom_point() +
+  geom_line(aes(y = pred),
+            color = "blue", lwd=1.2) +
+  labs(x = "College GPA",
+       y = "P(Accepted = 1)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+--
+
+$P(\text{Accepted} = 1) = \beta_0 + \beta_1 \text{GPA} \hspace{2cm}$ NOT CURVED
+
+**Transformation:** $f(P(\text{Accepted} = 1)) = \beta_0 + \beta_1 \text{GPA}$
+
+--
+
+.question[
+We just need a good transformation!
+]
+
+---
+
+## Logistic regression
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
+med_glm <- glm(Acceptance ~ GPA, data = MedGPA,
+               family = binomial())
+
+MedGPA %>%
+  mutate(pred = predict(med_glm, type="response")) %>%
+  ggplot(aes(x = GPA, y = Acceptance)) +
+  geom_point() +
+  geom_line(aes(y = pred),
+            color = "blue", lwd=1.2) +
+  labs(x = "College GPA",
+       y = "P(Accepted = 1)") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+$\pi = P(\text{Accepted} = 1)$
+
+**Logistic regression model:** $\hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}$
+
+---
+
+## Odds
+
+$\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}$
+
+**Odds:** $\dfrac{\pi}{1 - \pi}$ are called the <ins>odds</ins>
+
+--
+
+If $\pi = P(\text{Accepted} = 1)$, then $\dfrac{\pi}{1 - \pi}$ is the odds of being accepted to medical school.
+
+---
+
+## Odds
+
+**Odds:** $\dfrac{\pi}{1 - \pi}$
+
+**Example:** Suppose you flip a fair coin ( $P(\text{Heads} = 1) = 0.5$ ). The odds the coin comes up heads are 
+
+$\dfrac{0.5}{1 - 0.5} = \dfrac{0.5}{0.5} = \dfrac{1}{1}$
+
+*Note: This could also be written 1:1*
+
+---
+
+## Odds
+
+**Odds:** $\dfrac{\pi}{1 - \pi}$
+
+**Example:** Suppose you flip an unfair coin, with $P(\text{Heads} = 1) = 0.6$. The odds the coin comes up heads are:
+
+.abox[
+0.6
+]
+
+.bbox[
+0.4
+]
+
+.cbox[
+$\dfrac{0.6}{0.4} = \dfrac{1.5}{1}$
+]
+
+.dbox[
+$\dfrac{0.4}{0.6} = \dfrac{1}{1.5}$
+]
+
+---
+
+## Odds
+
+**Odds:** $\dfrac{\pi}{1 - \pi}$
+
+**Example:** Suppose you flip an unfair coin, with $P(\text{Heads} = 1) = 0.6$. The odds the coin comes up heads are:
+
+.abox[
+0.6
+]
+
+.bbox[
+0.4
+]
+
+.cbox[
+$\dfrac{0.6}{0.4} = \dfrac{1.5}{1}$
+]
+
+.dbox[
+$\dfrac{0.4}{0.6} = \dfrac{1}{1.5}$
+]
+
+**Solution:** The odds are $\dfrac{0.6}{0.4} = \dfrac{1.5}{1}$ (we could also write this 1.5:1)
+
+---
+
+## Example
