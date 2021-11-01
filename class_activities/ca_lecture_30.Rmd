@@ -1,0 +1,47 @@
+---
+title: "Class Activity, November 1"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+## Survival on the Titanic
+
+On April 15, 1912 the RMS *Titanic* sank after colliding with an iceberg, and hundreds of passengers aboard died in the disaster. As dramatized in the movie *Titanic*, the odds of survival were much better for first-class passengers (the richest on board) than for second and third class passengers.
+
+Here we have data on 891 *Titanic* passengers, showing survival by class.
+
+| | First class | Second and third class | Total |
+| --- | --- | --- | --- |
+| Survived | 136 | 206 | 342 |
+| Did not survive | 80 | 469 | 549 |
+| Total | 216 | 675 | 891 |
+
+1. What fraction of first-class passengers survived?
+
+2. What were the odds of survival for first-class passengers?
+
+3. What were the odds of survival for second and third class passengers?
+
+4. Calculate the odds ratio comparing odds of survival for first-class passengers to odds of survival for second and third class passengers.
+
+## GPA and med school acceptance
+
+The estimated logistic regression model for the relationship between GPA and acceptance to medical school is
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ \text{GPA},$
+
+where $\widehat{\pi}$ is the estimated probability of acceptance.
+
+5. What is the estimated odds of acceptance for a student with a GPA of 3.0? *(Hint: calculate on the log scale, then exponentiate. Remember that $\log$ here means natural log.)*
+
+6. What is the estimated odds of acceptance for a student with a GPA of 4.0?
+
+7. Calculate the odds ratio comparing odds of acceptance for a student with a GPA of 4.0 to a student with a GPA of 3.0.
+
+8. Calculate the odds ratio comparing odds of acceptance for a student with a GPA of 3.8 to a student with a GPA of 2.8.
+
+9. The estimated slope of the logistic regression model is $\widehat{\beta}_1 = 5.45$. Compare your answers in questions 7 and 8 to $e^{\widehat{\beta}_1}$.

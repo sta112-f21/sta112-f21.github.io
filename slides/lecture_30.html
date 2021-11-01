@@ -99,7 +99,7 @@ We just need a good transformation!
 
 `\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)`
 
-**Odds:** `\(\dfrac{\pi}{1 - \pi}\)` are called the &lt;ins&gt;odds&lt;/ins&gt;
+**Odds:** `\(\dfrac{\pi}{1 - \pi}\)` is called the &lt;ins&gt;odds&lt;/ins&gt;
 
 --
 
@@ -113,7 +113,7 @@ If `\(\pi = P(\text{Accepted} = 1)\)`, then `\(\dfrac{\pi}{1 - \pi}\)` is the od
 
 **Example:** Suppose you flip a fair coin ( `\(P(\text{Heads} = 1) = 0.5\)` ). The odds the coin comes up heads are 
 
-`\(\dfrac{0.5}{1 - 0.5} = \dfrac{0.5}{0.5} = \dfrac{1}{1}\)`
+`\(\dfrac{0.5}{1 - 0.5} = \dfrac{0.5}{0.5} = \dfrac{1}{1} = 1\)`
 
 *Note: This could also be written 1:1*
 
@@ -134,11 +134,11 @@ If `\(\pi = P(\text{Accepted} = 1)\)`, then `\(\dfrac{\pi}{1 - \pi}\)` is the od
 ]
 
 .cbox[
-`\(\dfrac{0.6}{0.4} = \dfrac{1.5}{1}\)`
+`\(\dfrac{0.6}{0.4} = \dfrac{1.5}{1} = 1.5\)`
 ]
 
 .dbox[
-`\(\dfrac{0.4}{0.6} = \dfrac{1}{1.5}\)`
+`\(\dfrac{0.4}{0.6} = \dfrac{1}{1.5} = 0.667\)`
 ]
 
 ---
@@ -158,14 +158,201 @@ If `\(\pi = P(\text{Accepted} = 1)\)`, then `\(\dfrac{\pi}{1 - \pi}\)` is the od
 ]
 
 .cbox[
-`\(\dfrac{0.6}{0.4} = \dfrac{1.5}{1}\)`
+`\(\dfrac{0.6}{0.4} = \dfrac{1.5}{1} = 1.5\)`
 ]
 
 .dbox[
-`\(\dfrac{0.4}{0.6} = \dfrac{1}{1.5}\)`
+`\(\dfrac{0.4}{0.6} = \dfrac{1}{1.5} = 0.667\)`
 ]
 
-**Solution:** The odds are `\(\dfrac{0.6}{0.4} = \dfrac{1.5}{1}\)` (we could also write this 1.5:1)
+**Solution:** The odds are `\(\dfrac{0.6}{0.4} = \dfrac{1.5}{1} = 1.5\)` (we could also write this 1.5:1)
+
+---
+
+## Example
+
+.pull-left[
+Study on whether transcranial magnetic stimulation (TMS) helps relieve migraine pain:
+
+.center[
+| | TMS | Placebo | Total |
+| --- | --- | --- | --- |
+| Pain free two hours later | 39 | 22 | 61 |
+| Not pain free two hours later | 61 | 78 | 139 |
+| Total | 100 | 100 | 200 |
+]
+]
+
+.pull-right[
+What fraction of TMS patients were pain free after 2 hours?
+
+.abox[
+0.39
+]
+
+.bbox[
+0.22
+]
+
+.cbox[
+0.61
+]
+
+.dbox[
+0.64
+]
+
+]
+
+--
+
+**Answer:** 39/100 = 0.39 
+
+---
+
+## Example
+
+.pull-left[
+Study on whether transcranial magnetic stimulation (TMS) helps relieve migraine pain:
+
+.center[
+| | TMS | Placebo | Total |
+| --- | --- | --- | --- |
+| Pain free two hours later | 39 | 22 | 61 |
+| Not pain free two hours later | 61 | 78 | 139 |
+| Total | 100 | 100 | 200 |
+]
+]
+
+.pull-right[
+What are the odds of being pain free after 2 hours for the TMS group?
+
+.abox[
+0.39
+]
+
+.bbox[
+0.64
+]
+
+.cbox[
+0.22
+]
+
+.dbox[
+1.56
+]
+
+]
+
+--
+
+**Answer:** (39/100)/(61/100) = 0.64
+
+---
+
+## Example
+
+.pull-left[
+Study on whether transcranial magnetic stimulation (TMS) helps relieve migraine pain:
+
+.center[
+| | TMS | Placebo | Total |
+| --- | --- | --- | --- |
+| Pain free two hours later | 39 | 22 | 61 |
+| Not pain free two hours later | 61 | 78 | 139 |
+| Total | 100 | 100 | 200 |
+]
+]
+
+.pull-right[
+What are the odds of being pain free after 2 hours for the placebo group?
+
+.abox[
+0.22
+]
+
+.bbox[
+0.64
+]
+
+.cbox[
+0.36
+]
+
+.dbox[
+0.28
+]
+
+]
+
+--
+
+**Answer:** (22/100)/(78/100) = 0.28
+
+---
+
+## Odds ratio
+
+.center[
+| | TMS | Placebo | Total |
+| --- | --- | --- | --- |
+| Pain free two hours later | 39 | 22 | 61 |
+| Not pain free two hours later | 61 | 78 | 139 |
+| Total | 100 | 100 | 200 |
+]
+
+Odds of being pain free after 2 hours for TMS group: 0.64
+
+Odds of being pain free after 2 hours for placebo group: 0.28
+
+**Odds ratio:** `\(0.64/0.28 = 2.29\)`
+
+.question[
+The odds of being pain free after 2 hours were 2.29 times higher with TMS than with the placebo.
+]
+
+---
+
+## Class activity
+
+---
+
+## GPA and med school acceptance
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ \text{GPA}\)`
+
+* Odds of acceptance for a student with a 3.0 GPA: `\(\exp\{-19.21 + 5.45 \cdot 3\} = 0.0573\)`
+
+--
+* Odds of acceptance for a student with a 4.0 GPA: `\(\exp\{-19.21 + 5.45 \cdot 4\} = 13.3298\)`
+
+--
+* Odds ratio: `\(13.3298/0.0573 = 233\)`
+    * So the odds of acceptance are 233 times higher for a student with a GPA of 4.0 vs. 3.0
+
+---
+
+## GPA and med school acceptance
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ \text{GPA}\)`
+
+* Odds of acceptance for a student with a 3.0 GPA: `\(\exp\{-19.21 + 5.45 \cdot 3\} = 0.0573\)`
+* Odds of acceptance for a student with a 4.0 GPA: `\(\exp\{-19.21 + 5.45 \cdot 4\} = 13.3298\)`
+* Odds ratio: `\(13.3298/0.0573 = 233\)`
+    * So the odds of acceptance are 233 times higher for a student with a GPA of 4.0 vs. 3.0
+* The odds of acceptance are also 233 times higher for a student with a GPA of 3.8 vs. 2.8
+    * An increase of 1 unit in GPA is associated with a change in odds of acceptance by a factor of 233
+    * And `\(\exp\{\widehat{\beta}_1\} = \exp\{5.45\} = 233\)`
+
+---
+
+## Interpreting the fitted regression model
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = \widehat{\beta}_0 + \widehat{\beta}_1 \ x\)`
+
+* `\(\exp\{\widehat{\beta}_0\} =\)` estimated odds when `\(x = 0\)`
+* `\(\exp\{\widehat{\beta}_1\} =\)` odds ratio for an increase of one unit in `\(x\)`
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
