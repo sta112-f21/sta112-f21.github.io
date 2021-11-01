@@ -15,6 +15,9 @@ editor_options:
 
 ## Agenda
 
+* Project 2 released, due November 15
+* Today: beginning logistic regression
+
 ---
 
 ## Linear regression
@@ -371,16 +374,18 @@ The odds of being pain free after 2 hours were 2.29 times higher with TMS than w
 
 ## Class activity
 
+[https://sta112-f21.github.io/class_activities/ca_lecture_30.html](https://sta112-f21.github.io/class_activities/ca_lecture_30.html)
+
 ---
 
 ## GPA and med school acceptance
 
 $\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ \text{GPA}$
 
-* Odds of acceptance for a student with a 3.0 GPA: $\exp\{-19.21 + 5.45 \cdot 3\} = 0.0573$
+* Estimated odds of acceptance for a student with a 3.0 GPA: $\exp\{-19.21 + 5.45 \cdot 3\} = 0.0573$
 
 --
-* Odds of acceptance for a student with a 4.0 GPA: $\exp\{-19.21 + 5.45 \cdot 4\} = 13.3298$
+* Estimated odds of acceptance for a student with a 4.0 GPA: $\exp\{-19.21 + 5.45 \cdot 4\} = 13.3298$
 
 --
 * Odds ratio: $13.3298/0.0573 = 233$
@@ -392,8 +397,8 @@ $\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ 
 
 $\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ \text{GPA}$
 
-* Odds of acceptance for a student with a 3.0 GPA: $\exp\{-19.21 + 5.45 \cdot 3\} = 0.0573$
-* Odds of acceptance for a student with a 4.0 GPA: $\exp\{-19.21 + 5.45 \cdot 4\} = 13.3298$
+* Estimated odds of acceptance for a student with a 3.0 GPA: $\exp\{-19.21 + 5.45 \cdot 3\} = 0.0573$
+* Estimated odds of acceptance for a student with a 4.0 GPA: $\exp\{-19.21 + 5.45 \cdot 4\} = 13.3298$
 * Odds ratio: $13.3298/0.0573 = 233$
     * So the odds of acceptance are 233 times higher for a student with a GPA of 4.0 vs. 3.0
 * The odds of acceptance are also 233 times higher for a student with a GPA of 3.8 vs. 2.8
@@ -407,4 +412,4 @@ $\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ 
 $\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = \widehat{\beta}_0 + \widehat{\beta}_1 \ x$
 
 * $\exp\{\widehat{\beta}_0\} =$ estimated odds when $x = 0$
-* $\exp\{\widehat{\beta}_1\} =$ odds ratio for an increase of one unit in $x$
+* $\exp\{\widehat{\beta}_1\} =$ estimated odds ratio for an increase of one unit in $x$

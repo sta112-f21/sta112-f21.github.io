@@ -1,5 +1,5 @@
 ---
-title: "Project 1"
+title: "Project 2"
 output: 
   rmdformats::robobook:
     css: "homework.css"
@@ -165,7 +165,7 @@ Write 2-3 paragraphs which:
 
 * Describe details of the data. What does a row in the data represent? How many rows and columns? What information do the variables record? Are there any missing data?
 * Describe any data manipulation. Did you remove any missing values? Did you focus only on a subset of the data?
-* Describe how you will address the research questions. Perhaps you will fit a specific model and perform a nested F-test. Or perhaps you will perform best subsets selection and interpret the results.
+* Describe how you will address the research questions. Perhaps you will fit a specific model and perform a nested F-test. Or perhaps you will perform best subsets selection and interpret the results. Different research questions may require different models and analysis procedures.
 * Describe the model diagnostics you will perform; these should include assumption diagnostics (such as shape and constant variance), checking for outliers, and checking for multicollinearity.
 
 ### Results (25 pts)

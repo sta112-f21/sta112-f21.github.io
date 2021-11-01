@@ -83,11 +83,51 @@
 </tbody>
 </table>
 <ol style="list-style-type: decimal">
-<li><p>What fraction of first-class passengers survived?</p></li>
-<li><p>What were the odds of survival for first-class passengers?</p></li>
-<li><p>What were the odds of survival for second and third class passengers?</p></li>
-<li><p>Calculate the odds ratio comparing odds of survival for first-class passengers to odds of survival for second and third class passengers.</p></li>
+<li>What fraction of first-class passengers survived?</li>
 </ol>
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+<BUTTON ONCLICK="ShowAndHide(&#39;q1_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q1_solution" style="display:none">
+<p><span class="math inline">\(136/216 = 0.63\)</span></p>
+</div>
+<ol start="2" style="list-style-type: decimal">
+<li>What were the odds of survival for first-class passengers?</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q2_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q2_solution" style="display:none">
+<p><span class="math inline">\((136/216)/(80/216) = 136/80 = 1.7\)</span></p>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>What were the odds of survival for second and third class passengers?</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q3_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q3_solution" style="display:none">
+<p><span class="math inline">\((206/675)/(469/675) = 206/469 = 0.44\)</span></p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Calculate the odds ratio comparing odds of survival for first-class passengers to odds of survival for second and third class passengers.</li>
+</ol>
+<BUTTON ONCLICK="ShowAndHide(&#39;q4_solution&#39;)">
+Solution
+</BUTTON>
+<div id="q4_solution" style="display:none">
+<p>Odds ratio: <span class="math inline">\(1.7/0.44 = 3.86\)</span>, so the odds of survival are 3.86 times higher for first-class passengers than for second and third class passengergs.</p>
+</div>
 </div>
 <div id="gpa-and-med-school-acceptance" class="section level2">
 <h2>GPA and med school acceptance</h2>
@@ -98,7 +138,8 @@
 <li><p>What is the estimated odds of acceptance for a student with a GPA of 3.0? <em>(Hint: calculate on the log scale, then exponentiate. Remember that <span class="math inline">\(\log\)</span> here means natural log.)</em></p></li>
 <li><p>What is the estimated odds of acceptance for a student with a GPA of 4.0?</p></li>
 <li><p>Calculate the odds ratio comparing odds of acceptance for a student with a GPA of 4.0 to a student with a GPA of 3.0.</p></li>
-<li><p>The estimated slope of the logistic regression model is <span class="math inline">\(\widehat{\beta}_1 = 5.45\)</span>. Compare your answer in question 7 to <span class="math inline">\(e^{\widehat{\beta}_1}\)</span>.</p></li>
+<li><p>Calculate the odds ratio comparing odds of acceptance for a student with a GPA of 3.8 to a student with a GPA of 2.8.</p></li>
+<li><p>The estimated slope of the logistic regression model is <span class="math inline">\(\widehat{\beta}_1 = 5.45\)</span>. Compare your answers in questions 7 and 8 to <span class="math inline">\(e^{\widehat{\beta}_1}\)</span>.</p></li>
 </ol>
 </div>
 

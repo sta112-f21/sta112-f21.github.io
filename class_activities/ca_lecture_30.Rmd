@@ -22,11 +22,46 @@ Here we have data on 891 *Titanic* passengers, showing survival by class.
 
 1. What fraction of first-class passengers survived?
 
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+$136/216 = 0.63$
+</DIV>
+
 2. What were the odds of survival for first-class passengers?
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+$(136/216)/(80/216) = 136/80 = 1.7$
+</DIV>
 
 3. What were the odds of survival for second and third class passengers?
 
+<BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
+
+<DIV ID="q3_solution" STYLE="display:none">
+$(206/675)/(469/675) = 206/469 = 0.44$
+</DIV>
+
 4. Calculate the odds ratio comparing odds of survival for first-class passengers to odds of survival for second and third class passengers.
+
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+Odds ratio: $1.7/0.44 = 3.86$, so the odds of survival are 3.86 times higher for first-class passengers than for second and third class passengergs.
+</DIV>
 
 ## GPA and med school acceptance
 
