@@ -17,9 +17,22 @@ editor_options:
 
 * Project 2 released, due November 15
 * Lab 6: Johe has left some detailed comments
+* STA courses
 * Quick discussion of quiz 4
 * Today: beginning logistic regression
 
+---
+
+## STA courses next semester
+
+Intermediate courses (200-level)
+
+* STA 279 Categorical and multilevel models
+    * Follows 112, more about model building and different types of regression
+    * Relaxing some assumptions from 112
+* STA 247 Design and sampling
+    * data collection, observational studies, experiments
+    
 ---
 
 ## Quiz 4
