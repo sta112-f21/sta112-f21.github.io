@@ -20,13 +20,35 @@ class: center, middle, inverse, title-slide
 ## Agenda
 
 * Project 2 released, due November 15
+* Lab 6: Johe has left some detailed comments
+* Quick discussion of quiz 4
 * Today: beginning logistic regression
+
+---
+
+## Quiz 4
+
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+* **Question 1:** Based on the scatterplot, model 3 is most appropriate because an interaction is needed to capture the different slopes for different noise types
+* **Question 3:** The researchers want to test whether the slope is different for different noise types. `\(H_0: \beta_3 = 0\)` vs. `\(H_A: \beta_3 \neq 0\)`, where `\(\beta_3\)` is the coefficient for the interaction between mass and noise
+    
+---
+
+## Quiz 4
+
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+* **Question 3:** The researchers want to test whether the slope is different for different noise types. `\(H_0: \beta_3 = 0\)` vs. `\(H_A: \beta_3 \neq 0\)`, where `\(\beta_3\)` is the coefficient for the interaction between mass and noise
+* **Question 4:** 
+    * reduced model: `\(\text{oxygen} = \beta_0 + \beta_1 \text{IsShip} + \beta_2 \text{Mass} + \varepsilon\)`
+    * full model: `\(\text{oxygen} = \beta_0 + \beta_1 \text{IsShip} + \beta_2 \text{Mass} + \beta_3 \text{IsShip} \cdot \text{Mass} + \varepsilon\)`
 
 ---
 
 ## Linear regression
 
-&lt;img src="lecture_30_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
 `\(\text{MCAT} = \beta_0 + \beta_1 \text{GPA} + \varepsilon\)`
 
@@ -48,7 +70,7 @@ MCAT score is a quantitative response. What if our response isn't quantitative?
 
 --
 
-&lt;img src="lecture_30_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -60,7 +82,7 @@ What's wrong with this fit?
 
 ## Binary response
 
-&lt;img src="lecture_30_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 **Problem:** 
 * probabilities (e.g., `\(P(Accepted = 1)\)` ) are constrained to be between 0 and 1
@@ -72,7 +94,7 @@ What's wrong with this fit?
 
 **Better idea:** &lt;ins&gt;curved&lt;/ins&gt; fit!
 
-&lt;img src="lecture_30_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -90,7 +112,7 @@ We just need a good transformation!
 
 ## Logistic regression
 
-&lt;img src="lecture_30_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture_30_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 `\(\pi = P(\text{Accepted} = 1)\)`
 

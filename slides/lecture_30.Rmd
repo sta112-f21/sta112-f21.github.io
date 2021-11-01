@@ -16,17 +16,71 @@ editor_options:
 ## Agenda
 
 * Project 2 released, due November 15
+* Lab 6: Johe has left some detailed comments
+* Quick discussion of quiz 4
 * Today: beginning logistic regression
 
 ---
 
-## Linear regression
+## Quiz 4
 
 ```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
 library(tidyverse)
 library(Stat2Data)
 data("MedGPA")
 
+set.seed(3)
+
+x = rnorm(100, mean=50, sd=15)
+sim_data <- data.frame(Noise = rep(c("ocean", "ship"), each = 50),
+                       Mass = x,
+                       Oxygen = c(50 + 2*x[1:50] + rnorm(50, sd=15),
+                                  300 - 2*x[51:100] + rnorm(50, sd=15)))
+
+sim_data %>%
+  ggplot(aes(x = Mass, y = Oxygen, color = Noise)) +
+  geom_point(size=2) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+* **Question 1:** Based on the scatterplot, model 3 is most appropriate because an interaction is needed to capture the different slopes for different noise types
+* **Question 3:** The researchers want to test whether the slope is different for different noise types. $H_0: \beta_3 = 0$ vs. $H_A: \beta_3 \neq 0$, where $\beta_3$ is the coefficient for the interaction between mass and noise
+    
+---
+
+## Quiz 4
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
+library(tidyverse)
+library(Stat2Data)
+data("MedGPA")
+
+set.seed(3)
+
+x = rnorm(100, mean=50, sd=15)
+sim_data <- data.frame(Noise = rep(c("ocean", "ship"), each = 50),
+                       Mass = x,
+                       Oxygen = c(50 + 2*x[1:50] + rnorm(50, sd=15),
+                                  300 - 2*x[51:100] + rnorm(50, sd=15)))
+
+sim_data %>%
+  ggplot(aes(x = Mass, y = Oxygen, color = Noise)) +
+  geom_point(size=2) +
+  theme_bw() +
+  theme(text = element_text(size=20))
+```
+
+* **Question 3:** The researchers want to test whether the slope is different for different noise types. $H_0: \beta_3 = 0$ vs. $H_A: \beta_3 \neq 0$, where $\beta_3$ is the coefficient for the interaction between mass and noise
+* **Question 4:** 
+    * reduced model: $\text{oxygen} = \beta_0 + \beta_1 \text{IsShip} + \beta_2 \text{Mass} + \varepsilon$
+    * full model: $\text{oxygen} = \beta_0 + \beta_1 \text{IsShip} + \beta_2 \text{Mass} + \beta_3 \text{IsShip} \cdot \text{Mass} + \varepsilon$
+
+---
+
+## Linear regression
+
+```{r echo=F, message=F, fig.width=6, fig.height=4, fig.align='center'}
 MedGPA %>%
   ggplot(aes(x = GPA, y = MCAT)) +
   geom_point() +
