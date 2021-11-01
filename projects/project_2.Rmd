@@ -1,0 +1,203 @@
+---
+title: "Project 1"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Monday, November 15, 12:00pm (noon) on Canvas
+
+**Submission:** A template file is provided, which includes the five section headings: [project_2_template.Rmd](https://sta112-f21.github.io/projects/project_2_template.Rmd)
+
+Once you have completed the report, submit *both* your 
+knitted HTML file and the R Markdown file to Canvas.
+
+# Overview
+
+In this project, you will use exploratory data analysis and linear regression to investigate several research questions. You will then write a data analysis report that communicates the results of your analysis and draws a conclusion about the research questions. As discussed in the Collaboration section below, this project must be completed independently.
+
+# Data
+
+In online discussion forums, a wide variety of information is collected about each post. This information can help moderators monitor the site, by helping them predict which posts will receive the most attention, and which may need to be moderated or deleted due to offensive or off-topic comments.
+
+The data here comes from a website called ScienceForums.Net (SFN), which has been open since 2002 and hosts conversations on a range of topics from biological and physical science to religion and philosophy. Each row in the data represents one 'thread', which is comprised of a series of posts stemming from an initial post. For each thread, we have some information that SFN collects such as the number of views and the number of authors. The threads present in the data are a random sample of threads from 2002-2014, with the data collected in 2014. SFN moderators are interested in using this data to determine which threads warrant the most attention.
+
+## Research questions
+
+For this project, suppose you have been approached by moderators at SFN. They give you the data, and ask the following questions:
+
+1. What is the relationship between views and posts? Does it vary by subforum? In answering this question, the moderators want you to make sure that you account for other variables which may be associated with views and posts; for example, older threads may have more views just because they have been around longer.
+
+2. Are members who have been registered for longer before starting the thread more successful at starting active discussions? As in question 1, make sure you account for potential confounding variables.
+
+3. Moderators want to know which threads will have longer durations. They want you to identify a set of variables which best predicts thread duration, and which yields an interpretable model. 
+
+You will investigate each of these research questions in your analysis, and explain your results for the three questions in your report.
+
+## Variables
+
+The dataset provided for this project contains the following columns:
+
+* `Age`: the age of the thread (in days) when the data was collected in 2014, measured from the first post in the thread
+* `State`: sometimes moderators close threads if they are inappropriate. closed indicates the thread has been closed, otherwise State is open
+* `Posts`: the number of posts in the thread
+* `Views`: the total number of views of the thread
+* `Duration`: 	the number of days between the first and last posts in the thread
+* `Authors`: the number of distinct authors posting in the thread
+* `AuthorExperience`: the number of days the author of the first post in the thread had been registered on SFN when the thread began (0 indicates they registered that day)
+* `DeletedPosts`: the number of posts in the thread that have been deleted by a moderator
+* `Forum`: the forum in which the thread was posted (e.g., Science)
+* `AuthorBanned`: whether the original author of the thread is currently banned from posting on SFN (at the time of data collection, not when the thread was first posted)
+
+## Downloading the data
+
+The data for this project is stored in a CSV file, and can be imported into R with the `read_csv` function in the `readr` package. The following code imports the data and saves it as a data frame called `sfn`:
+
+```r
+sfn <- read_csv("https://sta112-f21.github.io/projects/sfn.csv")
+```
+
+This code is included in the setup chunk of the R Markdown template for the project.
+
+
+# Content
+
+Your report will be written in the IMRaD format which we discussed in class, and which you used for Homework 4 and Project 1, with the following sections:
+
+* **Introduction:** motivates the research questions, why you want to study them, and the data you will use to study them.
+* **Methods:** further details on the data you will use to answer the research questions, and a description of the statistical methods you will use to analyze the data.
+* **Results:** the final results of your statistical analysis, such as the equations of the final models, confidence intervals, hypothesis tests, and model selection procedures.
+* **Discussion:** interpret the Results in the context of the original research questions.
+* **Appendix:** any supplementary details that were not included in the main report.
+
+There is no minimum or maximum length required. However, your analysis should be thorough, with your report addressing all three research questions, and containing all the elements described in the grading rubric below.
+
+# Collaboration
+
+One purpose of the projects is to capture your knowledge and understanding of statistics and data analysis. Unlike homework and lab assignments, this project must be completed on your own, without collaborating with other students. 
+
+You may:
+
+* ask the instructor for help
+* use resources from the class notes and internet (Wikipedia, StackExchange, etc.)
+
+You may not:
+
+* work with another student on the project
+* ask a TA or tutor (e.g., at the MSC) for help
+
+# Appearance and style
+
+### Writing
+
+The report should be written like an article or research paper: in full sentences and paragraphs, with headings for each section. You should not write your report with question numbers or as a list of bullet points. Scientific articles are generally written in third person, though "we" can also be acceptable ("we can see from Figure 1...") in some disciplines.
+
+### Code
+
+As with previous assignments, you will write the document in R Markdown. However, in full reports, the only output that should be visible from code chunks are figures and tables. If a code chunk does not produce a figure or table, you can hide it from the knitted document with `include=F`:
+
+````
+```{r, include=F}`r ''`
+
+```
+````
+
+If a code chunk produces a figure or table, only the figure or table should be visible in the knitted document. You can hide the chunk but display the output with `echo=F, message=F, warning=F`:
+
+````
+```{r, echo=F, message=F, warning=F}`r ''`
+
+```
+````
+
+### Figures
+
+Figures should have labeled axes, and should be clear and easy to read. Figures should also be captioned and numbered; to caption a figure, use `fig.cap = "..."` in the chunk options. For example (scroll to the right on the code to see it all),
+
+````
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Bill depth vs. bill length for penguins near Palmer Station, Antarctica."}`r ''`
+penguins %>%
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm)) +
+  geom_point() +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)") +
+  theme_bw()
+```
+````
+
+is displayed as
+
+```{r include=F}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Bill depth vs. bill length for penguins near Palmer Station, Antarctica."}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm)) +
+  geom_point() +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)") +
+  theme_bw()
+```
+
+Captions should provide enough information to understand what is being plotted, but interpretation can be left to the main text. Refer to figures by their number in the text. Make sure that any figures you include are discussed in the text.
+
+
+# Rubric
+
+### Introduction (15 pts)
+
+Write 1-2 paragraphs which:
+
+* Motivate the research questions
+* Describe where the data came from
+* Provide background on the dataset
+* Finish by summarizing what you will do in the report
+
+### Methods (25 pts)
+
+Write 2-3 paragraphs which:
+
+* Describe details of the data. What does a row in the data represent? How many rows and columns? What information do the variables record? Are there any missing data?
+* Describe any data manipulation. Did you remove any missing values? Did you focus only on a subset of the data?
+* Describe how you will address the research questions. Perhaps you will fit a specific model and perform a nested F-test. Or perhaps you will perform best subsets selection and interpret the results.
+* Describe the model diagnostics you will perform; these should include assumption diagnostics (such as shape and constant variance), checking for outliers, and checking for multicollinearity.
+
+### Results (25 pts)
+
+Write 2-3 paragraphs which:
+
+* Report the software used to fit the models. In this case, you can say "All analysis was completed using R", and list any specific packages used
+* Report the results of your statistical analysis, including
+    * The equations of fitted final models, with interpretation (interpret key coefficients and $R^2_{adj}$ )
+    * Any hypothesis tests and p-values
+    * Any confidence intervals
+    * Any variable selection procedures (e.g., best subsets selection)
+* Report model diagnostics, including:
+    * assumption diagnostics
+    * checking for outliers
+    * checking for multicollinearity
+
+### Discussion (15 pts)
+
+Write 1-2 paragraphs which:
+
+* Summarize what you learned from your analysis, and how it addresses the original research questions
+* Discuss any limitations to the analysis, and how they could be improved in future work
+
+### Appendix (10 pts)
+
+* Include any exploratory data analysis that was relevant
+* Report the results for any other models apart from the final models
+
+### Format (10 pts)
+
+* Uses the IMRaD format, with appropriate section titles
+* Figures are meaningfully captioned
+* Axes are labeled, with units
+* Code chunks not displayed in the knitted report
