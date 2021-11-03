@@ -1,0 +1,337 @@
+---
+author: "Dr. Ciaran Evans"
+title: Understanding the logistic regression model
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* AWM info session on internships and REUs
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+What are the odds of survival for female passengers?
+
+.abox[
+0.26
+]
+
+.bbox[
+0.68
+]
+
+.cbox[
+0.74
+]
+
+.dbox[
+2.88
+]
+
+]
+
+--
+
+**Answer:** (233/314)/(81/314) = 2.88
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+The odds of survival for female passengers are 2.88. How would you interpret these odds?
+
+.abox[
+Female passengers are 2.88 times more likely to survive than male passengers.
+]
+
+.bbox[
+Female passengers are 2.88 times more likely to survive than not survive.
+]
+
+.cbox[
+The probability of survival for female passengers is 2.88.
+]
+
+
+]
+
+--
+
+**Answer:** Female passengers are 2.88 times more likely to survive than not survive.
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+What is the odds ratio of survival for female vs. male passengers?
+
+.abox[
+12.35
+]
+
+.bbox[
+2.88
+]
+
+.cbox[
+0.08
+]
+
+.dbox[
+3.92
+]
+
+]
+
+--
+
+**Answer:** (233/81)/(109/468) = 12.35
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+The odds ratio of survival for female vs. male passengers is 12.35. How would you interpret this odds ratio?
+
+.abox[
+Female passengers are 12.35 times more likely to survive than male passengers.
+]
+
+.bbox[
+The odds of survival are 12.35 times higher for female passengers than for male passengers.
+]
+
+.cbox[
+Female passengers are 12.35 times more likely to survive than not survive.
+]
+
+.dbox[
+The probability of survival for female passengers is 12.35.
+]
+
+]
+
+--
+
+**Answer:** The odds of survival are 12.35 times higher for female passengers than for male passengers.
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}$
+]
+
+.pull-right[
+Based on the fitted logistic regression model, are older passengers more or less likely to survive?
+
+.abox[
+More likely
+]
+
+.cbox[
+Less likely
+]
+]
+
+--
+
+**Answer:** less likely (odds of survival decreases with age, so the probability of survival decreases with age too)
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}$
+]
+
+.pull-right[
+What are the estimated odds of survival for a newborn baby?
+
+.abox[
+-0.057
+]
+
+.bbox[
+0.94
+]
+
+.cbox[
+-0.011
+]
+
+.dbox[
+0.99
+]
+
+]
+
+--
+
+**Answer:** $\exp\{-0.057\} = 0.94$
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}$
+]
+
+.pull-right[
+What is the estimated change in the odds of survival for an increase of 1 year in age?
+
+.abox[
+The odds of surival change by a factor of -0.057
+]
+
+.bbox[
+The odds of survival change by a factor of 0.94
+]
+
+.cbox[
+The odds of survival change by a factor of -0.011
+]
+
+.dbox[
+The odds of survival change by a factor of 0.99
+]
+
+]
+
+--
+
+**Answer:** $\exp\{-0.011\} = 0.99$
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}$
+]
+
+.pull-right[
+What is the estimated *probability* of survival for a passenger 40 years old?
+
+.abox[
+0.38
+]
+
+.bbox[
+0.61
+]
+
+.cbox[
+-0.497
+]
+
+.dbox[
+0.99
+]
+
+]
+
+--
+
+**Answer:** $\dfrac{\exp\{-0.057 - 0.011 \cdot 40\}}{1 + \exp\{-0.057 - 0.011 \cdot 40\}} = 0.38$
+
+---
+
+## Converting from log-odds to probabilities
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = \widehat{\beta}_0 + \widehat{\beta}_1 \ x$
+
+$\widehat{\pi} = \dfrac{\exp\{\widehat{\beta}_0 + \widehat{\beta}_1 \ x \}}{1 + \exp\{\widehat{\beta}_0 + \widehat{\beta}_1 \ x \}}$
+
+---
+
+## Shape of the fitted curve
+
+How does the shape of the fitted logistic regression depend on $\widehat{\beta}_0$ and $\widehat{\beta}_1$?
+
+.pull-left[
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+library(tidyverse)
+
+expit <- function(p){
+  return(exp(p)/(1 + exp(p)))
+}
+
+data.frame(x = seq(-5, 5, length.out=100),
+           y = expit(-0.7 + seq(-5, 5, length.out=100)))
+```
+]
+
+.pull-right[
+
+]

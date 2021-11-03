@@ -405,14 +405,25 @@ quantile(param_boot$t, 0.975)
 
 (0.67612 - 1)/0.07411
 
-# do we need any random slopes?
-# Note that in this case, we have a pretty simple design
+# adding random slopes
 
 ble_lme_2 <- lmer(log_metabolic ~ Stage*Species + 
-                  log_mass + (log_mass|Run), data = bryozoan_larvae_early)
+                  log_mass + (log_mass|Run), 
+                  data = bryozoan_larvae_early)
 
+summary(ble_lme_2)
 
-anova(ble_lme, ble_lme_2)
+boot_fun <- function(fitted_mod){
+  return(mean(coef(fitted_mod)$Run$log_mass))
+}
+
+param_boot <- bootMer(ble_lme_2, boot_fun, nsim = 10000,
+                      seed = 3, type = "parametric")
+
+# (simple percentile interval)
+quantile(param_boot$t, 0.025)
+quantile(param_boot$t, 0.975)
+
 
 # Now what if we wanted to include the late-stage 
 # bugula in our model too? 

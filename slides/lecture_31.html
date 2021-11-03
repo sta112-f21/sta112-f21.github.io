@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Understanding the logistic regression model</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Understanding the logistic regression model
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* AWM info session on internships and REUs
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+What are the odds of survival for female passengers?
+
+.abox[
+0.26
+]
+
+.bbox[
+0.68
+]
+
+.cbox[
+0.74
+]
+
+.dbox[
+2.88
+]
+
+]
+
+--
+
+**Answer:** (233/314)/(81/314) = 2.88
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+The odds of survival for female passengers are 2.88. How would you interpret these odds?
+
+.abox[
+Female passengers are 2.88 times more likely to survive than male passengers.
+]
+
+.bbox[
+Female passengers are 2.88 times more likely to survive than not survive.
+]
+
+.cbox[
+The probability of survival for female passengers is 2.88.
+]
+
+
+]
+
+--
+
+**Answer:** Female passengers are 2.88 times more likely to survive than not survive.
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+What is the odds ratio of survival for female vs. male passengers?
+
+.abox[
+12.35
+]
+
+.bbox[
+2.88
+]
+
+.cbox[
+0.08
+]
+
+.dbox[
+3.92
+]
+
+]
+
+--
+
+**Answer:** (233/81)/(109/468) = 12.35
+
+---
+
+## Concept check
+
+.pull-left[
+Survival on the *Titanic* by passenger sex:
+
+| | Female | Male | Total |
+| --- | --- | --- | --- |
+| Survived | 233 | 109 | 342 |
+| Did not survive | 81 | 468 | 549 |
+| Total | 314 | 577 | 891 |
+
+]
+
+.pull-right[
+The odds ratio of survival for female vs. male passengers is 12.35. How would you interpret this odds ratio?
+
+.abox[
+Female passengers are 12.35 times more likely to survive than male passengers.
+]
+
+.bbox[
+The odds of survival are 12.35 times higher for female passengers than for male passengers.
+]
+
+.cbox[
+Female passengers are 12.35 times more likely to survive than not survive.
+]
+
+.dbox[
+The probability of survival for female passengers is 12.35.
+]
+
+]
+
+--
+
+**Answer:** The odds of survival are 12.35 times higher for female passengers than for male passengers.
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}\)`
+]
+
+.pull-right[
+Based on the fitted logistic regression model, are older passengers more or less likely to survive?
+
+.abox[
+More likely
+]
+
+.cbox[
+Less likely
+]
+]
+
+--
+
+**Answer:** less likely (odds of survival decreases with age, so the probability of survival decreases with age too)
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}\)`
+]
+
+.pull-right[
+What are the estimated odds of survival for a newborn baby?
+
+.abox[
+-0.057
+]
+
+.bbox[
+0.94
+]
+
+.cbox[
+-0.011
+]
+
+.dbox[
+0.99
+]
+
+]
+
+--
+
+**Answer:** `\(\exp\{-0.057\} = 0.94\)`
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}\)`
+]
+
+.pull-right[
+What is the estimated change in the odds of survival for an increase of 1 year in age?
+
+.abox[
+The odds of surival change by a factor of -0.057
+]
+
+.bbox[
+The odds of survival change by a factor of 0.94
+]
+
+.cbox[
+The odds of survival change by a factor of -0.011
+]
+
+.dbox[
+The odds of survival change by a factor of 0.99
+]
+
+]
+
+--
+
+**Answer:** `\(\exp\{-0.011\} = 0.99\)`
+
+---
+
+## Concept check
+
+.pull-left[
+Now let's look at the relationship between age and survival for *Titanic* passengers. Our fitted logistic regression model is
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.057 - 0.011 \ \text{age}\)`
+]
+
+.pull-right[
+What is the estimated *probability* of survival for a passenger 40 years old?
+
+.abox[
+0.38
+]
+
+.bbox[
+0.61
+]
+
+.cbox[
+-0.497
+]
+
+.dbox[
+0.99
+]
+
+]
+
+--
+
+**Answer:** `\(\dfrac{\exp\{-0.057 - 0.011 \cdot 40\}}{1 + \exp\{-0.057 - 0.011 \cdot 40\}} = 0.38\)`
+
+---
+
+## Converting from log-odds to probabilities
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = \widehat{\beta}_0 + \widehat{\beta}_1 \ x\)`
+
+`\(\widehat{\pi} = \dfrac{\exp\{\widehat{\beta}_0 + \widehat{\beta}_1 \ x \}}{1 + \exp\{\widehat{\beta}_0 + \widehat{\beta}_1 \ x \}}\)`
+
+---
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
