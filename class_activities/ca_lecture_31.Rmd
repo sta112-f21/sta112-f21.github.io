@@ -1,0 +1,41 @@
+---
+title: "Class Activity, November 3"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+## Instructions
+
+In this class activity, you practice fitting and using a logistic regression model. 
+
+**Data:** We will use the `MedGPA` data, which is included in the `Stat2Data` package for our textbook. This data looks at the relationship between GPA, MCAT score, and admission to medical school. We have already examined the relationship between GPA and admission. In this class activity you will look at the relationship between MCAT score and admission.
+
+To import the data, run the following:
+
+```r
+library(Stat2Data)
+data("MedGPA")
+```
+
+**Activity template:** [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_31_template.Rmd)
+
+## Questions
+
+1. Run the following code to fit a logistic regression model with MCAT score as the predictor and acceptance as the response:
+
+```r
+med_glm <- glm(Acceptance ~ MCAT, data = MedGPA, 
+               family = binomial)
+```
+
+Write down the equation of the estimated logistic regression model.
+
+2. What is the change in the odds of acceptance associated with an increase of 1 point on the MCAT?
+
+3. What is the estimated probability that a student with an MCAT score of 40 is accepted?
+
+4. For approximately what MCAT score would a student have a roughly 50-50 chance of being accepted to medical school?

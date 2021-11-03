@@ -319,6 +319,118 @@ What is the estimated *probability* of survival for a passenger 40 years old?
 
 ---
 
+## Shape of the fitted curve
+
+How does the shape of the fitted logistic regression depend on `\(\widehat{\beta}_0\)` and `\(\widehat{\beta}_1\)`?
+
+.pull-left[
+`\(\widehat{\pi} = \dfrac{\exp\{\widehat{\beta}_0 +  x \}}{1 + \exp\{\widehat{\beta}_0 + x \}} \hspace{0.5cm}\)` for `\(\widehat{\beta}_0 = -3, -1, 1\)`
+
+&lt;img src="lecture_31_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+`\(\widehat{\pi} = \dfrac{\exp\{-1 +  \widehat{\beta}_1 \ x \}}{1 + \exp\{-1 +  \widehat{\beta}_1 \ x \}} \hspace{0.5cm}\)` for `\(\widehat{\beta}_1 = 0.5, 1, 2\)`
+
+&lt;img src="lecture_31_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Fitting logistic regression in R
+
+
+```r
+library(Stat2Data)
+data("MedGPA")
+
+med_glm &lt;- glm(Acceptance ~ GPA, data = MedGPA,
+               family = binomial)
+```
+
+* `glm` stands for "Generalized Linear Model"
+* Use `family = binomial` for binary responses
+
+---
+
+## Fitting logistic regression in R
+
+
+```r
+library(Stat2Data)
+data("MedGPA")
+
+med_glm &lt;- glm(Acceptance ~ GPA, data = MedGPA,
+               family = binomial)
+med_glm
+```
+
+```
+## 
+## Call:  glm(formula = Acceptance ~ GPA, family = binomial, data = MedGPA)
+## 
+## Coefficients:
+## (Intercept)          GPA  
+##     -19.207        5.454  
+## 
+## Degrees of Freedom: 54 Total (i.e. Null);  53 Residual
+## Null Deviance:	    75.79 
+## Residual Deviance: 56.84 	AIC: 60.84
+```
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -19.21 + 5.45 \ \text{GPA}\)` 
+
+---
+
+## Class activity
+
+Predicting med school acceptance from MCAT score
+
+---
+
+## Class activity
+
+`\(\pi = P(Accepted = 1)\)`
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -8.712 + 0.246 \ \text{MCAT}\)` 
+
+What is the change in the odds of acceptance associated with an increase of 1 point on the MCAT?
+
+--
+
+**Answer:** An increase of 1 point on the MCAT is associated with an increase in the odds of acceptance by a factor of `\(\exp\{ 0.246 \} = 1.28\)`.
+
+---
+
+## Class activity
+
+`\(\pi = P(Accepted = 1)\)`
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -8.712 + 0.246 \ \text{MCAT}\)` 
+
+What is the estimated probability that a student with an MCAT score of 40 is accepted?
+
+--
+
+**Answer:** `\(\widehat{\pi} = \dfrac{ \exp\{-8.712 + 0.246 \cdot 40 \} }{1 +  \exp\{-8.712 + 0.246 \cdot 40 \}} = 0.76\)`
+
+So we estimate that a student with an MCAT score of 40 has a 76% chance of being accepted to medical school.
+
+---
+
+## Class activity
+
+`\(\pi = P(Accepted = 1)\)`
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -8.712 + 0.246 \ \text{MCAT}\)` 
+
+For approximately what MCAT score would a student have a roughly 50-50 chance of being accepted to medical school?
+
+--
+
+**Answer:** We need odds = 1, so `\(\dfrac{\widehat{\pi}}{1 - \widehat{\pi}} = \exp\{ -8.712 + 0.246 \ \text{MCAT} \} = 1\)`
+
+So `\(-8.712 + 0.246 \ \text{MCAT} = 0\)`, which means `\(\text{MCAT} = 8.712/0.246 = 35.4\)`
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
