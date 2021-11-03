@@ -1,0 +1,54 @@
+---
+title: "Quiz 4"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: top=1in
+fontsize: 12pt
+---
+
+**Name:**
+
+**Instructions:** You have 15 minutes to complete this quiz. You may use any notes or resources, including your laptop and the internet (R documentation, StackOverflow, Wikipedia, etc.). You may not communicate with anyone else during the quiz.
+
+There are four short questions. Relax and do your best! Try to answer as much as possible.
+
+The scenario is described on page 2. The questions are on page 3. 
+
+## Data
+
+How does stress impact animals' oxygen consumption? To investigate this question, biologists exposed crabs to varying water temperatures, and recorded their oxygen consumption. The data contain the following variables.
+
+* `Mass`: crab mass (g)
+* `Oxygen`: rate of oxygen consumption (micromoles per hour)
+* `Temperature`: water temperature (Celsius)
+
+\newpage
+
+## Scenario
+
+The researchers are interested in the relationship between mass and oxygen consumption, and the impact of temperature on this relationship. They fit the model
+
+$(1) \hspace{1cm} \text{oxygen} = \beta_0 + \beta_1 \ \text{Mass} + \beta_2 \ \text{Temperature} + \beta_3 \ \text{Mass} \cdot \text{Temperature} + \varepsilon$, 
+
+and the equation of the fitted model is
+
+$\widehat{\text{oxygen}} = 25.0 + 2.0 \ \text{Mass} + 2.5 \ \text{Temperature} + 0.3 \ \text{Mass} \cdot \text{Temperature}$
+
+\newpage
+
+## Questions
+
+**Question 1:** What is the predicted oxygen consumption for a 40g crab in 20$^{\circ}$C water?
+
+\vspace{4cm}
+
+**Question 2:** What is the estimated change in oxygen consumption associated with a 1g increase in Mass, when Temperature = 20$^{\circ}$C? What about when Temperature = 25$^{\circ}$C?
+
+\vspace{3cm} 
+
+**Question 3:** Using the model in (1), the researchers want to test whether there is any relationship between mass and oxygen consumption. Write down null and alternative hypotheses for this test, in terms of one or more parameters from the model.
+
+\vspace{3cm}
+
+**Question 4:** The researchers plan to use a nested F-test to test the hypotheses in question 3. The resulting test statistic comes from an $F_{d_1, d_2}$ distribution, where $d_1$ and $d_2$ are the numerator and denominator degrees of freedom. Calculate $d_1$ and $d_2$ for the hypothesis test in question 3. (There are 100 crabs in the data).

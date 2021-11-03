@@ -15,6 +15,9 @@ November 1
 
 
 November 3
-
+: Logistic regression interpretation
+  : [Slides](https://sta112-f21.github.io/slides/lecture_31.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_31.html)
+  
+: Textbook 9.1, 9.2
 
 November 5
