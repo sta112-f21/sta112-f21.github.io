@@ -1,0 +1,219 @@
+---
+title: "Homework 5 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(leaps)
+library(car)
+library(Stat2Data)
+data("MLBStandings2016")
+bryozoan <- read_csv("https://sta112-f21.github.io/homework/bryozoan_data.csv")
+
+```
+
+## Question 1
+
+```{r}
+bryozoan_larvae_early <- bryozoan %>%
+  filter(Stage != "late") %>%
+  mutate(log_mass = log(Mass), 
+         log_metabolic = log(Metabolic))
+```
+
+**Grading:** 5 points possible. It is ok if their code looks slightly different, as long as it correctly creates the dataset. They can receive partial credit if part of their code is correct.
+
+* 5/5 correct code
+* 3/5 somewhat correct
+* 0/5 wrong
+
+## Question 2
+
+Based on the scatterplot, model 4 is the most appropriate. From the scatterplot, we can see that the vertical distance between the early and larval stages is different for the bugula and watersipora. This can only happen if there is an interaction between species and stage (the interaction allows more flexibility in the intercepts).
+
+**Grading:** 10 points possible. If they provide a reasonable argument for model 4 but don't reference the scatterplot, they can still get most of the points. If they provide a reasonable argument for model 3, they can get some points. Models 1 and 2 are harder to argue.
+
+* 10/10 Correct answer (model 4) and correctly references scatterplot in answer
+* 8/10 Correct answer (model 4). Doesn't reference scatterplot or the way the interaction term determines distance between the lines, but provides a reasonable argument based on the research question.
+* 7/10 Chose model 3 and gave a reasonable justification
+* 4/10 Chose model 1 or 2
+
+
+## Question 3
+
+```{r}
+ble_lm <- lm(log_metabolic ~ Species*Stage + log_mass, 
+             data = bryozoan_larvae_early)
+summary(ble_lm)
+
+bryozoan_larvae_early %>%
+  mutate(pred = predict(ble_lm),
+         res = residuals(ble_lm)) %>%
+  ggplot(aes(x = pred, y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0, 
+              color = "blue", lwd = 1.2) +
+  labs(x = "Predicted log mass",
+       y = "Residuals") +
+  theme_bw()
+
+bryozoan_larvae_early %>%
+  mutate(res = residuals(ble_lm)) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles",
+       y = "Observed residual quantiles") +
+  theme_bw()
+```
+
+The equation of the fitted regression line is 
+
+$\widehat{\log(\text{metabolic rate})} = -3.34 + 0.47 \text{IsWatersipora} + 1.42 \text{IsLarval} - 0.79 \text{IsWatersipora} \cdot \text{IsLarval} + 0.58 \log(\text{mass})$
+
+Based on the residual plot, the shape and constant variance assumptions both look reasonable. (Students may say that shape or constant variance doesn't look reasonable because we have clusters of points; however, these are only clusters along the x-axis (the residuals are still scattered randomly in the y direction), and they result from having different intercepts for different groups).
+
+Based on the qq plot, the normality assumption looks pretty good, with the exception of a few points in the left tail which deviate substantially. And with 568 points in the data, and a pretty small model, we're not that worried about the normality assumption.
+
+**Grading:** 15 points possible. They get 3 points for each of the following:
+
+* fitting the model (on the `bryozoan_larvae_early` data)
+* Reporting the equation of the fitted model
+* Creating the residual plot and qq plot
+* Reasonable interpretation of the residual plot to assess shape and constant variance
+* Reasonable interpretation of the qq plot to assess normality
+
+Their answers may vary a little for interpreting the diagnostic plots. That is ok, as long as they come to roughly the same conclusions. If they chose a different model than model (4) in question 2, they don't lose points for fitting it here.
+
+
+## Question 4
+
+```{r}
+# test statistic
+(0.57672 - 1)/0.073
+
+# p-value
+pt(-5.80, 563, lower.tail = T)
+```
+
+Our hypotheses are $H_0: \beta_4 = 1$ and $H_A: \beta_4 < 1$. Our test statistic is $t = -5.80$, and the corresponding p-value is $5.53 \times 10^{-9}$. Note that the degrees of freedom for calculating the p-value are 563 (= $n-p$). Since the p-value is very close to 0, we have strong evidence that larger organisms are more energy efficient, proportional to body size.
+
+**Grading:** 15 points possible. Five points each for:
+
+* Stating the hypotheses
+* Calculating a test statistic and p-value
+* Interpreting the results
+
+I expect some students will get the hypotheses wrong (they will do something like $\beta_4 = 0$), and others will get the hypotheses correct but calculate the test statistic incorrectly (e.g., they will just take the test statistic from the R output, which is 7.90 but corresponds to the wrong hypotheses). They can receive partial credit (2/5) for those errors. If they get the hypotheses wrong and then calculate the test statistic and p-value corresponding to the wrong hypotheses, they only lose points for getting the hypotheses wrong.
+
+## Question 5
+
+```{r}
+ble_lm_full <- lm(log_metabolic ~ Species*Stage*log_mass,
+                  data = bryozoan_larvae_early)
+
+anova(ble_lm, ble_lm_full)
+```
+
+To test whether there is any difference in slope across the different species or stages, we need to allow the slope to vary across species and stages. This involves adding interaction terms, and our full model is
+
+$\log(\text{metabolic rate}) = \beta_0 + \beta_1 \text{IsWatersipora} + \beta_2 \text{IsLarval} + \beta_3 \text{IsWatersipora} \cdot \text{IsLarval} + \beta_4 \log(\text{mass}) +$ 
+
+$\hspace{4cm} \beta_5 \text{IsWatersipora} \cdot \log(\text{mass}) + \beta_6 \text{IsLarval} \cdot \log(\text{mass}) +$ 
+
+$\hspace{4cm} \beta_7 \text{IsWatersipora} \cdot \text{IsLarval} \cdot \log(\text{mass}) + \varepsilon$
+
+Our reduced model is model (4) from the assignment, which we fit above.
+
+Our test statistic is $F = 0.0296$, and the associated p-value is 0.993. This p-value is very close to 1, so there is very little evidence that the slope is different across species or stages.
+
+**Grading:** 15 points possible. Five points each for:
+
+* Identifying the full and reduced models
+* Calculating a test statistic and p-value
+* Interpreting the results
+
+I expect some students will identify the wrong full model. They can receive partial credit (3/5) if their full model is strictly larger than the model they chose in question 2, and contains some interactions with log mass.
+
+## Question 6
+
+```{r}
+mlb_new <- MLBStandings2016 %>%
+  select(-c(Wins, Losses, Team))
+```
+
+**Grading:** 5 points possible. It is ok if their code looks slightly different, as long as it correctly creates the dataset. They can receive partial credit if part of their code is correct.
+
+* 5/5 correct code
+* 3/5 somewhat correct
+* 0/5 wrong
+
+## Question 7
+
+```{r}
+model_1 <- lm(WinPct ~ League + BattingAverage + Runs + 
+                Hits + HR + Doubles + Triples +
+                RBI + SB + OBP +
+                ERA + HitsAllowed + Walks + 
+                StrikeOuts + Saves + WHIP,
+              data = mlb_new)
+
+model_2 <- lm(WinPct ~ League + BattingAverage + Runs + 
+                Hits + HR + Doubles + Triples +
+                RBI + SB + OBP + SLG + 
+                ERA + HitsAllowed + Walks + 
+                StrikeOuts + Saves + WHIP,
+              data = mlb_new)
+```
+
+Many examples are possible. Here's one: fit a model with all the predictors except SLG. Then $R^2_{adj} = 0.899$. If we add SLG to the model, $R^2_{adj}$ decreases to 0.894.
+
+**Grading:** 10 points possible. Full credit if they come up with an example where $R^2_{adj}$ decreases. Partial credit (5/10) if they made an attempt but it didn't work.
+
+
+## Question 8
+
+```{r}
+# maximizing adjusted R2:
+models <- regsubsets(WinPct ~ ., data = mlb_new,
+                     nvmax = 17)
+
+optimal_model_size <- which.max(summary(models)$adjr2)
+summary(models)$which[optimal_model_size,]
+
+# minimizing Mallows' Cp:
+optimal_model_size <- which.min(summary(models)$cp)
+summary(models)$which[optimal_model_size,]
+```
+
+The model which maximizes $R^2_{adj}$ includes BattingAverage, Runs, Hits, Doubles, OBP, ERA, HitsAllowed, Walks, Saves, and WHIP.
+
+The model which minimizes Mallows' $C_p$ includes BattingAverage, Runs, Hits, OBP, HitsAllowed, Walks, Saves, and WHIP.
+
+**Grading:** 15 points possible. 
+
+* 15/15 Correct code and results
+* 12/15 Error in code, correct reporting of results based on output
+* 10/15 Missing code, correct results
+
+If the code is correct but the reported results are wrong, they can get partial credit (e.g., 13/15 or 14/15) if their reported models are close to the correct answer (it is easy to accidentally miss one of the variables).
+
+## Question 9
+
+```{r}
+best_model <- lm(WinPct ~ BattingAverage + Runs + Hits + 
+                   OBP + HitsAllowed + Walks + Saves + WHIP,
+                 data = mlb_new)
+
+vif(best_model)
+```
+
+There is appears to be high multicollinearity, with high variance inflation factors for most of the predictors. This makes it challenging to interpret the fitted model, since we can't really think about changing the value of one predictor while holding the other predictors fixed.
+
+**Grading:** 10 points possible, broken down as follows:
+
+* 3 points for fitting the best model and calculating VIFs
+* 3 points for recognizing multicollinearity from the high VIFs
+* 4 points for correctly explaining why multicollinearity makes it hard to interpret the fitted model

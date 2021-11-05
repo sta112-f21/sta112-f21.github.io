@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Logistic regression assumptions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Logistic regression assumptions
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* Homework 6 released today, due next Friday
+    * Short assignment on logistic regression
+* Monday: Project 2 work day
+* Today: logistic regression assumptions
+
+---
+
+## Logistic regression model
+
+`\(\pi = P(y = 1) \hspace{2cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 x\)`
+
+* `\(y = 0\)` or `\(1\)`
+* `\(\pi = \dfrac{\exp\{\beta_0 + \beta_1 x\}}{1 + \exp\{\beta_0 + \beta_1 x\}} =\)` average value of `\(y\)`, given `\(x\)`
+
+--
+
+.question[
+What happend to the noise term `\(\varepsilon\)`?
+]
+
+--
+
+**Answer:**
+
+* `\(y = 0\)` or `\(1\)`, so it doesn't make sense to think about random noise around the mean
+* Think of each observed `\(y\)` as the result of a coin toss, where probability of heads ( `\(y = 1\)` ) is `\(\pi\)`
+* The probability `\(\pi\)` gives us the variability in `\(y\)`, we don't need a separate noise term
+
+---
+
+## Assumptions
+
+.pull-left[
+**Logistic regression assumptions:**
+
+* shape
+* randomness
+* independence
+]
+
+.pull-right[
+**Additional assumptions for *linear* regression:**
+
+* constant variance
+* normality
+* zero mean
+
+All these relate to the noise term `\(\varepsilon\)`, which doesn't appear in logistic regression.
+]
+
+---
+
+## Shape
+
+* Shape assumption is that the log-odds are (at least approximately) a linear function of `\(x\)`: `\(\log(odds) \approx \beta_0 + \beta_1 x\)`
+* We can assess the shape assumption by plotting the **empirical log-odds** (aka empirical logits)
+* Example: relationship between the length of a putt and whether it was made
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+
+---
+
+## Empirical log-odds
+
+**Step 1:** estimate the probability of success for each length of putt
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+| Probability of success `\(\widehat{p}\)` | 0.832 | 0.739 | 0.565 | 0.488 | 0.328 |
+
+---
+
+## Empirical log-odds
+
+**Step 2:** convert empirical probabilities to empirical odds
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+| Probability of success `\(\widehat{p}\)` | 0.832 | 0.739 | 0.565 | 0.488 | 0.328 |
+| Odds `\(\dfrac{\widehat{p}}{1 - \widehat{p}}\)` | 4.941 | 2.839 | 1.298 | 0.953 | 0.489 |
+
+---
+
+## Empirical log-odds
+
+**Step 3:** calculate empirical log-odds
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+| Probability of success `\(\widehat{p}\)` | 0.832 | 0.739 | 0.565 | 0.488 | 0.328 |
+| Odds `\(\dfrac{\widehat{p}}{1 - \widehat{p}}\)` | 4.941 | 2.839 | 1.298 | 0.953 | 0.489 |
+| Log-odds `\(\log \left( \dfrac{\widehat{p}}{1 - \widehat{p}} \right)\)` | 1.60 | 1.04 | 0.26 | -0.05 | -0.72 |
+
+---
+
+## Empirical log-odds
+
+**Step 4:** plot empirical log-odds against predictor
+
+&lt;img src="lecture_32_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+.question[
+The shape assumption is reasonable if the empirical log-odds plot looks roughly linear.
+]
+
+---
+
+## Shape
+
+.question[
+What if the predictor takes on many possible values?
+]
+
+* **Step 1:** Bin the predictor into a few (e.g., 5 or 10) different bins
+* **Step 2:** Calculate the average value of the predictor in each bin
+* **Step 3:** Calculate empirical log-odds for the observed response in each bin
+* **Step 4:** Plot empirical log-odds again average value of the predictor in each bin
+
+---
+
+## Randomness
+
+* Does the data come from a random process or randomized experiment?
+* **Example** (randomness holds): 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

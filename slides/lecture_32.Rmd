@@ -1,0 +1,166 @@
+---
+author: "Dr. Ciaran Evans"
+title: Logistic regression assumptions
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Homework 6 released today, due next Friday
+    * Short assignment on logistic regression
+* Monday: Project 2 work day
+* Today: logistic regression assumptions
+
+---
+
+## Logistic regression model
+
+$\pi = P(y = 1) \hspace{2cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 x$
+
+* $y = 0$ or $1$
+* $\pi = \dfrac{\exp\{\beta_0 + \beta_1 x\}}{1 + \exp\{\beta_0 + \beta_1 x\}} =$ average value of $y$, given $x$
+
+--
+
+.question[
+What happend to the noise term $\varepsilon$?
+]
+
+--
+
+**Answer:**
+
+* $y = 0$ or $1$, so it doesn't make sense to think about random noise around the mean
+* Think of each observed $y$ as the result of a coin toss, where probability of heads ( $y = 1$ ) is $\pi$
+* The probability $\pi$ gives us the variability in $y$, we don't need a separate noise term
+
+---
+
+## Assumptions
+
+.pull-left[
+**Logistic regression assumptions:**
+
+* shape
+* randomness
+* independence
+]
+
+.pull-right[
+**Additional assumptions for *linear* regression:**
+
+* constant variance
+* normality
+* zero mean
+
+All these relate to the noise term $\varepsilon$, which doesn't appear in logistic regression.
+]
+
+---
+
+## Shape
+
+* Shape assumption is that the log-odds are (at least approximately) a linear function of $x$: $\log(odds) \approx \beta_0 + \beta_1 x$
+* We can assess the shape assumption by plotting the **empirical log-odds** (aka empirical logits)
+* Example: relationship between the length of a putt and whether it was made
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+
+---
+
+## Empirical log-odds
+
+**Step 1:** estimate the probability of success for each length of putt
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+| Probability of success $\widehat{p}$ | 0.832 | 0.739 | 0.565 | 0.488 | 0.328 |
+
+---
+
+## Empirical log-odds
+
+**Step 2:** convert empirical probabilities to empirical odds
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+| Probability of success $\widehat{p}$ | 0.832 | 0.739 | 0.565 | 0.488 | 0.328 |
+| Odds $\dfrac{\widehat{p}}{1 - \widehat{p}}$ | 4.941 | 2.839 | 1.298 | 0.953 | 0.489 |
+
+---
+
+## Empirical log-odds
+
+**Step 3:** calculate empirical log-odds
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 84 | 88 | 61 | 61 | 44 |
+| Number of failures | 17 | 31 | 47 | 64 | 90 |
+| Total | 101 | 119 | 108 | 125 | 134 |
+| Probability of success $\widehat{p}$ | 0.832 | 0.739 | 0.565 | 0.488 | 0.328 |
+| Odds $\dfrac{\widehat{p}}{1 - \widehat{p}}$ | 4.941 | 2.839 | 1.298 | 0.953 | 0.489 |
+| Log-odds $\log \left( \dfrac{\widehat{p}}{1 - \widehat{p}} \right)$ | 1.60 | 1.04 | 0.26 | -0.05 | -0.72 |
+
+---
+
+## Empirical log-odds
+
+**Step 4:** plot empirical log-odds against predictor
+
+```{r echo=F, message=F, fig.width=7, fig.height=5, fig.align='center'}
+library(tidyverse)
+
+data.frame(length = c(3, 4, 5, 6, 7),
+  log_odds = c(1.6, 1.04, 0.26, -0.05, -0.72)) %>% 
+  ggplot(aes(x = length, y = log_odds)) + 
+  geom_point(size=2) + 
+  geom_smooth(se=F, method="lm") +
+  labs(x = "Length (feet)",
+       y = "Empirical log-odds") +
+  theme_bw() +
+  theme(text = element_text(size = 20))
+```
+
+.question[
+The shape assumption is reasonable if the empirical log-odds plot looks roughly linear.
+]
+
+---
+
+## Shape
+
+.question[
+What if the predictor takes on many possible values?
+]
+
+* **Step 1:** Bin the predictor into a few (e.g., 5 or 10) different bins
+* **Step 2:** Calculate the average value of the predictor in each bin
+* **Step 3:** Calculate empirical log-odds for the observed response in each bin
+* **Step 4:** Plot empirical log-odds again average value of the predictor in each bin
+
+---
+
+## Randomness
+
+* Does the data come from a random process or randomized experiment?
+* **Example** (randomness holds): 

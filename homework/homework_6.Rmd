@@ -1,0 +1,168 @@
+---
+title: "Homework 6"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+**Due:** Friday, November 12, 12:00pm on Canvas
+
+# Setup
+
+This assignment consists of three short parts. In the first two parts, you will critique data analyses which have several errors. In the third part, you will do the analysis (correctly) yourself.
+
+### Template
+
+A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_05_template.Rmd](https://sta112-f21.github.io/homework/hw_06_template.Rmd)
+
+### Data
+
+In this homework, you will look at a dataset of 3402 pitches thrown by MLB pitcher Clayton Kershaw in the 2013 season. The data is contained in the `Kershaw` data set, in the `Stat2Data` R package. We will focus on two specific variables for each pitch:
+
+* `Result`: a negative result (a ball or a hit), or a positive result (a strike or an out)
+* `EndSpeed`: the speed at which the ball crossed home plate (in mph)
+
+Our goal is to investigate the relationship between pitch speed and result. Are faster pitches more successful (i.e., more likely to lead to a strike or an out)?
+
+# Part I
+
+Your friend is interested in analyzing the relationship between Clayton Kershaw's pitching speed and the result of the pitch. They fit a regression model, and send you the following report:
+
+"There appears to be a positive relationship between the pitching speed and the outcome of the pitch (Figure 1). To summarize this relationship, we fit a simple linear regression with end speed as the predictor, and result as the response. The fitted line is shown in Figure 1, and the equation of the fitted line is $\widehat{\pi} = 0.157 + 0.0056 \ \text{EndSpeed}$, where $\pi = P(\text{Result} = 1)$."
+
+```{r echo=F, message=F, warning=F, fig.cap="Figure 1: Pitch result vs. end speed for Clayton Kershaw.", fig.align='center', fig.width=5, fig.height=3}
+library(tidyverse)
+library(Stat2Data)
+data("Kershaw")
+Kershaw %>%
+  mutate(Result = ifelse(Result == "Pos", 1, 0)) %>%
+  ggplot(aes(x = EndSpeed, y = Result)) +
+  geom_point() +
+  geom_smooth(se=F, method="lm") +
+  labs(x = "End speed (mph)", y = "Pitch result") +
+  theme_bw()
+```
+
+
+:::{.question}
+#### Question 1
+
+Your friend has made a serious error in fitting this regression model. Explain to your friend what they have done wrong, why it is wrong, and how they should do it differently.
+:::
+
+# Part II
+
+After reading your feedback from Part I, your friend decides to fit a logistic regression model instead. Below is their revised report:
+
+"We used logistic regression to model the relationship between pitch speed and result, and the fitted logistic regression model is $\widehat{\pi} = -1.43 + 0.023 \ \text{EndSpeed}$, where $\pi = P(\text{Result} = 1)$. This means there is a negative relationship between pitching speed and the probability that the pitch results in a strike or an out. To check the regression assumptions of shape, constant variance, and normality, we created a residual plot and a QQ plot, with the results shown in Figure 2. Unfortunately, all three assumptions appear violated."
+
+```{r echo=F, message=F, warning=F, fig.cap="Figure 2", fig.align='center', fig.height=3}
+library(patchwork)
+
+kershaw_glm <- glm(Result ~ EndSpeed, data = Kershaw,
+                   family = binomial)
+
+p1 <- Kershaw %>%
+  mutate(Result = ifelse(Result == "Pos", 1, 0),
+         pred = predict(kershaw_glm, type="response"),
+         res = Result - pred) %>%
+  ggplot(aes(x = pred, y = res)) +
+  geom_point() +
+  geom_abline(slope = 0, intercept = 0,
+              color = "blue", lwd=1.2) +
+  labs(x = "Predicted probability", y = "Residual") +
+  theme_bw()
+
+
+p2 <- Kershaw %>%
+  mutate(Result = ifelse(Result == "Pos", 1, 0),
+         pred = predict(kershaw_glm, type="response"),
+         res = Result - pred) %>%
+  ggplot(aes(sample = res)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(x = "Theoretical normal quantiles", y = "Observed residual quantiles") +
+  theme_bw()
+
+p1 + p2
+```
+
+:::{.question}
+#### Question 2
+
+This time, your friend has made several errors. Describe each error, and explain to your friend why they are wrong and what they should do differently.
+:::
+
+# Part III
+
+Your friend is still confused about logistic regression, and asks you to help them.
+
+:::{.question}
+#### Question 3
+
+Fit a logistic regression model for the relationship between Clayton Kershaw's pitching speed and pitch result; for reference later, call the fitted model `kershaw_glm` in R. Report the equation of the fitted model.
+:::
+
+:::{.question}
+#### Question 4
+
+What is the associated change in the odds of a successful pitch (i.e., a strike or out) when pitching speed increases by 1 mph?
+:::
+
+:::{.question}
+#### Question 5
+
+Calculate the estimated *probability* of a successful pitch when pitching speed is 95 mph.
+:::
+
+:::{.question}
+#### Question 6
+
+Run the following code to create an empirical log-odds plot for the fitted logistic regression model in Question 3. Based on the plot, do you think the shape assumption is appropriate?
+:::
+
+```r
+num_bins <- 8
+
+logodds_table <- Kershaw %>% 
+  mutate(pred = predict(kershaw_glm, type="response"),
+         obs = kershaw_glm$y,
+         bin = cut(EndSpeed, 
+                   breaks = num_bins,
+                   labels = F)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(EndSpeed),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point() +
+  geom_abline(intercept = coef(kershaw_glm)[["(Intercept)"]],
+              slope = coef(kershaw_glm)[["EndSpeed"]],
+              color = "blue", lwd=1.2) +
+  theme_bw() +
+  labs(x = "Average pitch speed",
+       y = "Empirical log-odds")
+```
+
+**Explanation of code:** *Remember that to assess the shape assumption in logistic regression, we can create an empirical log-odds plot (also called an empirical logit plot; "logit" is just another name for log-odds). To create an empirical log-odds plot, we divide the predictor into evenly spaced bins. In each bin, we calculate the average value of the predictor, and the proportion of observations in the bin with $y = 1$. We turn each proportion into a log-odds, and then we plot the empirical log-odds against the average value of the predictor in each bin.*
+
+*In this code, you first specify the number of bins (`num_bins`). You may want to change this number for other data; you don't want too few observations in a bin. The next section of the code divides the data into bins and calculate the mean predictor value, observed proportion, number of observations, and empirical log-odds in each bin. We then check the empirical log-odds table to make sure we have enough observations in each bin. Finally, we plot the log-odds against the binned predictor.*
+
+*To use this code in other examples, you would need to change the name of the data, the name of the fitted logistic regression model, and the name of the predictor variable.*
+
+:::{.question}
+#### Question 7
+
+Assess the randomness and independence assumptions.
+:::
