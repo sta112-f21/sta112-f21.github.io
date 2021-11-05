@@ -183,7 +183,7 @@ What if the predictor takes on many possible values?
 ## Randomness
 
 * Does the data come from a random process or randomized experiment?
-* **Example:** Put a slice of bread in a moist bag, and wait for mold to appear. Use a grid to divide the bread into small squares, and for each square record whether it has mold or not.
+* **Example:** Put a slice of bread in a moist bag, and wait for mold to appear. Use a grid to divide the bread into small squares, and for each square record whether it has mold or not. Plot the proportion of moldy squares against time.
 
 --
     * Randomness does not hold
