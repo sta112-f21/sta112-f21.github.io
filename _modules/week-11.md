@@ -21,3 +21,10 @@ November 3
 : Textbook 9.1, 9.2
 
 November 5
+: Logistic regression assumptions
+  : [Slides](https://sta112-f21.github.io/slides/lecture_32.html)
+
+: Textbook 9.3
+
+: **HW 6 released**{: .label .label-yellow }
+  : [HW 6](https://sta112-f21.github.io/homework/homework_6.html)

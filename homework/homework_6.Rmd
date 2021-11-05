@@ -17,7 +17,7 @@ This assignment consists of three short parts. In the first two parts, you will 
 
 ### Template
 
-A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_05_template.Rmd](https://sta112-f21.github.io/homework/hw_06_template.Rmd)
+A template R Markdown file, which loads the data and packages you will need for the assignment, is provided: [hw_06_template.Rmd](https://sta112-f21.github.io/homework/hw_06_template.Rmd)
 
 ### Data
 
@@ -159,7 +159,7 @@ logodds_table %>%
 
 *In this code, you first specify the number of bins (`num_bins`). You may want to change this number for other data; you don't want too few observations in a bin. The next section of the code divides the data into bins and calculate the mean predictor value, observed proportion, number of observations, and empirical log-odds in each bin. We then check the empirical log-odds table to make sure we have enough observations in each bin. Finally, we plot the log-odds against the binned predictor.*
 
-*To use this code in other examples, you would need to change the name of the data, the name of the fitted logistic regression model, and the name of the predictor variable.*
+*To use this code in other examples, you would need to change the name of the data, the name of the fitted logistic regression model, the name of the predictor variable, and possibly the number of bins.*
 
 :::{.question}
 #### Question 7

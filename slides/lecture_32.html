@@ -19,6 +19,7 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
+* DataFest and STA 175
 * Homework 6 released today, due next Friday
     * Short assignment on logistic regression
 * Monday: Project 2 work day
@@ -43,7 +44,6 @@ What happend to the noise term `\(\varepsilon\)`?
 
 **Answer:**
 
-* `\(y = 0\)` or `\(1\)`, so it doesn't make sense to think about random noise around the mean
 * Think of each observed `\(y\)` as the result of a coin toss, where probability of heads ( `\(y = 1\)` ) is `\(\pi\)`
 * The probability `\(\pi\)` gives us the variability in `\(y\)`, we don't need a separate noise term
 
@@ -155,7 +155,46 @@ What if the predictor takes on many possible values?
 ## Randomness
 
 * Does the data come from a random process or randomized experiment?
-* **Example** (randomness holds): 
+* **Example:** Med school application data. Grades, MCAT scores, and application results for 55 students from a Midwestern liberal arts college.
+    * Randomness is plausible as an approximation
+    * Students are reasonably representative of the population of students who apply to med school from similar colleges
+    
+---
+
+## Randomness
+
+* Does the data come from a random process or randomized experiment?
+* **Example:** Migraine data. Patients were randomly assigned either TMS or placebo, and their pain after 2 hours was measured.
+    * Randomness holds because it is a randomized experiment
+    
+---
+
+## Randomness
+
+* Does the data come from a random process or randomized experiment?
+* **Example:** Put a slice of bread in a moist bag, and wait for mold to appear. Use a grid to divide the bread into small squares, and for each square record whether it has mold or not.
+    * Randomness does not hold
+    
+---
+
+## Independence
+
+* Are observations independent of each other?
+* **Example:** Med school application data: independence is reasonable. There are hundreds of medical schools, each considering many applications for many positions. One student's outcome doesn't really affect another.
+
+---
+
+## Independence
+
+* Are observations independent of each other?
+* **Example:** Migraine data: independence is reasonable. Treatment is randomly assigned, so the outcome for one patient doesn't affect the outcome of another.
+
+---
+
+## Independence
+
+* Are observations independent of each other?
+* **Example:** Moldy bread: independence is not reasonable. Whether one part of the bread has mold affects whether a neighboring part has mold.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
