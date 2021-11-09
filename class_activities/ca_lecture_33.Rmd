@@ -1,0 +1,35 @@
+---
+title: "Class Activity, November 10"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+# Part I
+
+Suppose you have three different spinners, as shown below:
+
+<img src="spinners.png" width="600">
+
+When spun, the probability that the arrow lands in the "Yes" area is $\dfrac{1}{4}$, $\dfrac{1}{2}$, and $\dfrac{3}{4}$ for spinners A, B, and C respectively. 
+
+A spinner is chosen and spun twice, and the outcome is No, No. However, you don't know which spinner was chosen.
+
+1. What is the probability of outcome No, No for spinner A? What about for spinners B and C?
+
+2. For which spinner is the probability of No, No the highest?
+
+3. Which spinner would you guess was spun?
+
+<br/>
+
+Now a spinner is chosen and spun four times, and the outcome is No, Yes, Yes, No. Once again, you don't know which spinner was chosen.
+
+4. What is the probability of outcome No, Yes, Yes, No for each spinner?
+
+5. For which spinner is the probability of the observed data (No, Yes, Yes, No) the highest?
+
+6. Which spinner would you guess was spun?

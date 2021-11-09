@@ -1,0 +1,9 @@
+---
+title: "Class Activity, November 10"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---

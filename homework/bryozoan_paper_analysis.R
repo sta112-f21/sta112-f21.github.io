@@ -3,6 +3,8 @@ library(lme4)
 library(lmerTest)
 library(RLRsim)
 
+# importing the raw data
+
 metab <- read_csv("bryozoan_raw.csv")
 metab_b <- metab[,1:4]
 metab_w <- metab[,5:8]
