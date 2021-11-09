@@ -33,3 +33,22 @@ Now a spinner is chosen and spun four times, and the outcome is No, Yes, Yes, No
 5. For which spinner is the probability of the observed data (No, Yes, Yes, No) the highest?
 
 6. Which spinner would you guess was spun?
+
+# Part II
+
+Let's revisit the putting data. Our regression model is
+
+$\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{length},  \hspace{1cm} \text{or equivalently } \hspace{0.5cm} \pi = \dfrac{\exp\{\beta_0 + \beta_1 \ \text{length}\}}{1 + \exp\{\beta_0 + \beta_1 \ \text{length}\}}$,
+
+where $\pi = P(\text{make the putt})$.
+
+Suppose you attempt 15 putts, and observe the following outcomes:
+
+| Length | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- |
+| Number of successes | 3 | 2 | 3 | 1 | 1 |
+| Number of failures | 0 | 0 | 2 | 1 | 2 |
+
+7. What is the probability of the observed data if $\beta_0 = 3$ and $\beta_1 = -0.5$?
+
+8. What is the probability of the observed data if $\beta_0 = 4$ and $\beta_1 = -0.75$?

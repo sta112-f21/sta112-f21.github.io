@@ -67,6 +67,47 @@
 <li><p>Which spinner would you guess was spun?</p></li>
 </ol>
 </div>
+<div id="part-ii" class="section level1">
+<h1>Part II</h1>
+<p>Let’s revisit the putting data. Our regression model is</p>
+<p><span class="math inline">\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{length}, \hspace{1cm} \text{or equivalently } \hspace{0.5cm} \pi = \dfrac{\exp\{\beta_0 + \beta_1 \ \text{length}\}}{1 + \exp\{\beta_0 + \beta_1 \ \text{length}\}}\)</span>,</p>
+<p>where <span class="math inline">\(\pi = P(\text{make the putt})\)</span>.</p>
+<p>Suppose you attempt 15 putts, and observe the following outcomes:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Length</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Number of successes</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Number of failures</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<ol start="7" style="list-style-type: decimal">
+<li><p>What is the probability of the observed data if <span class="math inline">\(\beta_0 = 3\)</span> and <span class="math inline">\(\beta_1 = -0.5\)</span>?</p></li>
+<li><p>What is the probability of the observed data if <span class="math inline">\(\beta_0 = 4\)</span> and <span class="math inline">\(\beta_1 = -0.75\)</span>?</p></li>
+</ol>
+</div>
 
 
 
