@@ -19,6 +19,7 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
+* HW 5 comments and solutions on Canvas
 * Quiz 5 next Wednesday
     * Covers up through logistic regression assumptions
 * Today:
@@ -28,6 +29,8 @@ class: center, middle, inverse, title-slide
 ---
 
 ## Class activity, Part I
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_33.html](https://sta112-f21.github.io/class_activities/ca_lecture_33.html)
 
 ---
 
@@ -195,7 +198,7 @@ Steps for maximum likelihood estimation:
 
 ## Maximum likelihood for logistic regression 
 
-**Putting data:** Put at lengths 3, 4, 5, 6, and 7 feet. Record whether you make the put ( `\(y = 1\)` ) or miss ( `\(y = 0\)` ). Let `\(\pi = P(y = 1)\)`.
+**Putting data:** Putt at lengths 3, 4, 5, 6, and 7 feet. Record whether you make the put ( `\(y = 1\)` ) or miss ( `\(y = 0\)` ). Let `\(\pi = P(y = 1)\)`.
 
 **Regression model:** `\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{length} \hspace{1cm} \pi = \dfrac{\exp\{\beta_0 + \beta_1 \ \text{length}\}}{1 + \exp\{\beta_0 + \beta_1 \ \text{length}\}}\)`
 
@@ -226,6 +229,8 @@ Suppose `\(\beta_0 = 3, \ \beta_1 = -0.5\)`. What is `\(P(\text{data})\)` (aka `
 ---
 
 ## Class activity, Part II
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_33.html](https://sta112-f21.github.io/class_activities/ca_lecture_33.html)
 
 ---
 
@@ -263,7 +268,7 @@ What's the probability of the observed data, if `\(\beta_0 = 4\)` and `\(\beta_1
 
 | Length | 3 | 4 | 5 | 6 | 7 |
 | --- | --- | --- | --- | --- | --- |
-| `\(\pi\)` | `\(\dfrac{\exp\{4 - 0.75(3)\}}{1 + \exp\{3 - 0.5(3)\}} = 0.852\)` | 0.731 | 0.562 | 0.378 | 0.223 |
+| `\(\pi\)` | `\(\dfrac{\exp\{4 - 0.75(3)\}}{1 + \exp\{4 - 0.75(3)\}} = 0.852\)` | 0.731 | 0.562 | 0.378 | 0.223 |
 
 `\(L(\beta_0, \beta_1) = P(\text{data}) =\)`
 `\((0.852)^3(0.731)^2(0.562)^3(1 - 0.562)^2(0.378)(1 - 0.378)(0.223)(1 - 0.223)^2\)`
@@ -302,7 +307,7 @@ In the class activity examples, we have only considered a few different possibil
 &lt;br/&gt;
 
 * **Model:** `\(y = \beta_0 + \beta_1 x + \varepsilon\)`
-* **Measure of fit:** `\(SSE = \sum \limits_{i = 1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x)^2\)`
+* **Measure of fit:** `\(SSE = \sum \limits_{i = 1}^n (y_i - \widehat{\beta}_0 - \widehat{\beta}_1 x_i)^2\)`
 * **Optimize:** choose `\(\widehat{\beta}_0\)`, `\(\widehat{\beta}_1\)` to minimize SSE
 ]
     </textarea>
