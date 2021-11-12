@@ -51,7 +51,7 @@ kershaw_glm <- glm(Result ~ EndSpeed, data = Kershaw, family=binomial)
 summary(kershaw_glm)
 ```
 
-test statistic: $z = 0.0234$. p-value = 0.000104. This p-value is small, so we have strong evidence that there is a relationship between pitch speed and result.
+test statistic: $z = 3.881$. p-value = 0.000104. This p-value is small, so we have strong evidence that there is a relationship between pitch speed and result.
 
 **Likelihood ratio test:**
 
