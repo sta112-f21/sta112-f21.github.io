@@ -8,7 +8,68 @@ output:
 link-citations: yes
 ---
 
+## Setup
+
+In this activity, we will revisit the `Kershaw` data from Homework 6. As in Homework 6, we will focus on the following variables:
+
+* `Result`: a negative result (a ball or a hit), or a positive result (a strike or an out)
+* `EndSpeed`: the speed at which the ball crossed home plate (in mph)
+
+We are interested in the logistic regression model for the relationship between end speed and result:
+
+$\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{speed}$,
+
+where $\pi$ is the probability of a positive result.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_34_template.Rmd)
+
 1. You are interested in testing whether there is any relationship between whether a pitch is successful and the speed at which it crosses home plate. Carry out both a Wald test and a likelihood ratio test to investigate this question, and report your results. *In practice, we would just do one test, rather than both of them. But since this is a class activity, I want you to try both tests.*
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+**Wald test:**
+
+```{r, include=F}
+library(Stat2Data)
+data("Kershaw")
+```
+
+```{r}
+kershaw_glm <- glm(Result ~ EndSpeed, data = Kershaw, family=binomial)
+summary(kershaw_glm)
+```
+
+test statistic: $t = 0.0234$. p-value = 0.000104. This p-value is small, so we have strong evidence that there is a relationship between pitch speed and result.
+
+**Likelihood ratio test:**
+
+full model: $\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{speed}$
+
+reduced model: $\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0$
+
+test statistic: $G = 4540.4 - 4525.4 = 15.0$
+
+degrees of freedom: 1 (we are testing a single parameter), so $G \sim \chi^2_1$
+
+p-value:
+
+```{r}
+pchisq(15, df=1, lower.tail=F)
+```
+
+</DIV>
 
 2. Instead of the research question in exercise 1, you want to know whether faster pitches are more likely to be successful. Write down your hypotheses in terms of a parameter in the model.
 

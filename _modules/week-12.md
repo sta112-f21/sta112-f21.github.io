@@ -13,6 +13,7 @@ November 10
 
 November 12
 : Logistic regression inference
+  : [Slides](https://sta112-f21.github.io/slides/lecture_34.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_34.html)
 
 : Textbook 9.4
 

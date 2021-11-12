@@ -15,15 +15,25 @@ editor_options:
 
 ## Agenda
 
+* Project 2 due Monday
+* Today: inference with logistic regression
+
 ---
 
 ### Recap: maximum likelihood estimation for logistic regression
+
+**Likelihood:** 
+* For estimates $\widehat{\beta}_0$ and $\widehat{\beta}_1$, $\widehat{\pi} = \dfrac{\exp\{\widehat{\beta}_0 + \widehat{\beta}_1 x\}}{1 + \exp\{\widehat{\beta}_0 + \widehat{\beta}_1 x\}}$
+* $L(\widehat{\beta}_0, \widehat{\beta}_1) = P(\text{data})$
+    
+**Maximize:** 
+* Choose $\widehat{\beta}_0$, $\widehat{\beta}_1$ to maximize $L(\widehat{\beta}_0, \widehat{\beta}_1)$
 
 ---
 
 ## Deviance
 
-**Deviance:** If $L$ is the likleihood, then deviance is given by $-2 \log L$
+**Deviance:** If $L$ is the likelihood, then deviance is given by $-2 \log L$
 
 * Maximizing likelihood is equivalent to minimizing deviance
 * Deviance is analogous to SSE from linear regression
@@ -40,6 +50,7 @@ library(tidyverse)
 library(Stat2Data)
 library(knitr)
 data("MedGPA")
+data("Kershaw")
 
 hook_output <- knit_hooks$get("output")
 knit_hooks$set(output = function(x, options) {
@@ -107,11 +118,11 @@ Intuition: a larger drop in deviance is stronger evidence for a relationship bet
 
 Full model: $\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}$ 
 
-* degrees of freedom: $df_{\text{full}} = n - p = 55 - 2 = 53$
+* degrees of freedom: $df_{\text{full}} = n - p_{\text{full}} = 55 - 2 = 53$
 
 Reduced model: $\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0$
 
-* degrees of freedom: $df_{\text{reduced}} = n - p = 55 - 1 = 54$
+* degrees of freedom: $df_{\text{reduced}} = n - p_{\text{reduced}} = 55 - 1 = 54$
 
 --
 
@@ -228,7 +239,7 @@ p-value = 0.000553
 * some example hypotheses:
     * $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 \neq 0$
     * $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 > 0$
-        * Note: for one-sided tests, use the `pnorm` function in R, rather than the summary output
+        * Note: for one-sided tests, or tests of values other than 0, use the `pnorm` function in R, rather than the summary output
 ]
 
 .pull-right[
@@ -288,3 +299,81 @@ summary(med_glm)
 .center[
 $5.454 \pm 1.96 \cdot 1.579 = (2.36, 8.55)$
 ]
+
+---
+
+## Class activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_34.html](https://sta112-f21.github.io/class_activities/ca_lecture_34.html)
+
+---
+
+## Class activity
+
+$\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{speed}$
+
+Is there any relationship between whether a pitch is successful and the speed at which it crosses home plate?
+
+--
+
+$H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 \neq 0$
+
+---
+
+## Class activity
+
+$\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{speed}$
+
+Are faster pitches are more likely to be successful?
+
+--
+
+$H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 > 0$
+
+--
+
+Use a Wald test, not a likelihood ratio test, because alternative is one-sided.
+
+---
+
+## Class activity
+
+$H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 > 0$
+
+```{r, output.lines=10:14}
+kershaw_glm <- glm(Result ~ EndSpeed, data = Kershaw, 
+                   family=binomial)
+summary(kershaw_glm)
+``` 
+
+--
+
+$t = \dfrac{0.0234}{0.006} = 3.881$
+
+```{r}
+pnorm(3.881, lower.tail=F)
+```
+
+---
+
+## Class activity
+
+```{r, output.lines=10:14}
+kershaw_glm <- glm(Result ~ EndSpeed, data = Kershaw, 
+                   family=binomial)
+summary(kershaw_glm)
+``` 
+
+95% confidence interval for $\beta_1$: 
+
+--
+
+$0.0234 \pm 1.96 \cdot 0.006 = (0.012, 0.035)$
+
+--
+
+95% confidence interval for the odds ratio: 
+
+--
+
+$(e^{0.012}, e^{0.035}) = (1.012, 1.035)$
