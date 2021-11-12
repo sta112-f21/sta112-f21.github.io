@@ -1,0 +1,19 @@
+---
+title: "Class Activity, November 12"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+1. You are interested in testing whether there is any relationship between whether a pitch is successful and the speed at which it crosses home plate. Carry out both a Wald test and a likelihood ratio test to investigate this question, and report your results. *In practice, we would just do one test, rather than both of them. But since this is a class activity, I want you to try both tests.*
+
+2. Instead of the research question in exercise 1, you want to know whether faster pitches are more likely to be successful. Write down your hypotheses in terms of a parameter in the model.
+
+3. Which test (Wald, likelihood ratio, or both) can you use to test the hypotheses in question 2? Carry out the hypothesis test.
+
+4. Calculate a 95% confidence interval for $\beta_1$ in the logistic regression model.
+
+5. Instead of the interval in exercise 4, you want a 95% confidence interval for the odds ratio for an increase of 1mph in pitch speed. How can you calculate this confidence interval using your answer to exercise 4?

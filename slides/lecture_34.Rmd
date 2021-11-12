@@ -228,6 +228,7 @@ p-value = 0.000553
 * some example hypotheses:
     * $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 \neq 0$
     * $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 > 0$
+        * Note: for one-sided tests, use the `pnorm` function in R, rather than the summary output
 ]
 
 .pull-right[
