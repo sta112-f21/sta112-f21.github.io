@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Inference with logistic regression models</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Inference with logistic regression models
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+---
+
+### Recap: maximum likelihood estimation for logistic regression
+
+---
+
+## Deviance
+
+**Deviance:** If `\(L\)` is the likleihood, then deviance is given by `\(-2 \log L\)`
+
+* Maximizing likelihood is equivalent to minimizing deviance
+* Deviance is analogous to SSE from linear regression
+    * In fact, if `\(y = \beta_0 + \beta_1 x + \varepsilon\)` and `\(\varepsilon \sim N(0, \sigma_\varepsilon^2)\)`, then deviance = SSE
+    
+---
+
+## Example: GPA and med school admission
+
+`\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)`
+
+
+
+
+```r
+med_glm &lt;- glm(Acceptance ~ GPA, data = MedGPA, family=binomial)
+summary(med_glm)
+```
+
+```
+...
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -19.207      5.629  -3.412 0.000644 ***
+## GPA            5.454      1.579   3.454 0.000553 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 75.791  on 54  degrees of freedom
+*## Residual deviance: 56.839  on 53  degrees of freedom
+...
+```
+
+---
+
+## Comparing deviances
+
+
+```
+...
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -19.207      5.629  -3.412 0.000644 ***
+## GPA            5.454      1.579   3.454 0.000553 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+*##     Null deviance: 75.791  on 54  degrees of freedom
+*## Residual deviance: 56.839  on 53  degrees of freedom
+...
+```
+
+75.791 = deviance for intercept-only model `\(\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0\)` 
+
+56.839 = deviance for full model `\(\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)`
+
+--
+
+**drop-in-deviance:** deviance for reduced model - deviance for full model = 18.952
+
+---
+
+## Comparing deviances
+
+75.791 = deviance for intercept-only model `\(\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0\)` 
+
+56.839 = deviance for full model `\(\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)`
+
+**drop-in-deviance:** deviance for reduced model - deviance for full model = 18.952
+
+.question[
+Intuition: a larger drop in deviance is stronger evidence for a relationship between GPA and med school acceptance
+]
+
+---
+
+## Comparing deviances
+
+**drop-in-deviance:** `\(G =\)` deviance for reduced model - deviance for full model = 18.952
+
+Full model: `\(\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)` 
+
+* degrees of freedom: `\(df_{\text{full}} = n - p = 55 - 2 = 53\)`
+
+Reduced model: `\(\hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0\)`
+
+* degrees of freedom: `\(df_{\text{reduced}} = n - p = 55 - 1 = 54\)`
+
+--
+
+`\(H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 \neq 0\)`
+
+Under `\(H_0\)`, `\(G \sim \chi^2_{df_{\text{reduced}} - df_{\text{full}}}\)`
+
+---
+
+## `\(\chi^2\)` distribution
+
+`\(\chi^2_k\)` distribution: parameterized by degrees of freedom `\(k\)`
+
+.center[
+&lt;img src="Chi-square_pdf.png" width="600"&gt;
+]
+
+
+---
+
+## `\(\chi^2\)` distribution
+
+`\(\chi^2_k\)` distribution: parameterized by degrees of freedom `\(k\)`
+
+.center[
+&lt;img src="Chi-square_pdf.png" width="400"&gt;
+]
+
+`\(G =\)` deviance for reduced model - deviance for full model
+
+Under `\(H_0\)`, `\(G \sim \chi^2_{df_{\text{reduced}} - df_{\text{full}}}\)`
+
+.question[
+Why is `\(G\)` always `\(\geq 0\)`?
+]
+
+---
+
+## Computing a p-value
+
+`\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)` 
+
+`\(H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 \neq 0\)`
+
+`\(G =\)` deviance for reduced model - deviance for full model = 18.952 `\(\sim \chi^2_1\)`
+
+
+```r
+pchisq(18.952, df = 1, lower.tail=FALSE)
+```
+
+```
+## [1] 1.340487e-05
+```
+
+---
+
+## Likelihood ratio test for nested models
+
+* Compare full and reduced models. Example:
+    * full model: `\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)`
+    * reduced model: `\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0\)`
+
+---
+
+## Likelihood ratio test for nested models
+
+* Compare full and reduced models
+* Calculate deviance ( `\(-2 \log L\)` ) for full and reduced models. Example:
+    * deviance for full model = 56.839
+    * deviance for reduced model = 75.791
+---
+
+## Likelihood ratio test for nested models
+
+* Compare full and reduced models
+* Calculate deviance ( `\(-2 \log L\)` ) for full and reduced models
+* Test statistic: `\(G =\)` deviance for reduced model - deviance for full model
+    * Example: `\(G = 75.791 - 56.839 = 18.952\)`
+--
+* p-value: `\(G \sim \chi^2_{df_{\text{reduced}} - df_{\text{full}}}\)`
+    * Example: `\(G \sim \chi^2_1\)`
+
+---
+
+## Alternative: Wald tests for single parameters
+
+`\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)` 
+
+`\(H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 \neq 0\)`
+
+`\(z = \dfrac{\widehat{\beta}_1 - 0}{SE_{\widehat{\beta}_1}} = \dfrac{\widehat{\beta}_1}{SE_{\widehat{\beta}_1}} \hspace{0.5cm} \sim N(0, 1)\)`
+
+---
+
+## Example
+
+`\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)` 
+
+`\(H_0: \beta_1 = 0 \hspace{1cm} H_A: \beta_1 \neq 0\)`
+
+
+```
+...
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -19.207      5.629  -3.412 0.000644 ***
+*## GPA            5.454      1.579   3.454 0.000553 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+...
+```
+
+`\(z = \dfrac{5.454}{1.579} = 3.454 \hspace{0.5cm} \sim N(0, 1)\)`
+
+p-value = 0.000553
+
+---
+
+## Wald tests vs. likelihood ratio tests
+
+.pull-left[
+**Wald test**
+
+* like t-tests
+* test a single parameter
+* some example hypotheses:
+    * `\(H_0: \beta_1 = 0\)` vs. `\(H_A: \beta_1 \neq 0\)`
+    * `\(H_0: \beta_1 = 0\)` vs. `\(H_A: \beta_1 &gt; 0\)`
+]
+
+.pull-right[
+**Likelihood ratio test**
+
+* like nested F-tests
+* test one or more parameters 
+* some example hypotheses:
+    * `\(H_0: \beta_1 = 0\)` vs. `\(H_A: \beta_1 \neq 0\)`
+    * In multiple logistic regression, could have 
+    `\(H_0: \beta_1 = \beta_2 = \beta_3 = 0\)`
+    `\(H_A: \text{ at least one of } \beta_1, \beta_2, \beta_3 \neq 0\)`
+]
+
+p-values are different, because test statistics and distributions are different
+
+---
+
+## Confidence intervals
+
+Confidence interval for `\(\beta_1\)`:
+
+.center[
+`\(\widehat{\beta}_1 \pm z^* SE_{\widehat{\beta}_1}\)`
+]
+
+where `\(z^* =\)` critical value of `\(N(0, 1)\)` distribution.
+
+---
+
+## Computing `\(z^*\)`
+
+Example: for a 95% confidence interval, `\(z^* = 1.96\)`
+
+
+```r
+qnorm(0.025, lower.tail=F)
+```
+
+```
+## [1] 1.959964
+```
+
+Example: for a 99% confidence interval, `\(z^* = 2.58\)`
+
+
+```r
+qnorm(0.005, lower.tail=F)
+```
+
+```
+## [1] 2.575829
+```
+
+---
+
+## Example
+
+`\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \text{GPA}\)` 
+
+
+```
+...
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -19.207      5.629  -3.412 0.000644 ***
+*## GPA            5.454      1.579   3.454 0.000553 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+...
+```
+
+95% confidence interval for `\(\beta_1\)`: 
+
+.center[
+`\(5.454 \pm 1.96 \cdot 1.579 = (2.36, 8.55)\)`
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
