@@ -348,7 +348,7 @@ summary(kershaw_glm)
 
 --
 
-$t = \dfrac{0.0234}{0.006} = 3.881$
+$z = \dfrac{0.0234}{0.006} = 3.881$
 
 ```{r}
 pnorm(3.881, lower.tail=F)
