@@ -1,0 +1,30 @@
+---
+author: "Dr. Ciaran Evans"
+title: Lab 7
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Reminders:
+    * Quiz 5 on Wednesday
+    * EC 2 due November 29
+* Remaining items:
+    * lab 7 (today)
+    * Project 3 (due during finals week)
+    * possibly one more quiz
+
+---
+
+## Lab 7
+
+[https://sta112-f21.github.io/labs/lab_7.html](https://sta112-f21.github.io/labs/lab_7.html)
