@@ -1,0 +1,42 @@
+---
+title: "Lab 7, November 15"
+output: 
+  tufte::tufte_html:
+    css: "lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Monday, November 22 at 12pm (noon) on Canvas
+
+**Learning goals:** By the end of this lab, you will be able to
+
+* Fit and assess logistic regression models
+* Perform hypothesis tests and calculate confidence intervals for parameters in logistic regression models
+
+# Setup
+
+**Template file:** [lab_07_template.Rmd](https://sta112-f21.github.io/labs/lab_07_template.Rmd)
+
+In this lab we will use the `Markets` data from the `Stat2Data` package. This data contains information on the New York stock market (through the Dow Jones Industrial Average) and the Japanese stock market (through the Nikkei 225). We are interested in whether we can predict whether the stock market in Japan will go up or down. We have 56 days worth of data from the two markets, and we will focus on the following variables:
+
+* `Up`: whether the Nikkei 225 went up or down on that day (1 = up, 0 = down)
+* `DJIAch`: the previous day's change in the Dow Jones Industrial Average
+* `lagNik`: the previous day's change in the Nikkei 225
+
+# Questions
+
+1. Fit a logistic regression model to predict whether the Nikkei 225 went up based on the previous day's change in the Dow Jones Industrial Average. Report the equation of the fitted model, and the deviance.
+
+2. Assess the shape, independence, and randomness assumptions for the model in question 1.
+
+While assumptions like independence are typically violated for time series data (which is what we have here), a logistic regression model can still be useful for describing the relationship between the variables.
+
+3. Are greater increases in the Dow Jones Industrial Average associated with a higher chance of an increase in the Nikkei 225? Carry out a hypothesis test, using the model from question 1.
+
+4. Calculate and interpret a 99% confidence interval for the change in odds associated with a unit increase in `DJIAch`.
+
+5. Perhaps today's change in the Nikkei 225 is a better predictor of whether the index will go up or down tomorrow. Fit a logistic regression model to predict whether the Nikkei 225 went up based on the previous day's change in the Nikkei 225. Report the equation of the fitted model, and the deviance.
+
+6. Which variable, `DJIAch` or `lagNik`, does a better job at predicting whether the Nikkei 225 will go up? Explain the basis for your decision. *(Hint: which variable gives a higher probability of the observed data?)*
