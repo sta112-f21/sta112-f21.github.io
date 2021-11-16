@@ -1,0 +1,98 @@
+---
+title: "Quiz 5"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: top=1in
+fontsize: 12pt
+---
+
+**Name:**
+
+**Instructions:** You have 15 minutes to complete this quiz. You may use any notes or resources, including your laptop and the internet (R documentation, StackOverflow, Wikipedia, etc.). You may not communicate with anyone else during the quiz.
+
+There are four short questions, and one bonus question. Relax and do your best! Try to answer as much as possible.
+
+The scenario is described on page 2. The questions are on pages 3 and 4. 
+
+## Data
+
+What is the relationship between drinking alcohol and an overdrawn bank account for college students? Researchers hypothesize that drinking large quantities of alcohol and overdrawing a bank account both indicate risky behavior, and so they suspect a positive association. 
+
+To investigate this question, researchers collected data on a random sample of 450 undergraduates at Mississippi State University and the University of Mississippi (two large universities). Each row in the data represents one student, and we will focus on two variables:
+
+* `DaysDrink`: the number of days drinking alcohol, in the past 30 days
+* `Overdrawn`: whether the student has ever overdrawn a bank account (0 = no, 1 = yes)
+
+\newpage
+
+## Scenario
+
+The fitted logistic regression model is
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -2.21 + 0.047 \ \text{DaysDrink}$,
+
+where $\pi = P(\text{Overdrawn} = 1)$. To assess the logistic regression model, the researchers create an empirical log-odds plot:
+
+```{r echo=F, message=F, warning=F}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("CreditRisk")
+
+credit_glm <- glm(Overdrawn ~ DaysDrink, 
+                  data = CreditRisk %>% drop_na(),
+                  family = binomial)
+
+num_bins <- 5
+
+logodds_table <- CreditRisk %>% 
+  drop_na() %>%
+  mutate(pred = predict(credit_glm, type="response"),
+         obs = credit_glm$y,
+         bin = cut(DaysDrink, 
+                   breaks = num_bins,
+                   labels = F)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(DaysDrink),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_abline(intercept = coef(credit_glm)[["(Intercept)"]],
+              slope = coef(credit_glm)[["DaysDrink"]],
+              color = "blue", lwd=1.2) +
+  theme_bw() +
+  labs(x = "Average number of drinking days",
+       y = "Empirical log-odds") +
+  theme(text = element_text(size=20))
+```
+
+
+
+\newpage
+
+## Questions
+
+**Question 1:** What are the estimated odds of having overdrawn a bank account for a student who drank no alcohol in the last 30 days?
+
+\vspace{3cm}
+
+**Question 2:** What is the estimated change in odds associated with an increase of 1 day of drinking in the last 30 days?
+
+\vspace{3cm} 
+
+**Question 3:** What is the estimated probability of having overdrawn a bank account for a student who drank alcohol on 10 of the last 30 days?
+
+\vspace{3cm}
+
+**Question 4:** Assess the shape, independence, and randomness assumptions for the researchers' logistic regression model.
+
+\newpage
+
+**Bonus question:** The logistic regression model assumes that the change in odds associated with an increase of 1 drinking day is constant (as in Question 2). Is the change in *probability* of being overdrawn also constant? Explain your reasoning.
