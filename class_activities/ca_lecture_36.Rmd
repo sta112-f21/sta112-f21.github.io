@@ -1,0 +1,136 @@
+---
+title: "Class Activity, November 17"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+## Setup
+
+In this activity, we will revisit the `MedGPA` data, which looks at the relationship between GPA, MCAT score, and admission to medical school for 55 students from a midwestern liberal arts college.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_36_template.Rmd)
+
+## Exercises
+
+**Question:** If you know an applicant's MCAT score, does their GPA provide additional information about their chances of enrollment?
+
+We suspect that the answer is yes -- students with both a high MCAT and high GPA are probably more likely to get into med school than students with a high MCAT and low GPA. To explore this question, we will ultimately fit a logistic regression model with both MCAT and GPA as predictors. In this class activity, we will go through the model building process.
+
+Let's start by making empirical log-odds plots to check that it is reasonable to model the log-odds as a linear function of GPA and MCAT score.
+
+1. Below are empirical log-odds plots for GPA and MCAT score. Based on the plots, does it seem reasonable to model the log-odds as a linear function of GPA and MCAT score?
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=8, fig.height=3}
+library(tidyverse)
+library(Stat2Data)
+library(patchwork)
+data("MedGPA")
+
+num_bins <- 5
+
+logodds_table <- MedGPA %>%
+  mutate(obs = Acceptance,
+         bin = cut(GPA, 
+                   breaks = quantile(GPA, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(GPA),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+p1 <- logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average GPA",
+       y = "Empirical log-odds") +
+  theme(text = element_text(size=20))
+
+logodds_table <- MedGPA %>%
+  mutate(obs = Acceptance,
+         bin = cut(MCAT, 
+                   breaks = quantile(MCAT, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(MCAT),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+p2 <- logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average MCAT score",
+       y = "Empirical log-odds") +
+  theme(text = element_text(size=20))
+
+p1 + p2
+```
+
+Now, answering our question above involves fitting a model with both GPA and MCAT score as predictors. There are a couple possible models:
+
+$(1) \hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{GPA} + \beta_2 \ \text{MCAT}$
+
+$(2) \hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{GPA} + \beta_2 \ \text{MCAT} + \beta_3 \ \text{GPA} \cdot \text{MCAT}$
+
+We can try to investigate whether an interaction is necessary by comparing higher MCAT scores (say, above 35) to lower scores. The empirical log-odds plot below shows how the relationship between the log-odds and GPA, for the different MCAT score ranges.
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+
+num_bins <- 4
+
+logodds_table <- MedGPA %>%
+  mutate(obs = Acceptance,
+         high_mcat = ifelse(MCAT > 35, 
+                            "MCAT > 35",
+                            "MCAT <= 35"),
+         bin = cut(GPA, 
+                   breaks = quantile(GPA, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, high_mcat) %>%
+  summarize(mean_x = mean(GPA),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = high_mcat)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average GPA",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20))
+```
+
+2. Based on the empirical log-odds plot, which model ((1) or (2)) do you think would better fit the data?
+
+3. Fit the selected model, and report the deviance and the equation of the estimated model.
+
+4. What reduced model could we compare against to answer the research question?
+
+5. Fit the reduced model from Exercise 4, and report the deviance and the equation of the fitted model.
+
+6. What is the drop in deviance from the reduced to the full model?
