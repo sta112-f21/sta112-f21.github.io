@@ -4,7 +4,8 @@ output:
   pdf_document:
     latex_engine: xelatex
 geometry: top=1in
-fontsize: 12pt
+header-includes:
+- \usepackage[fontsize=22pt]{scrextend}
 ---
 
 **Name:**
@@ -13,7 +14,7 @@ fontsize: 12pt
 
 There are four short questions, and one bonus question. Relax and do your best! Try to answer as much as possible.
 
-The scenario is described on page 2. The questions are on pages 3 and 4. 
+The data is described on page 2, and the scenario is described on page 3. The questions are on pages 4 -- 6. 
 
 ## Data
 
@@ -83,15 +84,15 @@ logodds_table %>%
 
 **Question 1:** What are the estimated odds of having overdrawn a bank account for a student who drank no alcohol in the last 30 days?
 
-\vspace{3cm}
+\vspace{6cm}
 
 **Question 2:** What is the estimated change in odds associated with an increase of 1 day of drinking in the last 30 days?
 
-\vspace{3cm} 
+\newpage
 
 **Question 3:** What is the estimated probability of having overdrawn a bank account for a student who drank alcohol on 10 of the last 30 days?
 
-\vspace{3cm}
+\vspace{6cm}
 
 **Question 4:** Assess the shape, independence, and randomness assumptions for the researchers' logistic regression model.
 

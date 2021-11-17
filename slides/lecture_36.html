@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Beginning multiple logistic regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Beginning multiple logistic regression
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* Beginning multiple logistic regression
+* Quiz 5
+
+---
+
+## Class activity
+
+Med school admission data with both GPA and MCAT as predictors
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_36.html](https://sta112-f21.github.io/class_activities/ca_lecture_36.html)
+
+---
+
+## Class activity
+
+&lt;img src="lecture_36_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+Does it seem reasonable to model the log-odds as a linear function of GPA and MCAT score?
+
+---
+
+## Class activity
+
+&lt;img src="lecture_36_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+`\((1) \hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{GPA} + \beta_2 \ \text{MCAT}\)`
+
+`\((2) \hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{GPA} + \beta_2 \ \text{MCAT} + \beta_3 \ \text{GPA} \cdot \text{MCAT}\)`
+
+Which model ((1) or (2)) do you think would better fit the data?
+
+---
+
+## Class activity
+
+
+```r
+med_glm &lt;- glm(Acceptance ~ GPA*MCAT, data = MedGPA,
+               family = binomial)
+summary(med_glm)
+```
+
+```
+...
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)  17.0632    34.1200   0.500    0.617
+## GPA          -6.6350    10.0837  -0.658    0.511
+## MCAT         -0.9359     0.9737  -0.961    0.336
+## GPA:MCAT      0.3154     0.2864   1.101    0.271
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 75.791  on 54  degrees of freedom
+## Residual deviance: 53.186  on 51  degrees of freedom
+## AIC: 61.186
+...
+```
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = 17.06 - 6.64 \ \text{GPA} -0.94 \text{MCAT} + 0.32 \ \text{GPA} \cdot \text{MCAT}\)`
+
+Deviance = 53.19
+
+---
+
+## Class activity
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = 17.06 - 6.64 \ \text{GPA} -0.94 \text{MCAT} + 0.32 \ \text{GPA} \cdot \text{MCAT}\)`
+
+**Question:** Does the fitted model mean that there is a negative association between GPA and acceptance to med school??
+
+--
+
+**Answer:** No -- remember, there is an interaction term! So the relationship between GPA and acceptance depends on MCAT score. 
+
+A typical MCAT score in the data is about 35, which gives a slope of 
+
+`\(-6.64 + 0.32 \cdot 35 = 4.56\)`
+
+---
+
+## Class activity
+
+If you know an applicant's MCAT score, does their GPA provide additional information about their chances of enrollment?
+
+Reduced model:
+
+--
+
+`\(\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{MCAT}\)`
+
+`\(\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -8.71 + 0.25 \ \text{MCAT}\)`
+
+Deviance = 64.7
+
+---
+
+## Class activity
+
+Likelihood ratio test:
+
+`\(G = 64.7 - 53.19 = 11.51\)`
+
+`\(G \sim \ ?\)`
+
+---
+
+## Class activity
+
+Likelihood ratio test:
+
+`\(G = 64.7 - 53.19 = 11.51\)`
+
+`\(G \sim \chi^2_2\)`
+
+
+```r
+pchisq(11.51, df=2, lower.tail=F)
+```
+
+```
+## [1] 0.003166907
+```
+
+So we have strong evidence that GPA provides additional information about acceptance.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,231 @@
+---
+author: "Dr. Ciaran Evans"
+title: Beginning multiple logistic regression
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Beginning multiple logistic regression
+* Quiz 5
+
+---
+
+## Class activity
+
+Med school admission data with both GPA and MCAT as predictors
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_36.html](https://sta112-f21.github.io/class_activities/ca_lecture_36.html)
+
+---
+
+## Class activity
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=8, fig.height=3}
+library(tidyverse)
+library(Stat2Data)
+library(patchwork)
+library(knitr)
+data("MedGPA")
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
+
+num_bins <- 5
+
+logodds_table <- MedGPA %>%
+  mutate(obs = Acceptance,
+         bin = cut(GPA, 
+                   breaks = quantile(GPA, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(GPA),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+p1 <- logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average GPA",
+       y = "Empirical log-odds") +
+  theme(text = element_text(size=20))
+
+logodds_table <- MedGPA %>%
+  mutate(obs = Acceptance,
+         bin = cut(MCAT, 
+                   breaks = quantile(MCAT, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(MCAT),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+p2 <- logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average MCAT score",
+       y = "Empirical log-odds") +
+  theme(text = element_text(size=20))
+
+p1 + p2
+```
+
+Does it seem reasonable to model the log-odds as a linear function of GPA and MCAT score?
+
+---
+
+## Class activity
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=6, fig.height=4}
+
+num_bins <- 4
+
+logodds_table <- MedGPA %>%
+  mutate(obs = Acceptance,
+         high_mcat = ifelse(MCAT > 35, 
+                            "MCAT > 35",
+                            "MCAT <= 35"),
+         bin = cut(GPA, 
+                   breaks = quantile(GPA, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, high_mcat) %>%
+  summarize(mean_x = mean(GPA),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = high_mcat)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average GPA",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20))
+```
+
+$(1) \hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{GPA} + \beta_2 \ \text{MCAT}$
+
+$(2) \hspace{1cm} \log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{GPA} + \beta_2 \ \text{MCAT} + \beta_3 \ \text{GPA} \cdot \text{MCAT}$
+
+Which model ((1) or (2)) do you think would better fit the data?
+
+---
+
+## Class activity
+
+```{r, output.lines=10:20}
+med_glm <- glm(Acceptance ~ GPA*MCAT, data = MedGPA,
+               family = binomial)
+summary(med_glm)
+```
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = 17.06 - 6.64 \ \text{GPA} -0.94 \text{MCAT} + 0.32 \ \text{GPA} \cdot \text{MCAT}$
+
+Deviance = 53.19
+
+---
+
+## Class activity
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = 17.06 - 6.64 \ \text{GPA} -0.94 \text{MCAT} + 0.32 \ \text{GPA} \cdot \text{MCAT}$
+
+**Question:** Does the fitted model mean that there is a negative association between GPA and acceptance to med school??
+
+--
+
+**Answer:** No -- remember, there is an interaction term! So the relationship between GPA and acceptance depends on MCAT score. 
+
+A typical MCAT score in the data is about 35, which gives a slope of 
+
+$-6.64 + 0.32 \cdot 35 = 4.56$
+
+---
+
+## Class activity
+
+If you know an applicant's MCAT score, does their GPA provide additional information about their chances of enrollment?
+
+Reduced model:
+
+--
+
+$\log \left( \dfrac{\pi}{1 - \pi} \right) = \beta_0 + \beta_1 \ \text{MCAT}$
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -8.71 + 0.25 \ \text{MCAT}$
+
+Deviance = 64.7
+
+---
+
+## Class activity
+
+Likelihood ratio test:
+
+$G = 64.7 - 53.19 = 11.51$
+
+$G \sim \ ?$
+
+---
+
+## Class activity
+
+Likelihood ratio test:
+
+$G = 64.7 - 53.19 = 11.51$
+
+$G \sim \chi^2_2$
+
+```{r}
+pchisq(11.51, df=2, lower.tail=F)
+```
+
+So we have strong evidence that GPA provides additional information about acceptance.
+
