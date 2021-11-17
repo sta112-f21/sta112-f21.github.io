@@ -14,7 +14,7 @@ Run the setup chunk:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(Stat2Data)
-data("Kershaw")
+data("MedGPA")
 ```
 
 ## Question 1
