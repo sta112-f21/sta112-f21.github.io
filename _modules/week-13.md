@@ -9,6 +9,8 @@ November 15
 November 17
 : Beginning multiple logistic regression
   : [Slides](https://sta112-f21.github.io/slides/lecture_36.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_36.html)
+  
+: Textbook 10.1, 10.2
 
 : **Quiz 5**{: .label .label-red}
 
