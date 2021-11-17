@@ -22,7 +22,9 @@ editor_options:
 
 ## Class activity
 
-Med school admission data with both GPA and MCAT as predictors
+Med school admission data with both GPA and MCAT as predictors.
+
+**Question:** If you know an applicant's MCAT score, does their GPA provide additional information about their chances of enrollment?
 
 [https://sta112-f21.github.io/class_activities/ca_lecture_36.html](https://sta112-f21.github.io/class_activities/ca_lecture_36.html)
 

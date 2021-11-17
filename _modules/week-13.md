@@ -7,6 +7,8 @@ November 15
   : [Slides](https://sta112-f21.github.io/slides/lecture_35.html), [Lab 7](https://sta112-f21.github.io/labs/lab_7.html)
 
 November 17
+: Beginning multiple logistic regression
+  : [Slides](https://sta112-f21.github.io/slides/lecture_36.html), [Class activity](https://sta112-f21.github.io/class_activities/ca_lecture_36.html)
 
 : **Quiz 5**{: .label .label-red}
 
