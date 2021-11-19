@@ -1,0 +1,53 @@
+---
+---
+---
+title: "Class Activity, November 19"
+author: "Your Name"
+output: html_document
+---
+
+## Setup
+
+Run the setup chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("Titanic")
+```
+
+## Question 1
+
+Write your answer here...
+
+## Question 2
+
+Write your answer here...
+
+## Question 3
+
+Write your answer here...
+
+
+## Question 4
+
+```{r}
+
+```
+
+## Question 5
+
+```{r}
+
+```
+
+Write your answer here...
+
+## Question 6
+
+Write your answer here...
+
+## Question 7
+
+Write your answer here...

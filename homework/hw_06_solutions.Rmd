@@ -1,0 +1,106 @@
+---
+title: "Homework 6 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("Kershaw")
+```
+
+## Question 1
+
+Your friend made an error by fitting a linear regression, instead of a logistic regression. There are a couple reasons why this is a bad idea. First, probabilities (of a successful pitch) are bounded, between 0 and 1. But lines are not, so we could have an estimated probability < 0 or > 1. Second, the usual linear regression assumptions model the noise as a normal distribution around the line -- this doesn't make sense when are outcomes are only 0 or 1. Your friend should instead fit a logistic regression model.
+
+**Grading:** Out of 20 points
+
+* 5 points for identifying error
+* 10 points for explaining why it is wrong (one of the reasons here, or another reasonable explanation, will suffice)
+* 5 points for explaining what to do instead
+
+## Question 2
+
+Your friend made the following errors:
+
+* They fit the logistic regression model correctly, but reported the fit incorrectly (the left hand side should be the log odds, not the probability, because logistic regression models the log-odds as a linear function of the predictors)
+* They interpreted the fit incorrectly. The slope is positive, indicating a positive relationship between speed and the probability of a successful pitch.
+* Neither a residual plot nor qq plot is an appropriate diagnostic for logistic regression, because we don't check the constant variance or normality assumptions. We don't check these two assumptions because we don't make them: they both deal with the distribution of the noise term $\varepsilon$ in linear regression, but this noise term doesn't appear in logistic regression. Likewise, we don't use a residual plot to check the shape assumption -- instead, we can use an empirical log-odds plot
+
+**Grading:** Out of 21 points. 7 points for each error; they need to identify the error, explain why it is wrong, and explain what to do instead to get the 7 points.
+
+## Question 3
+
+```{r}
+kershaw_glm <- glm(Result ~ EndSpeed, data = Kershaw, family=binomial)
+summary(kershaw_glm)
+```
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -1.43 + 0.023 \ \text{EndSpeed}$
+
+**Grading:** Out of 10 points. They just have to fit the right model and report the fit. They can write log(odds) for the left hand side instead.
+
+## Question 4
+
+```{r}
+exp(0.023)
+```
+
+An increase of pitch speed by 1 mph is associated with an increase in the odds of a successful pitch by a factor of 1.023.
+
+**Grading:** Out of 10 points. They just have to calculate the number correctly and report the result.
+
+## Question 5
+
+```{r}
+exp(-1.43 + 0.023*95)/(1 + exp(-1.43 + 0.023*95))
+```
+
+We estimate that a pitch of 95mph has about a 68% chance of being successful.
+
+**Grading:** Out of 10 points. They just have to calculate the number correctly and report the result.
+
+## Question 6
+
+```{r}
+num_bins <- 8
+
+logodds_table <- Kershaw %>% 
+  mutate(pred = predict(kershaw_glm, type="response"),
+         obs = kershaw_glm$y,
+         bin = cut(EndSpeed, 
+                   breaks = num_bins,
+                   labels = F)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(EndSpeed),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point() +
+  geom_abline(intercept = coef(kershaw_glm)[["(Intercept)"]],
+              slope = coef(kershaw_glm)[["EndSpeed"]],
+              color = "blue", lwd=1.2) +
+  theme_bw() +
+  labs(x = "Average pitch speed",
+       y = "Empirical log-odds")
+```
+
+For the most part, the shape assumption looks reasonable. However, around 70 mph, the empirical log-odds are much lower than predicted by the model. This could mean that the shape assumption is violated, and we need a more flexible model, or there are other variables (like the type of pitch) that we need to include in the model.
+
+**Grading:** Out of 14 points. Answers may vary a little here, and they don't need to explain why the shape assumption could be violated.  If they identify the point near 70mph as an "outlier", don't take off points, but do explain why it isn't an outlier in the usual sense (that point is the average of many observations).
+
+## Question 7
+
+The randomness assumption seems like a reasonable approximation here. What we want is that, given pitch speed, the outcome of a given pitch can be modeled as random, with some probability of success. Since a pitch is affected by a wide range of different forces, viewing the outcome as random seems pretty reasonable. Note that we can't appeal to random sampling as the source of randomness here, since we have all the pitches from one pitcher in 2013. This also means generalizing to a broader population probably won't work.
+
+The independence assumption seems less reasonable. There is a natural time ordering to the data here, and we could imagine that earlier pitches could influence later pitches (either in the same game, or across the season).
+
+**Grading:** Out of 15 points. Student's should realize that the data aren't a random sample, but I'm ok with different answers for the randomness assumption (either concluding it is or isn't reasonable) as long as the explanation is reasonable. For independence, they should recognize that there could be some dependence; but if they don't, be pretty lenient if they made a decent attempt.
