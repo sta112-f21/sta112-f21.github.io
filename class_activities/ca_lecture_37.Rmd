@@ -1,0 +1,91 @@
+---
+title: "Class Activity, November 19"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+## Setup
+
+In this activity, we will work with the `Titanic` data.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_37_template.Rmd)
+
+## Part I
+
+Let's begin by exploring the relationship between age and survival, broken down by sex and passenger class:
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4}
+library(tidyverse)
+library(Stat2Data)
+data("Titanic")
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+1. A logistic regression model would assume that the relationship between age and the log-odds of survival is linear within each combination of sex and passenger class. Does that assumption look reasonable?
+
+2. Does there appear to be a relationship between age and survival, after accounting for sex and class?
+
+3. Which combination of age, class, and sex appears to have the highest chance of survival? The lowest? Why might that be?
+
+## Part II
+
+Based on the empirical log-odds plot above, we choose the logistic regression model
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age} + \beta_8 \ \text{IsSecondClass} \cdot \text{Age} + \beta_9 \ \text{IsThirdClass} \cdot \text{Age} \ + \\
+& \hspace{0.5cm} \beta_{10} \ \text{IsMale} \cdot \text{IsSecondClass} \cdot \text{Age} + \beta_{11} \ \text{IsMale} \cdot \text{IsThirdClass} \cdot \text{Age}
+\end{align}
+$$
+where $\pi$ is the probability of survival.
+
+4. Fit the above model (you don't need to write down the fitted model right now).
+
+5. Using the fitted model, what is the estimated odds ratio of survival for a 40 year old woman in first class vs. a 40 year old man in first class?
+
+6. Does this estimated odds ratio change as age changes?
+
+## Part III
+
+Now let's consider two questions we could answer using our model.
+
+* Is there a relationship between age and survival, after accounting for sex and class?
+* After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+7. For each of these two questions, write down a reduced model that would allow you to address the question with a nested test.

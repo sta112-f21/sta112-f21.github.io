@@ -1,0 +1,436 @@
+---
+author: "Dr. Ciaran Evans"
+title: Multiple logistic regression
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+---
+
+## EDA with the Titanic data
+
+**Titanic data:** 1313 passengers on the Titanic, with the following variables:
+
+* `Survived` (1 = yes, 0 = no)
+* `Age` (in years)
+* `Sex` (female or male)
+* `PClass` (passenger class; 1st, 2nd, or 3rd)
+
+**Question:** After accounting for other variables, is there a relationship between age and survival?
+
+---
+
+## EDA: age and survival
+
+.question[
+I want to explore the relationship between age and survival. What plot can I make?
+]
+
+---
+
+## EDA: age and survival
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+library(tidyverse)
+library(Stat2Data)
+data("Titanic")
+
+num_bins <- 8
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20))
+
+```
+
+* Does the shape assumption seem reasonable here?
+* What might explain the observed shape?
+
+---
+
+## EDA: age and survival
+
+```{r echo=F, message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+
+num_bins <- 8
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20))
+
+```
+
+* One reason for the unusual shape could be that we need to include other variables
+* (This could also explain why the slope looks positive for age > 20)
+
+---
+
+## Class activity, Part I
+
+EDA for the relationship between age and survival, broken down by sex and passenger class.
+
+---
+
+## Class activity, Part I
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+.question[
+Does the shape assumption seem reasonable for each group?
+]
+
+---
+
+## Class activity, Part I
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+.question[
+Does there appear to be a relationship between age and survival, after accounting for sex and class?
+]
+
+---
+
+## Class activity, Part I
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+.question[
+Which combination of age, class, and sex appears to have the highest chance of survival? The lowest? Why might that be?
+]
+
+---
+
+## Class activity, Part I
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+.question[
+Based on the plot, what model should I choose?
+]
+
+---
+
+## Class activity, Part I
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age} + \beta_8 \ \text{IsSecondClass} \cdot \text{Age} + \beta_9 \ \text{IsThirdClass} \cdot \text{Age} \ + \\
+& \hspace{0.5cm} \beta_{10} \ \text{IsMale} \cdot \text{IsSecondClass} \cdot \text{Age} + \beta_{11} \ \text{IsMale} \cdot \text{IsThirdClass} \cdot \text{Age}
+\end{align}
+$$
+
+---
+
+## Class activity, Part II
+
+Fit and interpret the model.
+
+---
+
+## Class activity, Part II
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age} + \beta_8 \ \text{IsSecondClass} \cdot \text{Age} + \beta_9 \ \text{IsThirdClass} \cdot \text{Age} \ + \\
+& \hspace{0.5cm} \beta_{10} \ \text{IsMale} \cdot \text{IsSecondClass} \cdot \text{Age} + \beta_{11} \ \text{IsMale} \cdot \text{IsThirdClass} \cdot \text{Age}
+\end{align}
+$$
+
+.question[
+What is the estimated odds ratio of survival for a 40 year old woman in first class vs. a 40 year old man in first class?
+]
+
+--
+
+**Odds ratio:** After simplifying, $\dfrac{1}{\exp\{ \beta_1 + \beta_7 \cdot 40\}}$
+
+So our estimate is $\dfrac{1}{\exp\{ \widehat{\beta_1} + \widehat{\beta_7} \cdot 40\}} = \dfrac{1}{\exp\{ -1.005 - 0.0664 \cdot 40 \}} = 38.9$
+
+---
+
+## Class activity, Part II
+
+**Odds ratio:** After simplifying, $\dfrac{1}{\exp\{ \beta_1 + \beta_7 \cdot 40\}}$
+
+So our estimate is $\dfrac{1}{\exp\{ \widehat{\beta_1} + \widehat{\beta_7} \cdot 40\}} = \dfrac{1}{\exp\{ -1.005 - 0.0664 \cdot 40 \}} = 38.9$
+
+.question[
+Does this estimated odds ratio change as age changes?
+]
+
+--
+
+**Answer:** Yes; the estimated odds ratio is $\dfrac{1}{\exp\{ -1.005 - 0.0664 \cdot \text{Age} \}}$
+
+As Age increases, so does the estimated odds ratio.
+
+---
+
+## Class activity, Part III
+
+* Is there a relationship between age and survival, after accounting for sex and class?
+* After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+---
+
+## Class activity, Part III
+
+Is there a relationship between age and survival, after accounting for sex and class?
+
+.question[
+What's our reduced model?
+]
+
+--
+
+The reduced model doesn't include age:
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +\\
+& \hspace{0.5cm} \beta_4 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_5 \ \text{IsMale} \cdot \text{IsThirdClass}
+\end{align}
+$$
+
+---
+
+## Class activity, Part III
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+.question[
+What's our reduced model?
+]
+
+--
+
+The reduced model removes interactions betwen age and class (forcing the slopes to be the same within each sex):
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age}
+\end{align}
+$$
