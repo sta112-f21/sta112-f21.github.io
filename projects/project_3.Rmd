@@ -1,0 +1,305 @@
+---
+title: "Project 3"
+output: 
+  rmdformats::robobook:
+    css: "homework.css"
+    highlight: pygments
+link-citations: yes
+---
+
+**Due:** Wednesday, December 8, 12:00pm (noon) on Canvas
+
+**Submission:** A template file is provided, which includes the five section headings: [project_3_template.Rmd](https://sta112-f21.github.io/projects/project_3_template.Rmd)
+
+Once you have completed the report, submit *both* your 
+knitted HTML file and the R Markdown file to Canvas.
+
+**Notes:** Please note a few differences from Project 2:
+
+* One of the research questions involves logistic regression. See the Diagnostics and Transformations section below for expectations with checking assumptions for logistic regression.
+* I have provided code (see the Diagnostics and Transformations section below) for empirical log-odds plots, which you can adapt for this project. I recommend using this code, rather than code we have used on previous assignments (which was somewhat specialized to simple logistic regression).
+* The suggested length of the different sections is a little longer; see the Rubric below.
+
+**General advice:** 
+
+* It is ok if your answer to a research question ends up being "no relationship", provided you justify your answer with sound statistical analysis.
+* Real data is often messy. If assumptions are violated, try some transformations, but sometimes transformations don't work. If this happens, pick the model which best satisfies the assumptions and allows you to address your research question.
+* Start playing with the data and with models early. I find that the bulk of my time with data analysis is spent cleaning, transforming, and exploring the data.
+
+# Overview
+
+In this project, you will use exploratory data analysis and regression to investigate several research questions. You will then write a data analysis report that communicates the results of your analysis and draws a conclusion about the research questions. As discussed in the Collaboration section below, this project must be completed independently.
+
+# Data
+
+The [College Scorecard](https://collegescorecard.ed.gov/), compiled by the US Department of Education, is meant to be a tool for college applicants to compare different institutions. In this project, you will work with data from the scorecard to advise a high school senior on choosing a college. (We will use data that are several years old, so may be slightly out of date, but we will hope that the same general trends are still true today).
+
+## Research questions
+
+For this project, suppose you have been approached by a high school senior applying to college. They are looking through the college scorecard data, and they have some questions for you about the value of different schools. As schools have different student backgrounds and demographics, we will need to account for differences between schools when answering each question.
+
+1. Do students who graduate from more expensive schools earn more money after graduation, after controlling for other variables? Is the relationship between school cost and graduate earnings the same for public and private schools? To investigate these questions, fit one or more multiple linear regression models to predict earnings after graduation from school cost, student debt, school type (public or private), and the test scores of enrolled students. Think carefully about interaction terms and multicollinearity when choosing your model.
+
+2. Do students who attend private colleges have different loan repayment rates than students who attend public colleges, after accounting for differences between institutions like test scores, school cost, undergraduate enrollment, and federal student loans? As in question 1, use a multiple linear regression model, and think carefully about interaction terms and multicollinearity.
+
+3. In Question 2, we used linear regression, but the response variable was a fraction, which is forced to be between 0 and 1. What if we try logistic regression instead? Fit a multiple logistic regression model, using the same variables as in Question 2, but with a different response: whether more than 70% of graduated students are actively repaying their loans (yes or no). Does your answer change?
+
+4. The college scorecard data available for this project contains 266 schools. These schools are not a random sample from the population of all higher-education institutions in the US; rather, they represent the institutions for which all variables were available. This results in a different population of schools; for example, if you look through some of the schools, you'll notice few community colleges or for-profit institutions. In light of this, how should a high school senior use your answers to questions 1 -- 3 if they are interested in attending a community college? What additional data would you need to help them make an informed decision about community college? Address these questions in 1-2 paragraphs in the Discussion section of your report (you do not need to do any statistical modeling for question 4).
+
+You will investigate each of these research questions in your analysis, and explain your results in your report.
+
+## Variables
+
+The dataset provided for this project contains the following columns:
+
+* `INSTNM`: school name
+* `STABBR`: state in which the school is located
+* `CONTROL`: whether the school is public or private
+* `SATVRMID`: midpoint of SAT critical reading scores of students attending the school
+* `SATMTMID`: midpoint of SAT math scores
+* `SATWRMID`: midpoint of SAT writing scores
+* `ACTCMMID`: midpoint of the ACT cumulative scores
+* `ACTENMID`: midpoint of ACT English scores
+* `ACTMTMID`: midpoint of ACT math scores
+* `ACTWRMID`: midpoint of ACT writing scores
+* `UGDS`: number of undergraduate students at the school
+* `NPT4`: average cost to attend the school
+* `PCTFLOAN`: fraction of undergraduates receiving a federal student loan
+* `MD_EARN_WNE_P10`: median salary of students 10 years after graduation
+* `GRAD_DEBT_MDN_SUPP`: median debt of graduated students
+* `RPY_3YR_RT_SUPP`: proportion of students who are actively repaying their loans 3 years after graduation
+* `RPY_3YR_70`: whether the proportion of students actively repaying their loans 3 years after graduation is > 70% (1 = yes, 0 = no)
+
+## Downloading the data
+
+The data for this project is stored in a CSV file, and can be imported into R with the `read_csv` function in the `readr` package. The following code imports the data and saves it as a data frame called `scorecard`:
+
+```r
+scorecard <- read_csv("https://sta112-f21.github.io/projects/scorecard.csv")
+```
+
+This code is included in the setup chunk of the R Markdown template for the project.
+
+# Collaboration
+
+One purpose of the projects is to capture your knowledge and understanding of statistics and data analysis. Unlike homework and lab assignments, this project must be completed on your own, without collaborating with other students. 
+
+You may:
+
+* ask the instructor for help
+* use resources from the class notes and internet (Wikipedia, StackExchange, etc.)
+
+You may not:
+
+* work with another student on the project
+* ask a TA or tutor (e.g., at the MSC) for help
+
+
+# Content
+
+Your report will be written in the IMRaD format, with the following sections:
+
+* **Introduction:** motivates the research questions, why you want to study them, and the data you will use to study them.
+* **Methods:** further details on the data you will use to answer the research questions, and a description of the statistical methods you will use to analyze the data.
+* **Results:** the final results of your statistical analysis, such as the equations of the final models, confidence intervals, hypothesis tests, and model selection procedures.
+* **Discussion:** interpret the Results in the context of the original research questions.
+* **Appendix:** any supplementary details that were not included in the main report.
+
+There is no minimum or maximum length required. However, your analysis should be thorough, with your report addressing all research questions, and containing all the elements described in the grading rubric below.
+
+## Diagnostics and Transformations
+
+Because we have spent more time on linear regression than on logistic regression, I don't expect as much for logistic regression diagnostics.
+
+* **Linear regression:** You should
+    * Check shape, constant variance, normality, independence, and randomness
+    * Experiment with transforming the predictors and/or response if assumptions are not met
+    * Check for outliers
+    * Check for multicollinearity
+* **Logistic regression:** You should
+    * Check shape, independence, and randomness
+        * To check the shape assumption, make some empirical log-odds plots for different predictors separately. This involves code that is a little different from what we have used before (see below for an example that you can modify)
+    * Experiment with transforming the predictors if the shape assumption is not met (we don't transform the response in logistic regression)
+
+**Code for empirical log-odds plots:** The following code shows how to make the empirical log-odds plots we looked at in class with the Titanic data. You can modify these chunks for the scorecard data. To adapt the code, replace the Titanic data with the scorecard data, change the variable names (e.g., swap `Survived` and `Age` for variables in the scorecard data), change the x-axis label, and experiment with different numbers of bins.
+
+```{r message=F, warning=F, fig.align='center', fig.width=7, fig.height=5}
+library(tidyverse)
+library(Stat2Data)
+data("Titanic")
+
+num_bins <- 8
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20))
+
+```
+
+```{r message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "Passenger class",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+
+## Appearance and style
+
+### Writing
+
+The report should be written like an article or research paper: in full sentences and paragraphs, with headings for each section. You should not write your report with question numbers or as a list of bullet points. Scientific articles are generally written in third person, though "we" can also be acceptable ("we can see from Figure 1...") in some disciplines.
+
+### Code
+
+As with previous assignments, you will write the document in R Markdown. However, in full reports, the only output that should be visible from code chunks are figures and tables. If a code chunk does not produce a figure or table, you can hide it from the knitted document with `include=F`:
+
+````
+```{r, include=F}`r ''`
+
+```
+````
+
+If a code chunk produces a figure or table, only the figure or table should be visible in the knitted document. You can hide the chunk but display the output with `echo=F, message=F, warning=F`:
+
+````
+```{r, echo=F, message=F, warning=F}`r ''`
+
+```
+````
+
+### Figures
+
+Figures should have labeled axes, and should be clear and easy to read. Figures should also be captioned and numbered; to caption a figure, use `fig.cap = "..."` in the chunk options. For example (scroll to the right on the code to see it all),
+
+````
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Bill depth vs. bill length for penguins near Palmer Station, Antarctica."}`r ''`
+penguins %>%
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm)) +
+  geom_point() +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)") +
+  theme_bw()
+```
+````
+
+is displayed as
+
+```{r include=F}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+```{r, echo=F, message=F, warning=F, fig.cap="Figure 1: Bill depth vs. bill length for penguins near Palmer Station, Antarctica."}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm)) +
+  geom_point() +
+  labs(x = "Bill length (mm)",
+       y = "Bill depth (mm)") +
+  theme_bw()
+```
+
+Captions should provide enough information to understand what is being plotted, but interpretation can be left to the main text. Refer to figures by their number in the text. Make sure that any figures you include are discussed in the text.
+
+
+## Rubric
+
+### Introduction (15 pts)
+
+Write 2-3 paragraphs which:
+
+* Motivate the research questions
+* Describe where the data came from
+* Provide background on the dataset
+* Finish by summarizing what you will do in the report
+
+### Methods (30 pts)
+
+Write 1--2 paragraphs which:
+
+* Describe details of the data. What does a row in the data represent? How many rows and columns? What information do the variables record? Are there any missing data?
+* Describe any data manipulation. Did you remove any missing values? Did you focus only on a subset of the data?
+* Describe the model diagnostics you will perform.
+
+For *each* of research questions 1--3, write 1--2 paragraphs in which you:
+
+* Describe how you will address the research question. Perhaps you will fit a specific model and perform a nested test. Or perhaps you will perform best subsets selection and interpret the results. Different research questions may require different models and analysis procedures.
+
+### Results (30 pts)
+
+* Report the software used to fit the models. In this case, you can say "All analysis was completed using R", and list any specific packages used
+* For *each* of research questions 1--3, write 2--3 paragraphs which
+    * Report the results of your statistical analysis, including
+        * The equations of fitted final models, with interpretation
+        * Any hypothesis tests and p-values
+        * Any confidence intervals
+        * Any variable selection procedures (e.g., best subsets selection)
+    * Report model diagnostics
+
+### Discussion (15 pts)
+
+* Write 1--2 paragraphs which summarize what you learned from your analysis, and how it addresses the original research questions
+* Write 1--2 paragraphs addressing research question 4
+
+### Appendix (5 pts)
+
+* Include any exploratory data analysis that was relevant
+* Report the results for any other models apart from the final models
+
+### Format (5 pts)
+
+* Uses the IMRaD format, with appropriate section titles
+* Figures are meaningfully captioned
+* Axes are labeled, with units
+* Code chunks not displayed in the knitted report

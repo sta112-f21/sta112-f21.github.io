@@ -1,0 +1,24 @@
+---
+---
+---
+title: "Project 3"
+author: "Your Name"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+scorecard <- read_csv("https://sta112-f21.github.io/projects/scorecard.csv")
+```
+
+## Introduction
+
+## Methods
+
+## Results
+
+## Discussion
+
+## Appendix
+
