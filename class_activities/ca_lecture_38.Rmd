@@ -1,0 +1,147 @@
+---
+title: "Class Activity, November 29"
+output: 
+  tufte::tufte_html:
+    css: "../labs/lab.css"
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r, include=F}
+library(tidyverse)
+library(Stat2Data)
+data("Titanic")
+```
+
+## Setup
+
+In this activity, we will work with the `Titanic` data.
+
+Download the activity template: [activity template](https://sta112-f21.github.io/class_activities/ca_lecture_38_template.Rmd)
+
+
+## Questions
+
+From exploratory data analysis, we modeled the relationship between age, sex, class, and survival as 
+
+$$
+\begin{align}
+(1) \hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age} + \beta_8 \ \text{IsSecondClass} \cdot \text{Age} + \beta_9 \ \text{IsThirdClass} \cdot \text{Age} \ + \\
+& \hspace{0.5cm} \beta_{10} \ \text{IsMale} \cdot \text{IsSecondClass} \cdot \text{Age} + \beta_{11} \ \text{IsMale} \cdot \text{IsThirdClass} \cdot \text{Age}
+\end{align}
+$$
+
+We want to use that model to answer two questions:
+
+**First question:** Is there a relationship between age and survival, after accounting for sex and class?
+
+**Second question:** After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+We will use a likelihood ratio test to investigate these two questions. Our reduced model for the first question is
+
+$$
+\begin{align}
+(2) \hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +\\
+& \hspace{0.5cm} \beta_4 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_5 \ \text{IsMale} \cdot \text{IsThirdClass}
+\end{align}
+$$
+
+and our reduced model for the second question is
+
+$$
+\begin{align}
+(3) \hspace{0.5cm} \log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age}
+\end{align}
+$$
+
+1. Fit the full model (Equation (1) above), and calculate the deviance (what R calls "residual deviance").
+
+<SCRIPT>
+function ShowAndHide(divid) {
+    var x = document.getElementById(divid);
+    if (x.style.display == 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</SCRIPT>
+
+<BUTTON ONCLICK="ShowAndHide('q1_solution')">Solution</BUTTON>
+
+<DIV ID="q1_solution" STYLE="display:none">
+
+```{r}
+titanic_no_nas <- Titanic %>% 
+  drop_na()
+
+full_glm <- glm(Survived ~ Sex*PClass*Age, 
+                data = titanic_no_nas,
+                family = binomial)
+summary(full_glm)
+```
+
+The deviance for the full model is 639.64
+
+</DIV>
+
+2. Fit the reduced model for the first question (Equation (2)), and calculate the test statistic: $G$ = deviance for reduced model - deviance for full model.
+
+<BUTTON ONCLICK="ShowAndHide('q2_solution')">Solution</BUTTON>
+
+<DIV ID="q2_solution" STYLE="display:none">
+
+```{r}
+reduced_glm_1 <- glm(Survived ~ Sex*PClass, 
+                data = titanic_no_nas,
+                family = binomial)
+
+summary(reduced_glm_1)
+```
+
+The deviance for the reduced model is 697.84, so the test statistic is $G = 697.84 - 639.64 = 58.2$
+
+</DIV>
+
+3. We know that $G$ follows a $\chi^2$ distribution; what are the degrees of freedom?
+
+<BUTTON ONCLICK="ShowAndHide('q3_solution')">Solution</BUTTON>
+
+<DIV ID="q3_solution" STYLE="display:none">
+
+The degrees of freedom is the number of parameters tested. In this case, we are testing 6 parameters, so we have 6 degrees of freedom
+
+</DIV>
+
+4. Fill in the following code to calculate a p-value for the first question:
+
+```r
+pchisq(..., df = ..., lower.tail=F)
+```
+
+<BUTTON ONCLICK="ShowAndHide('q4_solution')">Solution</BUTTON>
+
+<DIV ID="q4_solution" STYLE="display:none">
+
+```{r}
+pchisq(58.2, df = 6, lower.tail=F)
+```
+
+</DIV>
+
+5. What do you conclude about the first question?
+
+<BUTTON ONCLICK="ShowAndHide('q5_solution')">Solution</BUTTON>
+
+<DIV ID="q5_solution" STYLE="display:none">
+
+The p-value is very close to 0, so we have strong evidence that there is a relationship between age and survival, after accounting for sex and class.
+
+</DIV>
+
+6. Carry out a likelihood ratio test to address the second question, and report your results.

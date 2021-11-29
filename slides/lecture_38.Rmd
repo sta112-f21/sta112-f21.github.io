@@ -1,0 +1,228 @@
+---
+author: "Dr. Ciaran Evans"
+title: Nested tests with multiple logistic regression
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Today:
+    * Likelihood ratio tests with the Titanic data
+    * Some time for project 3 work
+* This week:
+    * Wednesday: short lecture / project 3 work
+    * Friday: project 3 work day (optional class)
+
+---
+
+## Titanic data
+
+**Titanic data:** 1313 passengers on the Titanic, with the following variables:
+
+* `Survived` (1 = yes, 0 = no)
+* `Age` (in years)
+* `Sex` (female or male)
+* `PClass` (passenger class; 1st, 2nd, or 3rd)
+
+---
+
+## Logistic regression model
+
+```{r echo=F, message=F, warning=F, fig.width=8, fig.height=4, fig.align='center'}
+library(tidyverse)
+library(Stat2Data)
+data("Titanic")
+
+num_bins <- 6
+
+logodds_table <- Titanic %>%
+  drop_na() %>%
+  group_by(Sex, PClass) %>%
+  mutate(obs = Survived,
+         bin = cut(Age, 
+                   breaks = quantile(Age, 
+                                     seq(0, 1,
+                                         length.out=(num_bins+1))),
+                   labels = F, include.lowest=T)) %>%
+  group_by(bin, Sex, PClass) %>%
+  summarize(mean_x = mean(Age),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds,
+             color = as.factor(PClass))) +
+  geom_point(size=2) +
+  geom_smooth(se=F, method="lm") +
+  theme_bw() +
+  labs(x = "Average Age",
+       y = "Empirical log-odds",
+       color = "",) +
+  theme(text = element_text(size=20)) +
+  facet_wrap(~Sex)
+
+```
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age} + \beta_8 \ \text{IsSecondClass} \cdot \text{Age} + \beta_9 \ \text{IsThirdClass} \cdot \text{Age} \ + \\
+& \hspace{0.5cm} \beta_{10} \ \text{IsMale} \cdot \text{IsSecondClass} \cdot \text{Age} + \beta_{11} \ \text{IsMale} \cdot \text{IsThirdClass} \cdot \text{Age}
+\end{align}
+$$
+---
+
+## Questions
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age} + \beta_8 \ \text{IsSecondClass} \cdot \text{Age} + \beta_9 \ \text{IsThirdClass} \cdot \text{Age} \ + \\
+& \hspace{0.5cm} \beta_{10} \ \text{IsMale} \cdot \text{IsSecondClass} \cdot \text{Age} + \beta_{11} \ \text{IsMale} \cdot \text{IsThirdClass} \cdot \text{Age}
+\end{align}
+$$
+
+* Is there a relationship between age and survival, after accounting for sex and class?
+* After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+.question[
+For each question, which reduced model could I compare the full model (above) with to answer the question?
+]
+
+---
+
+## Questions
+
+Is there a relationship between age and survival, after accounting for sex and class?
+
+.question[
+What's our reduced model?
+]
+
+--
+
+The reduced model doesn't include age:
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +\\
+& \hspace{0.5cm} \beta_4 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_5 \ \text{IsMale} \cdot \text{IsThirdClass}
+\end{align}
+$$
+
+---
+
+## Questions
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+.question[
+What's our reduced model?
+]
+
+--
+
+The reduced model removes interactions betwen age and class (forcing the slopes to be the same within each sex):
+
+$$
+\begin{align}
+\log \left( \dfrac{\pi}{1 - \pi} \right) &= \beta_0 + \beta_1 \ \text{IsMale} + \beta_2 \ \text{IsSecondClass} + \beta_3 \ \text{IsThirdClass} +  \beta_4 \ \text{Age} \ + \\
+& \hspace{0.5cm} \beta_5 \ \text{IsMale} \cdot \text{IsSecondClass} + \beta_6 \ \text{IsMale} \cdot \text{IsThirdClass} \ + \\
+& \hspace{0.5cm} \beta_7 \ \text{IsMale} \cdot \text{Age}
+\end{align}
+$$
+
+---
+
+## Likelihood ratio tests for nested models
+
+* Compare full and reduced models
+* Calculate deviance ( $-2 \log L$ ) for full and reduced models
+* Test statistic: $G =$ deviance for reduced model - deviance for full model
+* p-value: $G \sim \chi^2_{df_\text{reduced} - df_\text{full}}$
+    * $df_\text{reduced} - df_\text{full} =$ number of parameters tested
+
+---
+
+## Class Activity
+
+[https://sta112-f21.github.io/class_activities/ca_lecture_38.html](https://sta112-f21.github.io/class_activities/ca_lecture_38.html)
+
+---
+
+## Class Activity
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+* Deviance for full model = 639.64
+* Deviance for reduced model = 
+* Drop in deviance: $G =$
+* Degrees of freedom for $\chi^2$ distribution: 
+* p-value:
+* Conclusion:
+
+---
+
+## Class Activity
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+* Deviance for full model = 639.64
+* Deviance for reduced model = 649.95
+* Drop in deviance: $G = 649.95 - 639.64 = 10.31$ 
+* Degrees of freedom for $\chi^2$ distribution: 
+* p-value:
+* Conclusion:
+
+---
+
+## Class Activity
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+* Deviance for full model = 639.64
+* Deviance for reduced model = 649.95
+* Drop in deviance: $G = 649.95 - 639.64 = 10.31$ 
+* Degrees of freedom for $\chi^2$ distribution: 4
+* p-value:
+* Conclusion:
+
+---
+
+## Class Activity
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+* Deviance for full model = 639.64
+* Deviance for reduced model = 649.95
+* Drop in deviance: $G = 649.95 - 639.64 = 10.31$ 
+* Degrees of freedom for $\chi^2$ distribution: 4
+* p-value: 0.0355
+* Conclusion: 
+
+---
+
+## Class Activity
+
+After accounting for sex, does the change in the odds of survival associated with a 1-year increase in age depend on class?
+
+* Deviance for full model = 639.64
+* Deviance for reduced model = 649.95
+* Drop in deviance: $G = 649.95 - 639.64 = 10.31$ 
+* Degrees of freedom for $\chi^2$ distribution: 4
+* p-value: 0.0355
+* Conclusion: We have moderate evidence that after accounting for sex, the change in odds of survival associated with a 1-year increase in age is different for different classes
