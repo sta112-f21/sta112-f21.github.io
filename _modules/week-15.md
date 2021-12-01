@@ -9,6 +9,10 @@ November 29
 : Textbook 10.4
 
 December 1
+: Regression beyond 112
+  : [Slides](https://sta112-f21.github.io/slides/lecture_39.html)
+
+: Course evaluations
 
 December 3
 : Project 3 work day

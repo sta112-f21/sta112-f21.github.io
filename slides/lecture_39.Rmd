@@ -1,0 +1,140 @@
+---
+author: "Dr. Ciaran Evans"
+title: Regression beyond this course
+output:
+  xaringan::moon_reader:
+    css: "lab-slides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Agenda
+
+* Course recap
+* Regression beyond 112
+* Project 3 work time
+* Course evaluations
+
+---
+
+## Course recap
+
+What we've covered:
+
+* Data wrangling
+* Data visualization and exploratory data analysis
+* Regression topics:
+    * one or more predictors (either quantitative or categorical)
+    * assumptions and diagnostics
+    * transformations
+    * statistical inference
+* Types of regression:
+    * linear (with least squares) (quantitative response)
+    * logistic (with maximum likelihood) (binary response)
+    
+---
+
+## Advanced topics in regression
+
+.question[
+How do we handle assumption violations if transformations don't work?
+]
+
+* If the shape assumption doesn't hold...
+    * nonlinear least squares (NLS)
+    * splines and generalized additive models (GAMs)
+* If the constant variance assumption doesn't hold...
+    * weighted linear regression
+    * robust regression
+* If the normality assumption doesn't hold...
+    * semiparametric or nonparametric tests
+* If the independence assumption doesn't hold...
+    * hierarchical and mixed-effect models
+* If there are outliers...
+    * robust regression (Huber loss, M-estimation, etc.)
+
+---
+
+## Advanced topics in regression
+
+.question[
+How do we handle issues with data quality and size?
+]
+
+* Issues with missing or incomplete data...
+    * survival analysis (censored data)
+    * imputation 
+    * lots of techniques...
+* High dimensional data ( $n << p$ )
+    * dimension reduction (e.g., PCA)
+    * penalized regression (lasso, ridge, elastic net)
+
+---
+
+## Advanced topics in regression
+
+.question[
+How do we handle other types of response variables?
+]
+
+* Generalized linear models
+    * $y$ = response variable
+    * $\mu_y$ = average value of $y$
+    * $g(\mu_y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p$
+* Functional data analysis
+    * What if my data are functions instead of vectors?
+    
+---
+
+## Advanced topics in regression
+
+.question[
+What if we care about prediction, not inference?
+]
+
+* Examples of other classifiers:
+    * tree-based methods
+    * support vector machines (SVMs)
+    * neural networks
+* Training classifiers:
+    * train/test/validation split
+    * cross validation and hyperparameter tuning
+    * bias/variance tradeoff
+
+---
+
+## Where can I learn all this cool stuff?
+
+* STA 279 (later 214)
+    * generalized linear models
+    * hierarchical and mixed-effect models
+* STA 312
+    * linear models and the theory behind them
+    * addressing assumption violations
+* STA 362
+    * dimension reduction
+    * clustering
+* STA 363
+    * penalized regression
+    * splines
+    * tree-based methods
+    * prediction (cross-validation, data splitting, etc.)
+    
+---
+
+## Project 3 work time
+
+---
+
+## Course evaluations
+
+Fill out the emailed survey for STA 112. Additional questions:
+
+* What was your favorite topic in 112?
+* Which parts of the course aided your learning the most?
+* What changes would improve the course?

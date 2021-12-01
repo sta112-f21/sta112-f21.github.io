@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regression beyond this course</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Ciaran Evans" />
+    <script src="libs/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="lab-slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regression beyond this course
+### Dr. Ciaran Evans
+
+---
+
+
+## Agenda
+
+* Course recap
+* Regression beyond 112
+* Project 3 work time
+* Course evaluations
+
+---
+
+## Course recap
+
+What we've covered:
+
+* Data wrangling
+* Data visualization and exploratory data analysis
+* Regression topics:
+    * one or more predictors (either quantitative or categorical)
+    * assumptions and diagnostics
+    * transformations
+    * statistical inference
+* Types of regression:
+    * linear (with least squares) (quantitative response)
+    * logistic (with maximum likelihood) (binary response)
+    
+---
+
+## Advanced topics in regression
+
+.question[
+How do we handle assumption violations if transformations don't work?
+]
+
+* If the shape assumption doesn't hold...
+    * nonlinear least squares (NLS)
+    * splines and generalized additive models (GAMs)
+* If the constant variance assumption doesn't hold...
+    * weighted linear regression
+    * robust regression
+* If the normality assumption doesn't hold...
+    * semiparametric or nonparametric tests
+* If the independence assumption doesn't hold...
+    * hierarchical and mixed-effect models
+* If there are outliers...
+    * robust regression (Huber loss, M-estimation, etc.)
+
+---
+
+## Advanced topics in regression
+
+.question[
+How do we handle issues with data quality and size?
+]
+
+* Issues with missing or incomplete data...
+    * survival analysis (censored data)
+    * imputation 
+    * lots of techniques...
+* High dimensional data ( `\(n &lt;&lt; p\)` )
+    * dimension reduction (e.g., PCA)
+    * penalized regression (lasso, ridge, elastic net)
+
+---
+
+## Advanced topics in regression
+
+.question[
+How do we handle other types of response variables?
+]
+
+* Generalized linear models
+    * `\(y\)` = response variable
+    * `\(\mu_y\)` = average value of `\(y\)`
+    * `\(g(\mu_y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p\)`
+* Functional data analysis
+    * What if my data are functions instead of vectors?
+    
+---
+
+## Advanced topics in regression
+
+.question[
+What if we care about prediction, not inference?
+]
+
+* Examples of other classifiers:
+    * tree-based methods
+    * support vector machines (SVMs)
+    * neural networks
+* Training classifiers:
+    * train/test/validation split
+    * cross validation and hyperparameter tuning
+    * bias/variance tradeoff
+
+---
+
+## Where can I learn all this cool stuff?
+
+* STA 279 (later 214)
+    * generalized linear models
+    * hierarchical and mixed-effect models
+* STA 312
+    * linear models and the theory behind them
+    * addressing assumption violations
+* STA 362
+    * dimension reduction
+    * clustering
+* STA 363
+    * penalized regression
+    * splines
+    * tree-based methods
+    * prediction (cross-validation, data splitting, etc.)
+    
+---
+
+## Project 3 work time
+
+---
+
+## Course evaluations
+
+Fill out the emailed survey for STA 112. Additional questions:
+
+* What was your favorite topic in 112?
+* Which parts of the course aided your learning the most?
+* What changes would improve the course?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

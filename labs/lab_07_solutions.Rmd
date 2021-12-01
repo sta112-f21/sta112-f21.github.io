@@ -1,0 +1,109 @@
+---
+title: "Lab 7 Solutions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(Stat2Data)
+data("Markets")
+```
+
+## Exercise 1
+
+```{r}
+dj_glm <- glm(Up ~ DJIAch, data = Markets,
+              family = binomial)
+summary(dj_glm)
+```
+
+With $\pi$ the probability of the Nikkei 225 going up, the fitted model is 
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = -0.021 + 0.013 \ \text{DJIAch}$
+
+and the deviance is 62.93.
+
+## Exercise 2
+
+```{r}
+num_bins <- 5
+
+logodds_table <- Markets %>% 
+  mutate(pred = predict(dj_glm, type="response"),
+         obs = dj_glm$y,
+         bin = cut(DJIAch, 
+                   breaks = num_bins,
+                   labels = F)) %>%
+  group_by(bin) %>%
+  summarize(mean_x = mean(DJIAch),
+            prop = mean(c(obs, 0.5)),
+            num_obs = n()) %>%
+  ungroup() %>%
+  mutate(logodds = log(prop/(1 - prop)))
+
+logodds_table
+
+logodds_table %>%
+  ggplot(aes(x = mean_x,
+             y = logodds)) +
+  geom_point() +
+  geom_abline(intercept = coef(dj_glm)[["(Intercept)"]],
+              slope = coef(dj_glm)[["DJIAch"]],
+              color = "blue", lwd=1.2) +
+  theme_bw() +
+  labs(x = "Average change in Dow Jones",
+       y = "Empirical log-odds")
+```
+
+The shape assumption looks roughly reasonable for most of the range of the data, though possibly not for very negative changes in the Dow Jones (it is hard to tell because there are few observations in this area). 
+
+Randomness can be a little tricky to think about. For the randomness assumption to hold, we need the direction of change in tomorrow's Nikkei 225 to be random (with some probability of going up), given today's change in the Dow Jones. Since fluctuations in the stock market result from a variety of complex factors, viewing the change as a random process is not unreasonable.
+
+What about independence? The independence assumption requires that the outcome for today doesn't affect the outcome for tomorrow (since the data consists of consecutive days). This seems unlikely, so independence likely does not hold (there is a natural time dependence to the data).
+
+## Exercise 3
+
+```{r}
+pnorm(3.183, lower.tail=F)
+```
+
+Letting $\beta_1$ be the true population slope for the logistic regression model of `Up` on `DJIAch`, our hypotheses are
+
+$H_0: \beta_1 = 0$ 
+$H_A: \beta_1 > 0$
+
+Since this is a one-sided test, we carry out a Wald test. Our test statistic is $z = 3.183$, and our p-value is 0.00073.
+
+## Exercise 4
+
+```{r}
+qnorm(0.005, lower.tail=F)
+
+0.0132 - 2.576*0.0042
+0.0132 + 2.576*0.0042
+```
+
+For a 99% Wald confidence interval, our critical value is $z^* = 2.576$. This gives a 99% interval of (0.00238, 0.024) for the change in log-odds. To get an interval for the change in odds, we exponentiate: 
+
+$(e^{0.00238}, e^{0.024}) = (1.0024, 1.024)$
+
+We are 99% confident that an increase of 1 unit in the change in the Dow Jones is associated with an increase in the odds of the Nikkei 225 going up by a factor of between 1.0024 and 1.024.
+
+## Exercise 5
+
+```{r}
+nik_glm <- glm(Up ~ lagNik, data = Markets,
+              family = binomial)
+summary(nik_glm)
+```
+
+With $\pi$ the probability of the Nikkei 225 going up, the fitted model is 
+
+$\log \left( \dfrac{\widehat{\pi}}{1 - \widehat{\pi}} \right) = 0.041 - 0.0035 \ \text{lagNik}$
+
+and the deviance is 74.46.
+
+## Exercise 6
+
+Both models use the same response variable, so we can compare the probability of the observed responses under the different models. Remember that the probability of the observed data is the likelihood, and deviance is $-2 \log L$. Therefore, the model with the higher likelihood has the smaller deviance. The first model, with DJIAch as the predictor, has a smaller deviance, so it looks like DJIAch does a better job at predicting whether the Nikkei 225 goes up.
